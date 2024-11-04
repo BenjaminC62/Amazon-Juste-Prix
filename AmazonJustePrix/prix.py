@@ -1,25 +1,19 @@
 import requests
 from bs4 import BeautifulSoup
 
-def getPrix(article):
-    l=[]
-    o={}
-
-
-    url="https://www.amazon.com/dp/"+article
-
-    headers={"accept-language": "en-US,en;q=0.9","accept-encoding": "gzip, deflate, br","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36","accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"}
-
-    resp = requests.get(url, headers=headers)
-
-    soup=BeautifulSoup(resp.text,'html.parser')
-
-
+def get_prix_article(article):
+    r = requests.get(" http://ws.chez-wam.info/" + article)
     try:
-        o["price"]=soup.find("span",{"class":"a-price"}).find("span").text
+        price = r.json()["price"][:-1] # récupère le prix de l'article
+        for i in price:
+            if i == ",":
+                price = price.replace(i, ".")
+            elif i == " ":
+                price = price.replace(i, "")
+        result = float(price) # converti la valeur du prix str -> float
+        print(type(result))
     except:
-        o["price"]=None
+        raise Exception("Prix de l'article n'est pas disponible !")
+    return result
 
-    return o["price"]
-
-print(getPrix("B091G3WT74"))
+print(get_prix_article("B09PQ1DCLK"))
