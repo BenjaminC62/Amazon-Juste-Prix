@@ -48,6 +48,10 @@ def creation_bd():
 
 creation_bd()
 
+def recupereImageArticle(article):  # put application's code here
+    r = requests.get(" http://ws.chez-wam.info/" + article)
+    image = r.json()["images"][0]
+    return f"<img width='250px' height='250px' src='{image}'/>"
 
 if __name__ == '__main__':
     app.run()
