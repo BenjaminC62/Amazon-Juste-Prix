@@ -1,5 +1,6 @@
 import sqlite3
-from wsgiref.validate import validator
+
+from flask import Flask
 
 from flask import Flask, render_template
 import requests
@@ -33,6 +34,19 @@ def justePrixAmazon():  # put application's code here
         else:
             result = "Le prix est trop petit"
     return render_template('game.html',image=image, form=form, prix=prix, nom=nom, result=result)
+
+
+def creation_bd():
+    try:
+        conn = sqlite3.connect('justePrix.db')
+        cursor = conn.cursor()
+        cursor.execute('''CREATE TABLE ARTICLE(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom_article TEXT NOT NULL, prix_article FLOAT NOT NULL, ref_article TEXT NOT NULL)''')
+        conn.commit()
+        conn.close()
+    except sqlite3.OperationalError:
+        print("La table existe déjà")
+
+creation_bd()
 
 
 if __name__ == '__main__':
