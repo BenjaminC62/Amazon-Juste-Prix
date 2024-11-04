@@ -1,12 +1,13 @@
 import sqlite3
 
-from flask import Flask
 
 from flask import Flask, render_template
 import requests
 from flask_wtf import FlaskForm
 from wtforms.fields.numeric import FloatField
 from wtforms.validators import DataRequired
+
+import FonctionNom
 
 con = sqlite3.connect('justePrix.db', check_same_thread=False)
 app = Flask(__name__)
@@ -52,6 +53,40 @@ def recupereImageArticle(article):  # put application's code here
     r = requests.get(" http://ws.chez-wam.info/" + article)
     image = r.json()["images"][0]
     return f"<img width='250px' height='250px' src='{image}'/>"
+
+
+def get_prix_article(article):
+    r = requests.get(" http://ws.chez-wam.info/" + article)
+    try:
+        price = r.json()["price"][:-1] # récupère le prix de l'article
+        for i in price:
+            if i == ",":
+                price = price.replace(i, ".")
+            elif i == " ":
+                price = price.replace(i, "")
+        result = float(price) # converti la valeur du prix str -> float
+        print(type(result))
+    except:
+        raise Exception("Prix de l'article n'est pas disponible !")
+    return result
+
+print(get_prix_article("B09PQ1DCLK"))
+
+def insertion_bd():
+    liste_article = ["B0CW3DLT9M"]
+    conn = sqlite3.connect('justePrix.db')
+    cursor = conn.cursor()
+    cursor.execute('''DELETE FROM ARTICLE''') # Question de verif
+    conn.commit()
+    for i in range(len(liste_article)):
+        nom_article = FonctionNom.getNom(liste_article[i])
+        prix_article = get_prix_article(liste_article[i])
+        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''', (nom_article, prix_article, liste_article[i]))
+    conn.commit()
+    conn.close()
+
+insertion_bd()
+
 
 if __name__ == '__main__':
     app.run()
