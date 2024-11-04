@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr-FR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Juste prix amazon</title>
+</head>
+<body>
+    <h1>Juste prix amazon</h1>
+    {% if form %}
+        <form action="" method="post">
+            {% if image %}
+                <img src="{{ image }}" width="200px" height="200px" alt="image de l'article">
+            {% else %}
+                <p>Image non disponible</p>
+            {% endif %}
+            {{ form.csrf_token }}
+            {{ form.prix_article.label }} : {{ form.prix_article() }}
+            <button type="submit">Valider</button>
+        </form>
+    {% endif %}
+    {% if result %}
+        <h2>{{ result }}</h2>
+    {% endif %}
+
+</body>
+</html>
