@@ -33,7 +33,7 @@ def justePrixAmazon():  # put application's code here
             result = "Le prix est trop grand"
         else:
             result = "Le prix est trop petit"
-    return render_template('game.html',image=image, form=form, prix=prix, nom=nom, result=result)
+    return render_template('MainGame.html',image=image, form=form, prix=prix, nom=nom, result=result)
 
 
 def creation_bd():
