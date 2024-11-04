@@ -26,9 +26,9 @@ def justePrixAmazon():  # put application's code here
     form = JustePrix()
 
     if form.validate_on_submit():
-        if form.prix_article.data == prix:
+        if form.prixArticle.data == prix:
             result = "Bravo, vous avez trouvé le juste prix !"
-        elif form.prix_article.data > prix:
+        elif form.prixArticle.data > prix:
             result = "Le prix est trop grand"
         else:
             result = "Le prix est trop petit"
