@@ -21,8 +21,13 @@ class justePrix(FlaskForm):
     prix_article = IntegerField("Prix de l'article", validators=[DataRequired()])
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def home():
+    form = justePrix()
+
+    if form.validate_on_submit():
+        return render_template('MainGame.html', form=form)
+
     return render_template('PageAccueil.html')
 
 
