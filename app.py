@@ -4,6 +4,7 @@ import sqlite3
 import requests
 from flask import Flask, render_template
 from flask_wtf import FlaskForm
+from wtforms.fields.choices import RadioField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
 
@@ -19,11 +20,23 @@ nom = ""
 
 class justePrix(FlaskForm):
     prix_article = IntegerField("Prix de l'article", validators=[DataRequired()])
+    difficulty = RadioField("Difficulté", choices=[('easy', 'Facile'), ('medium', 'Moyen'), ('hard', 'Difficile')])
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('PageAccueil.html')
+    form = justePrix()
+
+    if form.validate_on_submit() and form.difficulty.data == "easy":
+        return render_template('MainGame.html')  # Easy ici -> a changer le MainGame
+
+    if form.validate_on_submit() and form.difficulty.data == "easy":
+        return render_template('MainGame.html')  # Medium ici -> a faire
+
+    if form.validate_on_submit() and form.difficulty.data == "easy":
+        return render_template('MainGame.html')  # Hard ici -> a faire
+
+    return render_template('PageAccueil.html', form=form)
 
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
