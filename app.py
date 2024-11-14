@@ -45,10 +45,11 @@ def choisirArticle():
     nb_article = cursor.fetchone()[0]
     con.commit()
     item_random = random.randint(1, nb_article)
-    cursor.execute("SELECT * FROM ARTICLE WHERE id = %d" % item_random)
+    print(item_random)
+    cursor.execute("SELECT * FROM ARTICLE WHERE id = ?" , (item_random,))
     article = cursor.fetchone()
     con.commit()
-    con.close()
+
     print(article)
 
     nom = article[1]
@@ -93,10 +94,11 @@ creation_bd()
 
 def insertion_bd():
     global image, prix, nom
-    liste_article = ["B0BP1MNHVH"]
+    liste_article = ["B07YQFZ6CJ"]
 
     cursor = con.cursor()
     cursor.execute('''DELETE FROM ARTICLE''') # Question de verif
+    cursor.execute('''DELETE FROM sqlite_sequence WHERE name='ARTICLE';''')
     con.commit()
     for i in range(len(liste_article)):
         try:
@@ -118,4 +120,5 @@ insertion_bd()
 
 
 if __name__ == '__main__':
+    choisirArticle()
     app.run()
