@@ -5,60 +5,28 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="/main.css">
     <title>Juste prix amazon</title>
-    <style>
-    .dark {
-      background-color: #1a202c;
-      color: #fff;
-    }
-  </style>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-<button id="toggle-mode" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-    <span id="mode-text">Mode sombre</span>
-  </button>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-2 rounded shadow-md w-full max-w-lg">
+        <h1 class="text-3xl font-bold text-center mb-3">Juste prix amazon</h1>
+        {% if form %}
+        {% endif %}
+        {% if result %}
+        {% endif %}
+            <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
+            <form action="" method="post" class="space-y-4">
+                {% if image %}
+                    <img src="{{ image }}" width="200px" height="200px" alt="image de l'article" class="mx-auto">
+                {% else %}
+                <p class="text-center text-gray-500">Image non disponible</p>
+                {% endif %}
 
-
-  <script>
-    const toggleModeButton = document.getElementById('toggle-mode');
-    const modeText = document.getElementById('mode-text');
-    const body = document.body;
-
-    if (localStorage.getItem('mode') === 'dark') {
-      body.classList.add('dark');
-      modeText.textContent = 'Mode clair';
-    }
-
-
-    toggleModeButton.addEventListener('click', () => {
-      if (body.classList.contains('dark')) {
-        body.classList.remove('dark');
-        modeText.textContent = 'Mode sombre';
-        localStorage.setItem('mode', 'light');
-      } else {
-        body.classList.add('dark');
-        modeText.textContent = 'Mode clair';
-        localStorage.setItem('mode', 'dark');
-      }
-    });
-  </script>
-    <h1>Juste prix amazon</h1>
-    {% if form %}
-        <form action="" method="post">
-            {% if image %}
-                <img src="{{ image }}" width="200px" height="200px" alt="image de l'article">
-            {% else %}
-                <p>Image non disponible</p>
-            {% endif %}
-            {{ form.csrf_token }}
-            {{ form.prixArticle.label }} : {{ form.prixArticle() }}
-            <button type="submit">Valider</button>
-        </form>
-    {% endif %}
-    {% if result %}
-        <h2>{{ result }}</h2>
-    {% endif %}
-
+                {{ form.csrf_token }}
+                {{ form.prix_article.label }} : {{ form.prix_article() }}
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Valider</button>
+            </form>
+    </div>
 </body>
 </html>
