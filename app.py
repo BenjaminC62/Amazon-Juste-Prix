@@ -49,7 +49,6 @@ def choisirArticle():
     cursor.execute("SELECT * FROM ARTICLE WHERE id = ?" , (item_random,))
     article = cursor.fetchone()
     con.commit()
-
     print(article)
 
     nom = article[1]
@@ -64,11 +63,11 @@ def recupereImageArticle(article):
     return image
 
 def get_prix_article(article):
-    r = requests.get(" http://ws.chez-wam.info/" + article)
+    r = requests.get("http://ws.chez-wam.info/" + article)
     try:
         price = r.json()["price"][:-1] # récupère le prix de l'article
         price = price.replace(",", ".").replace(" ", "") # remplace la virgule par un point et un espace par rien
-        result = int(float(price)) # converti la valeur du prix str -> float
+        result = int(float(price)) # converti la valeur du prix str -> float -> int
         print(type(result))
     except:
         raise Exception("Prix de l'article n'est pas disponible !")
@@ -94,27 +93,18 @@ creation_bd()
 
 def insertion_bd():
     global image, prix, nom
-    liste_article = ["B07YQFZ6CJ"]
+    liste_article = ["B07YQFZ6CJ","B0BWS9WQDY"]
 
     cursor = con.cursor()
     cursor.execute('''DELETE FROM ARTICLE''') # Question de verif
     cursor.execute('''DELETE FROM sqlite_sequence WHERE name='ARTICLE';''')
     con.commit()
     for i in range(len(liste_article)):
-        try:
-            nom_article = getNom(liste_article[i])
-            prix_article = get_prix_article(liste_article[i])
-            cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''', (nom_article, prix_article, liste_article[i]))
-        except Exception as e:
-            print(f"Erreur lors de la récupération de l'article {liste_article[i]}: {e}")
-            # Insertion manuelle si l'article n'est pas trouvé
-            nom = input(f"Entrez le nom de l'article pour {liste_article[i]}: ")
-            prix = int(float(input(f"Entrez le prix de l'article pour {liste_article[i]}: ")))
-            cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''', (nom, prix, liste_article[i]))
+        nom_article = getNom(liste_article[i])
+        print(nom_article)
+        prix_article = get_prix_article(liste_article[i])
+        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''', (nom_article, prix_article, liste_article[i]))
     con.commit()
-
-
-
 
 insertion_bd()
 
