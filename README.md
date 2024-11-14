@@ -50,4 +50,3 @@ Nous avons choisi d'utiliser une "developer branch workflow".
 * Création d'une fonction qui récupère le nom de l'article placé en paramètre
 * Création de la fonction principale du jeu
 * Création d'un fichier de styles 
-
