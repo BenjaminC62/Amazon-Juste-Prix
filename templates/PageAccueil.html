@@ -6,20 +6,20 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen">
-<div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto">
-    <h1 class="text-4xl font-bold mb-4 text-center">Juste prix amazon</h1>
-    <p class="mb-2 text-center">Bienvenue sur le jeu du juste prix amazon</p>
-    <p class="mb-2 text-center">Vous allez devoir deviner le prix d'un article sur amazon</p>
-    <p class="mb-2 text-center">Si vous trouvez le juste prix, vous gagnez un point</p>
-    <p class="mb-2 text-center">Si vous ne trouvez pas le juste prix, vous perdez un point</p>
-    <p class="mb-2 text-center">Vous pouvez jouer autant de fois que vous le souhaitez</p>
-    <p class="mb-4 text-center">Vous pouvez voir le classement des joueurs en cliquant sur le lien ci-dessous</p>
-    <button type="submit" href="Classement.html"
-            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Classement
-    </button>
-    <br>
-    <br>
-    <p class="mb-4 text-center">Vous pouvez commencer à jouer en cliquant sur le lien ci-dessous</p>
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto">
+        <a href="{{ url_for('login') }}" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center">Login</a>
+
+        <h1 class="text-4xl font-bold mb-4 text-center">Juste prix amazon</h1>
+        <p class="mb-2 text-center">Bienvenue sur le jeu du juste prix amazon</p>
+        <p class="mb-2 text-center">Vous allez devoir deviner le prix d'un article sur amazon</p>
+        <p class="mb-2 text-center">Si vous trouvez le juste prix, vous gagnez un point</p>
+        <p class="mb-2 text-center">Si vous ne trouvez pas le juste prix, vous perdez un point</p>
+        <p class="mb-2 text-center">Vous pouvez jouer autant de fois que vous le souhaitez</p>
+        <p class="mb-4 text-center">Vous pouvez voir le classement des joueurs en cliquant sur le lien ci-dessous</p>
+        <button type="submit" href="Classement.html" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Classement</button>
+        <br>
+        <br>
+        <p class="mb-4 text-center">Vous pouvez commencer à jouer en cliquant sur le lien ci-dessous</p>
 
     <form action="/justePrixAmazon" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
         <div class="flex justify-center items-center space-x-2">

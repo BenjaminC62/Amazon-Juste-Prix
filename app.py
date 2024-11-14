@@ -1,12 +1,17 @@
 import random
 import sqlite3
+from os.path import exists
 
 import requests
 from flask import Flask, render_template
+from flask import Flask, render_template, request, session, redirect, url_for
+import requests
 from flask_wtf import FlaskForm
 from wtforms.fields.choices import RadioField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
+
+import random
 
 con = sqlite3.connect('justePrix.db', check_same_thread=False)
 
@@ -41,19 +46,41 @@ def home():
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-    global image, prix, nom
-    result = ""
+    if 'username' in session:
+        global image, prix, nom
+        result = ""
 
-    form = justePrix()
+        form = justePrix()
 
-    if form.validate_on_submit():
-        if form.prix_article.data == prix:
-            result = "Bravo, vous avez trouvé le juste prix !"
-        elif form.prix_article.data > prix:
-            result = "Le prix est trop grand"
-        else:
-            result = "Le prix est trop petit"
-    return render_template('MainGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        if form.validate_on_submit():
+            if form.prixArticle.data == prix:
+                result = "Bravo, vous avez trouvé le juste prix !"
+                session['score'] += 1
+            elif form.prixArticle.data > prix:
+                result = "Le prix est trop grand"
+            else:
+                result = "Le prix est trop petit"
+        return render_template('MainGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+    else:
+        return redirect(url_for('/'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        conn = sqlite3.connect('justePrix.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM USERS WHERE nom = ?', (username,))
+        user = cursor.fetchone()
+        conn.close()
+
+        if user and user[3] == password:
+            session['username'] = username
+            session['score'] = user[4]  # Assuming the score is stored in the 5th column
+            return redirect('/')
+    return render_template('login.html')
 
 
 def choisirArticle():
@@ -141,6 +168,7 @@ def insertion_bd():
 
 
 insertion_bd()
+
 
 if __name__ == '__main__':
     choisirArticle()
