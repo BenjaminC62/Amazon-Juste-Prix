@@ -93,7 +93,7 @@ creation_bd()
 
 def insertion_bd():
     global image, prix, nom
-    liste_article = ["B08HN37XZ1"]
+    liste_article = ["B0BP1MNHVH"]
 
     cursor = con.cursor()
     cursor.execute('''DELETE FROM ARTICLE''') # Question de verif
