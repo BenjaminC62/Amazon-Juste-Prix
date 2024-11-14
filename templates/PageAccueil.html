@@ -21,20 +21,15 @@
     <br>
     <p class="mb-4 text-center">Vous pouvez commencer à jouer en cliquant sur le lien ci-dessous</p>
 
-    <form action="/justePrixAmazon" method="post" class="space-y-4">
-        <div class="flex justify-center">
-            <label class="mr-4">
-                <input type="radio" name="difficulte" value="facile" class="mr-1" required> Facile
-            </label>
-            <label class="mr-4">
-                <input type="radio" name="difficulte" value="moyen" class="mr-1" required> Moyen
-            </label>
-            <label>
-                <input type="radio" name="difficulte" value="difficile" class="mr-1" required> Difficile
-            </label>
+    <form action="/justePrixAmazon" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
+        <div class="flex justify-center items-center space-x-2">
+            {{ form.csrf_token }}
+            <label class="font-semibold">{{ form.difficulty.label }} : </label>
+            {{ form.difficulty(class="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out flex
+            flex-row") }}
         </div>
         <button type="submit"
-                class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center">
+                class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
             Jouer
         </button>
     </form>
