@@ -35,7 +35,7 @@ def justePrixAmazon():
             result = "Le prix est trop grand"
         else:
             result = "Le prix est trop petit"
-    return render_template('game.html',image=image, form=form, prix=prix, nom=nom, result=result)
+    return render_template('MainGame.html',image=image, form=form, prix=prix, nom=nom, result=result)
 
 def choisirArticle():
     global image, prix, nom
@@ -92,20 +92,31 @@ def creation_bd():
 creation_bd()
 
 def insertion_bd():
+    global image, prix, nom
     liste_article = ["B08W5CLLPL"]
 
     cursor = con.cursor()
     cursor.execute('''DELETE FROM ARTICLE''') # Question de verif
     con.commit()
     for i in range(len(liste_article)):
-        nom_article = getNom(liste_article[i])
-        prix_article = get_prix_article(liste_article[i])
-        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''', (nom_article, prix_article, liste_article[i]))
+        try:
+            nom_article = getNom(liste_article[i])
+            prix_article = get_prix_article(liste_article[i])
+            cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''', (nom_article, prix_article, liste_article[i]))
+        except Exception as e:
+            print(f"Erreur lors de la récupération de l'article {liste_article[i]}: {e}")
+            # Insertion manuelle si l'article n'est pas trouvé
+            nom = input(f"Entrez le nom de l'article pour {liste_article[i]}: ")
+            prix = int(float(input(f"Entrez le prix de l'article pour {liste_article[i]}: ")))
+            cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''', (nom, prix, liste_article[i]))
     con.commit()
+
+    #INSERT TEST
+
 
 insertion_bd()
 
 
 if __name__ == '__main__':
-    choisirArticle()
+
     app.run()
