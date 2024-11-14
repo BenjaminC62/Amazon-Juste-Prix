@@ -1,4 +1,5 @@
 import sqlite3
+from crypt import methods
 from os.path import exists
 
 from flask import Flask, render_template, session, redirect, url_for, request
@@ -21,6 +22,10 @@ nom = ""
 class justePrix(FlaskForm) :
     prix_article = IntegerField("Prix de l'article" , validators=[DataRequired()])
 
+
+@app.route('/home' , methods=['GET'])
+def home():
+    return render_template('home.html')
 @app.route('/', methods=['GET', 'POST'])
 def justePrixAmazon():
     if 'username' in session:
@@ -39,7 +44,7 @@ def justePrixAmazon():
                 result = "Le prix est trop petit"
         return render_template('MainGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
     else:
-        return redirect(url_for('/'))
+        return redirect(url_for('home'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
