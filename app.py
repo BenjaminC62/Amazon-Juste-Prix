@@ -21,7 +21,11 @@ nom = ""
 class justePrix(FlaskForm) :
     prix_article = IntegerField("Prix de l'article" , validators=[DataRequired()])
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/' , methods=['GET'])
+def home():
+    return render_template('PageAccueil.html')
+
+@app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
     global image,prix, nom
     result = ""
