@@ -93,7 +93,7 @@ creation_bd()
 
 def insertion_bd():
     global image, prix, nom
-    liste_article = ["B08W5CLLPL"]
+    liste_article = ["B08HN37XZ1"]
 
     cursor = con.cursor()
     cursor.execute('''DELETE FROM ARTICLE''') # Question de verif
@@ -111,12 +111,11 @@ def insertion_bd():
             cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''', (nom, prix, liste_article[i]))
     con.commit()
 
-    #INSERT TEST
+
 
 
 insertion_bd()
 
 
 if __name__ == '__main__':
-
     app.run()
