@@ -7,8 +7,42 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/main.css">
     <title>Juste prix amazon</title>
+    <style>
+    .dark {
+      background-color: #1a202c;
+      color: #fff;
+    }
+  </style>
 </head>
 <body>
+<button id="toggle-mode" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+    <span id="mode-text">Mode sombre</span>
+  </button>
+
+
+  <script>
+    const toggleModeButton = document.getElementById('toggle-mode');
+    const modeText = document.getElementById('mode-text');
+    const body = document.body;
+
+    if (localStorage.getItem('mode') === 'dark') {
+      body.classList.add('dark');
+      modeText.textContent = 'Mode clair';
+    }
+
+
+    toggleModeButton.addEventListener('click', () => {
+      if (body.classList.contains('dark')) {
+        body.classList.remove('dark');
+        modeText.textContent = 'Mode sombre';
+        localStorage.setItem('mode', 'light');
+      } else {
+        body.classList.add('dark');
+        modeText.textContent = 'Mode clair';
+        localStorage.setItem('mode', 'dark');
+      }
+    });
+  </script>
     <h1>Juste prix amazon</h1>
     {% if form %}
         <form action="" method="post">
