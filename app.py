@@ -1,17 +1,12 @@
 import random
 import sqlite3
-from os.path import exists
 
 import requests
-from flask import Flask, render_template
 from flask import Flask, render_template, request, session, redirect, url_for
-import requests
 from flask_wtf import FlaskForm
 from wtforms.fields.choices import RadioField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
-
-import random
 
 con = sqlite3.connect('justePrix.db', check_same_thread=False)
 
@@ -33,13 +28,13 @@ def home():
     form = justePrix()
 
     if form.validate_on_submit() and form.difficulty.data == "easy":
-        return render_template('MainGame.html')  # Easy ici -> a changer le MainGame
+        return render_template('MainGame.html', form=form)  # Easy ici -> a changer le MainGame
 
-    if form.validate_on_submit() and form.difficulty.data == "easy":
-        return render_template('MainGame.html')  # Medium ici -> a faire
+    if form.validate_on_submit() and form.difficulty.data == "medium":
+        return render_template('MainGame.html', form=form)  # Medium ici -> a faire
 
-    if form.validate_on_submit() and form.difficulty.data == "easy":
-        return render_template('MainGame.html')  # Hard ici -> a faire
+    if form.validate_on_submit() and form.difficulty.data == "hard":
+        return render_template('MainGame.html', form=form)  # Hard ici -> a faire
 
     return render_template('PageAccueil.html', form=form)
 
@@ -62,7 +57,8 @@ def justePrixAmazon():
                 result = "Le prix est trop petit"
         return render_template('MainGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
     else:
-        return redirect(url_for('/'))
+        return redirect(url_for('home'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -165,10 +161,14 @@ def insertion_bd():
         cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''',
                        (nom_article, prix_article, liste_article[i]))
     con.commit()
+    cursor.execute('''DELETE FROM USERS''')
+    con.commit()
+    cursor.execute('''INSERT INTO USERS(nom, prenom, password, score) VALUES(?,?,?,?)''',
+                   ("test", "admin", "admin", 0))
+    con.commit()
 
 
 insertion_bd()
-
 
 if __name__ == '__main__':
     choisirArticle()
