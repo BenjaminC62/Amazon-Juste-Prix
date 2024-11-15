@@ -30,6 +30,7 @@ class juste_prix_accueil(FlaskForm):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    choisirArticle()
     form = juste_prix_accueil()
     global difficulty
 
@@ -60,6 +61,7 @@ def home():
 def justePrixAmazon():
     global image, prix, nom, difficulty
     result = ""
+    user = False
 
     print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
 
@@ -73,13 +75,14 @@ def justePrixAmazon():
             print("IL passe dans le result == prix")
             result = "Bravo, vous avez trouvé le juste prix !"
             if 'username' in session:
-                game_result(session['username'], True)
+                user = True
                 session['score'] += 1
+                game_result(session['username'], True)
                 return render_template('MainEndGame.html', form=form, image=image, prix=prix, nom=nom, result=result,
-                                       session=session)
+                                       user=user)
             else:
                 return render_template('MainEndGame.html', form=form, image=image, prix=prix, nom=nom, result=result,
-                                       session=session)
+                                       user=user)
 
         elif form.prix_article.data > prix:
             print("IL passe dans le result > prix")
@@ -151,6 +154,12 @@ def register():
         conn.close()
         return redirect('/login')
     return render_template('register.html')
+
+
+def logout():
+    session.pop('username', None)
+    session.pop('score', None)
+    return redirect('/')
 
 
 def choisirArticle():
@@ -277,5 +286,4 @@ def insertion_bd():
 
 
 if __name__ == '__main__':
-    choisirArticle()
     app.run()

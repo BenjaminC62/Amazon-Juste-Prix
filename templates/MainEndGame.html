@@ -27,18 +27,14 @@
                 disabled>
             Valider
         </button>
-        {% if 'username' in session %}
+        <a href="{{ url_for('home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Rejouer</a>
+        {% if user == True %}
         <div class="flex justify-between mt-4">
             <a href="{{ url_for('register') }}"
                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Register</a>
             <a href="{{ url_for('login') }}"
                class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Login</a>
-            <a href="{{ url_for('home') }}"
-               class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Rejouer</a>
         </div>
-        {% else %}
-        <a href="{{ url_for('home') }}"
-           class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Rejouer</a>
         {% endif %}
 
     </form>
