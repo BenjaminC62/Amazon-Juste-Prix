@@ -3,7 +3,7 @@ import sqlite3
 import threading
 
 import requests
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect
 from flask_wtf import FlaskForm
 from wtforms.fields.choices import RadioField
 from wtforms.fields.numeric import IntegerField
@@ -36,7 +36,7 @@ def home():
     print("il passe dans la difficulté")
     print(form.errors)
 
-    if form.validate_on_submit() :
+    if form.validate_on_submit():
 
         print("passe dans la submit")
 
@@ -56,43 +56,46 @@ def home():
     return render_template('PageAccueil.html', form=form)
 
 
-
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-    if 'username' in session:
-        global image, prix, nom, difficulty
-        result = ""
+    global image, prix, nom, difficulty
+    result = ""
 
-        print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
+    print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
 
-        form = justePrix()
+    form = justePrix()
+    print(session)
 
-        if form.validate_on_submit():
-            print(form.errors)
-            print("passe dansle submit")
-            if form.prix_article.data == prix:
-                print("IL passe dans le result == prix")
-                result = "Bravo, vous avez trouvé le juste prix !"
-                session['score'] += 1
-                game_result(session['username'], True)
-            elif form.prix_article.data > prix:
-                print("IL passe dans le result > prix")
-                result = "Le prix est trop grand"
-            else:
-                print("IL passe dans le result jsp prix")
-                result = "Le prix est trop petit"
-
+    if form.validate_on_submit():
         print(form.errors)
+        print("passe dansle submit")
+        if form.prix_article.data == prix:
+            print("IL passe dans le result == prix")
+            result = "Bravo, vous avez trouvé le juste prix !"
+            if 'username' in session:
+                game_result(session['username'], True)
+                session['score'] += 1
+                return render_template('MainEndGame.html', form=form, image=image, prix=prix, nom=nom, result=result,
+                                       session=session)
+            else:
+                return render_template('MainEndGame.html', form=form, image=image, prix=prix, nom=nom, result=result,
+                                       session=session)
 
-        if (difficulty == "easy"):
-            return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
-        elif (difficulty == "medium"):
-            return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        elif form.prix_article.data > prix:
+            print("IL passe dans le result > prix")
+            result = "Le prix est trop grand"
         else:
-            return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+            print("IL passe dans le result jsp prix")
+            result = "Le prix est trop petit"
 
+    print(form.errors)
+
+    if (difficulty == "easy"):
+        return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+    elif (difficulty == "medium"):
+        return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
     else:
-        return redirect(url_for('home'))
+        return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -185,7 +188,6 @@ def recupereImageArticle(article):
     return image
 
 
-
 def get_prix_article(article):
     r = requests.get("http://ws.chez-wam.info/" + article)
     result = 0
@@ -233,11 +235,13 @@ def creation_bd():
 
 creation_bd()
 
+
 def fetch_and_insert_article(cursor, article, theme):
     nom_article = getNom(article)
     prix_article = get_prix_article(article)
     cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
                    (nom_article, prix_article, article, theme))
+
 
 def insertion_bd():
     global image, prix, nom
