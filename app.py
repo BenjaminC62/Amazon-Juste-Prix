@@ -34,6 +34,8 @@ def home():
     form = juste_prix_accueil()
     global difficulty
 
+    user = session.get('username', None)
+
     print("il passe dans la difficulté")
     print(form.errors)
 
@@ -54,7 +56,7 @@ def home():
             difficulty = "hard"
             return redirect("/justePrixAmazon")  # Hard ici -> a faire
 
-    return render_template('PageAccueil.html', form=form)
+    return render_template('PageAccueil.html', form=form, user=user)
 
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
