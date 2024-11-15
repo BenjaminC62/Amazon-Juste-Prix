@@ -149,6 +149,15 @@ def register():
         return redirect('/login')
     return render_template('register.html')
 
+@app.route('/leaderboard', methods=['GET', 'POST'])
+def leaderboard():
+    cursor = con.cursor()
+    cursor.execute("SELECT nom, score FROM USERS ORDER BY score DESC")
+    users = cursor.fetchall()
+    print(users)
+    print(users[0][0])
+    con.commit()
+    return render_template('Classement.html', users=users)
 
 def choisirArticle():
     global image, prix, nom
