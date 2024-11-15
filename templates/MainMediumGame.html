@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="fr-FR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Juste prix amazon</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+<div class="bg-white p-2 rounded shadow-md w-full max-w-lg">
+    <h1 class="text-3xl font-bold text-center mb-3">Juste prix amazon</h1>
+    <form action="" method="post" class="space-y-4">
+        <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
+        <h2 class="text-center text-lg font-semibold mt-4">{{ nom }}</h2>
+        {% if image %}
+        <img src="{{ image }}" width="100px" height="100px" alt="image de l'article" class="mx-auto">
+        {% else %}
+        <p class="text-center text-gray-500">Image non disponible</p>
+        {% endif %}
+        <div class="flex justify-center">
+            {{ form.csrf_token }}
+            {{ form.prix_article.label }} : {{ form.prix_article() }}
+        </div>
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Valider
+        </button>
+    </form>
+</div>
+</body>
+</html>

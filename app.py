@@ -25,7 +25,9 @@ class justePrix(FlaskForm):
 
 class juste_prix_accueil(FlaskForm):
     difficulty = RadioField("Difficulté", choices=[('easy', 'Facile'), ('medium', 'Moyen'), ('hard', 'Difficile')])
-    theme = RadioField("Theme" , choices=[('default', 'Default'), ('jeu_video', 'Jeu Vidéo') , ('livre', 'Livre') , ('pc', 'PC') , ('carte_graphique', 'Carte Graphique')])
+    theme = RadioField("Theme",
+                       choices=[('default', 'Default'), ('jeu_video', 'Jeu Vidéo'), ('livre', 'Livre'), ('pc', 'PC'),
+                                ('carte_graphique', 'Carte Graphique')])
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -33,17 +35,19 @@ def home():
     form = juste_prix_accueil()
     global difficulty
 
-    if form.validate_on_submit() and form.difficulty.data == "easy":
-        difficulty = "easy"
-        return render_template('MainGame.html', form=form)  # Easy ici -> a changer le MainGame
+    if form.validate_on_submit():
 
-    if form.validate_on_submit() and form.difficulty.data == "medium":
-        difficulty = "medium"
-        return render_template('MainGame.html', form=form)  # Medium ici -> a faire
+        print("dificult avec form.diff", form.difficulty.data)
 
-    if form.validate_on_submit() and form.difficulty.data == "hard":
-        difficulty = "hard"
-        return render_template('MainGame.html', form=form)  # Hard ici -> a faire
+        if form.difficulty.data == "easy":
+            difficulty = "easy"
+            return redirect("/justePrixAmazon")
+        if form.difficulty.data == "medium":
+            difficulty = "medium"
+            return redirect("/justePrixAmazon")
+        if form.difficulty.data == "hard":
+            difficulty = "hard"
+            return redirect("/justePrixAmazon")
 
     return render_template('PageAccueil.html', form=form)
 
@@ -66,7 +70,19 @@ def justePrixAmazon():
         else:
             result = "Le prix est trop petit"
 
-    return render_template('MainGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        print(form.errors)
+
+        print("la difficulté est : ", difficulty)
+
+        if difficulty == "easy":
+            return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        elif difficulty == "medium":
+            return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        else:
+            return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+
+    else:
+        return redirect(url_for('home'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -87,13 +103,15 @@ def login():
             return redirect('/')
     return render_template('login.html')
 
+
 def update_score(username, new_score):
     conn = sqlite3.connect('justePrix.db')
     cursor = conn.cursor()
     cursor.execute('UPDATE USERS SET score = ? WHERE nom = ?', (new_score, username))
     conn.commit()
     conn.close()
-    
+
+
 def game_result(username, gagner):
     if gagner:
         conn = sqlite3.connect('justePrix.db')
@@ -154,7 +172,6 @@ def get_prix_article(article):
         price = r.json()["price"][:-1]  # récupère le prix de l'article
         price = price.replace(",", ".").replace(" ", "")  # remplace la virgule par un point et un espace par rien
         result = int(float(price))  # converti la valeur du prix str -> float -> int
-        print(type(result))
     except:
         raise Exception("Prix de l'article n'est pas disponible !")
     return result
@@ -164,6 +181,8 @@ def getNom(article):
     r = requests.get(" http://ws.chez-wam.info/" + article)
     try:
         name = r.json()["title"]
+        name = name.split(" ")
+        name = " ".join(name[:3])
     except:
         raise Exception("Nom de l'article n'est pas disponible !")
     return name
