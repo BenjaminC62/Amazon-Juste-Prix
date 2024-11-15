@@ -25,7 +25,9 @@ class justePrix(FlaskForm):
 
 class juste_prix_accueil(FlaskForm):
     difficulty = RadioField("Difficulté", choices=[('easy', 'Facile'), ('medium', 'Moyen'), ('hard', 'Difficile')])
-    theme = RadioField("Theme" , choices=[('default', 'Default'), ('jeu_video', 'Jeu Vidéo') , ('livre', 'Livre') , ('pc', 'PC') , ('carte_graphique', 'Carte Graphique')])
+    theme = RadioField("Theme",
+                       choices=[('default', 'Default'), ('jeu_video', 'Jeu Vidéo'), ('livre', 'Livre'), ('pc', 'PC'),
+                                ('carte_graphique', 'Carte Graphique')])
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -101,12 +103,14 @@ def login():
             return redirect('/')
     return render_template('login.html')
 
+
 def update_score(username, new_score):
     conn = sqlite3.connect('justePrix.db')
     cursor = conn.cursor()
     cursor.execute('UPDATE USERS SET score = ? WHERE nom = ?', (new_score, username))
     conn.commit()
     conn.close()
+
 
 def game_result(username, gagner):
     if gagner:
@@ -168,7 +172,6 @@ def get_prix_article(article):
         price = r.json()["price"][:-1]  # récupère le prix de l'article
         price = price.replace(",", ".").replace(" ", "")  # remplace la virgule par un point et un espace par rien
         result = int(float(price))  # converti la valeur du prix str -> float -> int
-        print(type(result))
     except:
         raise Exception("Prix de l'article n'est pas disponible !")
     return result
