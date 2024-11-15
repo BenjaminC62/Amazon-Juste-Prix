@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen">
+<form action="/register" method="post" class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-4 text-center">Register</h2>
+    <div class="mb-4">
+        <label for="prenom" class="block text-gray-700">Prénom</label>
+        <input type="text" id="prenom" name="prenom" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+    </div>
+    <div class="mb-4">
+        <label for="nom" class="block text-gray-700">Nom</label>
+        <input type="text" id="nom" name="nom" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+    </div>
+    <div class="mb-4">
+        <label for="password" class="block text-gray-700">Mot de passe</label>
+        <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+    </div>
+    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">S'inscrire</button>
+</form>
+</body>
+</html>

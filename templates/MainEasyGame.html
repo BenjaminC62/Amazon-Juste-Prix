@@ -13,6 +13,9 @@
     <h1 class="text-3xl font-bold text-center mb-3">Juste prix amazon</h1>
     <form action="" method="post" class="space-y-4">
         <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
+        <h2 class="text-center text-lg font-semibold mt-4">Le nom de l'article est : {{ nom }}</h2>
+        <h3 class="text-center text-lg font-semibold mt-4">Voici une fourchette du prix {% if prix-300 < 0 %} 0 {% else
+            %} {{ prix-300 }} {% endif %} - {{ prix+300-prix }}</h3>
         {% if image %}
         <img src="{{ image }}" width="100px" height="100px" alt="image de l'article" class="mx-auto">
         {% else %}
