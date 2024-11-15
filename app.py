@@ -64,6 +64,7 @@ def justePrixAmazon():
                 print("IL passe dans le result == prix")
                 result = "Bravo, vous avez trouvé le juste prix !"
                 session['score'] += 1
+                game_result(session['username'], True)
             elif form.prix_article.data > prix:
                 print("IL passe dans le result > prix")
                 result = "Le prix est trop grand"
@@ -94,6 +95,24 @@ def login():
             session['score'] = user[4]  # Assuming the score is stored in the 5th column
             return redirect('/')
     return render_template('login.html')
+
+def update_score(username, new_score):
+    conn = sqlite3.connect('justePrix.db')
+    cursor = conn.cursor()
+    cursor.execute('UPDATE USERS SET score = ? WHERE nom = ?', (new_score, username))
+    conn.commit()
+    conn.close()
+    
+def game_result(username, gagner):
+    if gagner:
+        conn = sqlite3.connect('justePrix.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT score FROM USERS WHERE nom = ?', (username,))
+        current_score = cursor.fetchone()[0]
+        conn.close()
+
+        new_score = current_score + 1
+        update_score(username, new_score)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -194,8 +213,8 @@ def insertion_bd():
         cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''',
                        (nom_article, prix_article, liste_article[i]))
     con.commit()
-    cursor.execute('''DELETE FROM USERS''')
-    con.commit()
+    #cursor.execute('''DELETE FROM USERS''')
+    #con.commit()
     cursor.execute('''INSERT INTO USERS(nom, prenom, password, score) VALUES(?,?,?,?)''',
                    ("test", "admin", "admin", 0))
     con.commit()
