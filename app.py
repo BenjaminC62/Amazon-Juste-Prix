@@ -34,15 +34,15 @@ def home():
 
     if form.validate_on_submit() and form.difficulty.data == "easy":
         difficulty = "easy"
-        return render_template('MainGame.html', form=form)  # Easy ici -> a changer le MainGame
+        return render_template('MainEasyGame.html', form=form)  # Easy ici -> a changer le MainGame
 
     if form.validate_on_submit() and form.difficulty.data == "medium":
         difficulty = "medium"
-        return render_template('MainGame.html', form=form)  # Medium ici -> a faire
+        return render_template('MainEasyGame.html', form=form)  # Medium ici -> a faire
 
     if form.validate_on_submit() and form.difficulty.data == "hard":
         difficulty = "hard"
-        return render_template('MainGame.html', form=form)  # Hard ici -> a faire
+        return render_template('MainEasyGame.html', form=form)  # Hard ici -> a faire
 
     return render_template('PageAccueil.html', form=form)
 
@@ -72,7 +72,7 @@ def justePrixAmazon():
                 result = "Le prix est trop petit"
 
         print(form.errors)
-        return render_template('MainGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
     else:
         return redirect(url_for('home'))
 
@@ -138,6 +138,8 @@ def getNom(article):
     r = requests.get(" http://ws.chez-wam.info/" + article)
     try:
         name = r.json()["title"]
+        name = name.split(" ")
+        name = " ".join(name[:3])
     except:
         raise Exception("Nom de l'article n'est pas disponible !")
     return name
