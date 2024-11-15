@@ -21,10 +21,6 @@
     <p class="mb-2 text-center">Si vous ne trouvez pas le juste prix, vous perdez un point</p>
     <p class="mb-2 text-center">Vous pouvez jouer autant de fois que vous le souhaitez</p>
     <p class="mb-4 text-center">Vous pouvez voir le classement des joueurs en cliquant sur le lien ci-dessous</p>
-    <button type="submit" href="Classement.html"
-            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Classement
-    </button>
-    <br>
     <br>
     <p class="mb-4 text-center">Vous pouvez commencer à jouer en cliquant sur le lien ci-dessous</p>
 
@@ -32,8 +28,7 @@
         <div class="flex justify-center items-center space-x-2">
             {{ form.csrf_token }}
             <label class="font-semibold">{{ form.difficulty.label }} : </label>
-            {{ form.difficulty(class="text-blue-600 transition duration-150 ease-in-out flex
-            flex-row") }}
+            {{ form.difficulty(class="text-blue-600 transition duration-150 ease-in-out flex flex-row") }}
         </div>
         <button type="submit"
                 class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
