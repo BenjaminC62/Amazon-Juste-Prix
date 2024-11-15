@@ -173,7 +173,7 @@ def creation_bd():
     cursor = con.cursor()
     try:
         cursor.execute(
-            '''CREATE TABLE ARTICLE(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom_article TEXT NOT NULL, prix_article FLOAT NOT NULL, ref_article TEXT NOT NULL)''')
+            '''CREATE TABLE ARTICLE(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom_article TEXT NOT NULL, prix_article FLOAT NOT NULL, ref_article TEXT NOT NULL , theme TEXT NOT NULL)''')
         con.commit()
     except sqlite3.OperationalError:
         print("La table ARTICLE existe déjà")
@@ -191,21 +191,51 @@ creation_bd()
 
 def insertion_bd():
     global image, prix, nom
+
+    # Listes d'articles par thème
     liste_article = ["B07YQFZ6CJ", "B0BWS9WQDY"]
+    liste_article_livre = ["B09V121HM9", "B08R111DV7", "B0CRS894KW", "B08KFWJJW2", "B09WPK89X5"]
+    liste_article_jeu_video = ["B0D7HSRMHT", "B0DKFDRCGX", "B0821XHJB6", "B0D6M2FG43", "B07BB4R214"]
+    liste_article_pc = ["B0D9YR8DGH", "B0BB37LMJZ", "B0BQRXHMP8", "B0D8L79YR8", "B0DJTJT5VX"]
+    liste_article_carte_graphique = ["B0BRYY1JX8", "B0B34M1YLW", "B09Y57F1HL", "B0CGRMJF6C", "B0C8ZSM1W2"]
 
     cursor = con.cursor()
     cursor.execute('''DELETE FROM ARTICLE''')  # Question de verif
     cursor.execute('''DELETE FROM sqlite_sequence WHERE name='ARTICLE';''')
     con.commit()
-    for i in range(len(liste_article)):
-        nom_article = getNom(liste_article[i])
-        print(nom_article)
-        prix_article = get_prix_article(liste_article[i])
-        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''',
-                       (nom_article, prix_article, liste_article[i]))
+
+    # Insertion des articles de chaque thème
+    for article in liste_article:
+        nom_article = getNom(article)
+        prix_article = get_prix_article(article)
+        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
+                       (nom_article, prix_article, article, 'default'))
+
+    for article in liste_article_livre:
+        nom_article = getNom(article)
+        prix_article = get_prix_article(article)
+        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
+                       (nom_article, prix_article, article, 'livre'))
+
+    for article in liste_article_jeu_video:
+        nom_article = getNom(article)
+        prix_article = get_prix_article(article)
+        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
+                       (nom_article, prix_article, article, 'jeu_video'))
+
+    for article in liste_article_pc:
+        nom_article = getNom(article)
+        prix_article = get_prix_article(article)
+        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
+                       (nom_article, prix_article, article, 'pc'))
+
+    for article in liste_article_carte_graphique:
+        nom_article = getNom(article)
+        prix_article = get_prix_article(article)
+        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
+                       (nom_article, prix_article, article, 'carte_graphique'))
+
     con.commit()
-    #cursor.execute('''DELETE FROM USERS''')
-    #con.commit()
     cursor.execute('''INSERT INTO USERS(nom, prenom, password, score) VALUES(?,?,?,?)''',
                    ("test", "admin", "admin", 0))
     con.commit()
