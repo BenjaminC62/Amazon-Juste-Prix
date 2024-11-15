@@ -96,6 +96,11 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/classement')
+def classement():
+    """ Faire un classement des scores
+    """
+
 def choisirArticle():
     global image, prix, nom
 
