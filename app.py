@@ -96,6 +96,22 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        prenom = request.form['prenom']
+        nom = request.form['nom']
+        password = request.form['password']
+
+        conn = sqlite3.connect('justePrix.db')
+        cursor = conn.cursor()
+        cursor.execute('INSERT INTO USERS(prenom, nom, password, score) VALUES(?, ?, ?, 0)', (prenom, nom, password))
+        conn.commit()
+        conn.close()
+        return redirect('/login')
+    return render_template('register.html')
+
+
 def choisirArticle():
     global image, prix, nom
 
