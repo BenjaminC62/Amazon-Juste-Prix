@@ -49,33 +49,23 @@ def home():
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-    if 'username' in session:
-        global image, prix, nom, difficulty
-        result = ""
+    global image, prix, nom, difficulty
+    result = ""
 
-        print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
+    form = justePrix()
 
-        form = justePrix()
-
-        if form.validate_on_submit():
-            print(form.errors)
-            print("passe dansle submit")
-            if form.prix_article.data == prix:
-                print("IL passe dans le result == prix")
-                result = "Bravo, vous avez trouvé le juste prix !"
+    if form.validate_on_submit():
+        if form.prix_article.data == prix:
+            result = "Bravo, vous avez trouvé le juste prix !"
+            if 'username' in session:
                 session['score'] += 1
                 game_result(session['username'], True)
-            elif form.prix_article.data > prix:
-                print("IL passe dans le result > prix")
-                result = "Le prix est trop grand"
-            else:
-                print("IL passe dans le result jsp prix")
-                result = "Le prix est trop petit"
+        elif form.prix_article.data > prix:
+            result = "Le prix est trop grand"
+        else:
+            result = "Le prix est trop petit"
 
-        print(form.errors)
-        return render_template('MainGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
-    else:
-        return redirect(url_for('home'))
+    return render_template('MainGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
 
 
 @app.route('/login', methods=['GET', 'POST'])
