@@ -15,6 +15,8 @@
 
 ### Benjamin : 
 * Fonction qui récupère l'image de l'article
+* Rectification des différentes fonctions de la base de données
+* 
 
 ### Mathéo :
 * Fonction qui récupère le nom de l'article
