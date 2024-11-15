@@ -25,6 +25,7 @@ class justePrix(FlaskForm):
 
 class juste_prix_accueil(FlaskForm):
     difficulty = RadioField("Difficulté", choices=[('easy', 'Facile'), ('medium', 'Moyen'), ('hard', 'Difficile')])
+    theme = RadioField("Theme" , choices=[('default', 'Default'), ('jeu_video', 'Jeu Vidéo') , ('livre', 'Livre') , ('pc', 'PC') , ('carte_graphique', 'Carte Graphique')])
 
 
 @app.route('/', methods=['GET', 'POST'])
