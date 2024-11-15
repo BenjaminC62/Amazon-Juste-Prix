@@ -20,7 +20,6 @@
     <p class="mb-2 text-center">Si vous trouvez le juste prix, vous gagnez un point</p>
     <p class="mb-2 text-center">Si vous ne trouvez pas le juste prix, vous perdez un point</p>
     <p class="mb-2 text-center">Vous pouvez jouer autant de fois que vous le souhaitez</p>
-    <p class="mb-4 text-center">Vous pouvez voir le classement des joueurs en cliquant sur le lien ci-dessous</p>
     <br>
     <p class="mb-4 text-center">Vous pouvez commencer à jouer en cliquant sur le lien ci-dessous</p>
 
@@ -35,6 +34,10 @@
             Jouer
         </button>
     </form>
+    <div class="fixed bottom-4 left-4">
+    <a href="{{ url_for('leaderboard') }}"
+       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">Afficher le classement</a>
+    </div>
 </div>
 </body>
 </html>
