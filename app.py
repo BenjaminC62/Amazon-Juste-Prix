@@ -38,11 +38,11 @@ def home():
 
     if form.validate_on_submit() and form.difficulty.data == "medium":
         difficulty = "medium"
-        return render_template('MainEasyGame.html', form=form)  # Medium ici -> a faire
+        return render_template('MainMediumGame.html', form=form)  # Medium ici -> a faire
 
     if form.validate_on_submit() and form.difficulty.data == "hard":
         difficulty = "hard"
-        return render_template('MainEasyGame.html', form=form)  # Hard ici -> a faire
+        return render_template('MainHardGame.html', form=form)  # Hard ici -> a faire
 
     return render_template('PageAccueil.html', form=form)
 
@@ -72,7 +72,14 @@ def justePrixAmazon():
                 result = "Le prix est trop petit"
 
         print(form.errors)
-        return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+
+        if (difficulty == "easy"):
+            return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        elif (difficulty == "medium"):
+            return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        else:
+            return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+
     else:
         return redirect(url_for('home'))
 
