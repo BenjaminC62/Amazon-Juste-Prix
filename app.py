@@ -1,17 +1,12 @@
 import random
 import sqlite3
-from os.path import exists
 
 import requests
-from flask import Flask, render_template
 from flask import Flask, render_template, request, session, redirect, url_for
-import requests
 from flask_wtf import FlaskForm
 from wtforms.fields.choices import RadioField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
-
-import random
 
 con = sqlite3.connect('justePrix.db', check_same_thread=False)
 
@@ -21,25 +16,33 @@ app.secret_key = 'secret'
 image = ""
 prix = 0
 nom = ""
+difficulty = ""
 
 
 class justePrix(FlaskForm):
     prix_article = IntegerField("Prix de l'article", validators=[DataRequired()])
+
+
+class juste_prix_accueil(FlaskForm):
     difficulty = RadioField("Difficulté", choices=[('easy', 'Facile'), ('medium', 'Moyen'), ('hard', 'Difficile')])
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    form = justePrix()
+    form = juste_prix_accueil()
+    global difficulty
 
     if form.validate_on_submit() and form.difficulty.data == "easy":
-        return render_template('MainGame.html')  # Easy ici -> a changer le MainGame
+        difficulty = "easy"
+        return render_template('MainGame.html', form=form)  # Easy ici -> a changer le MainGame
 
-    if form.validate_on_submit() and form.difficulty.data == "easy":
-        return render_template('MainGame.html')  # Medium ici -> a faire
+    if form.validate_on_submit() and form.difficulty.data == "medium":
+        difficulty = "medium"
+        return render_template('MainGame.html', form=form)  # Medium ici -> a faire
 
-    if form.validate_on_submit() and form.difficulty.data == "easy":
-        return render_template('MainGame.html')  # Hard ici -> a faire
+    if form.validate_on_submit() and form.difficulty.data == "hard":
+        difficulty = "hard"
+        return render_template('MainGame.html', form=form)  # Hard ici -> a faire
 
     return render_template('PageAccueil.html', form=form)
 
@@ -47,22 +50,32 @@ def home():
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
     if 'username' in session:
-        global image, prix, nom
+        global image, prix, nom, difficulty
         result = ""
+
+        print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
 
         form = justePrix()
 
         if form.validate_on_submit():
-            if form.prixArticle.data == prix:
+            print(form.errors)
+            print("passe dansle submit")
+            if form.prix_article.data == prix:
+                print("IL passe dans le result == prix")
                 result = "Bravo, vous avez trouvé le juste prix !"
                 session['score'] += 1
-            elif form.prixArticle.data > prix:
+            elif form.prix_article.data > prix:
+                print("IL passe dans le result > prix")
                 result = "Le prix est trop grand"
             else:
+                print("IL passe dans le result jsp prix")
                 result = "Le prix est trop petit"
+
+        print(form.errors)
         return render_template('MainGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
     else:
-        return redirect(url_for('/'))
+        return redirect(url_for('home'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -165,10 +178,14 @@ def insertion_bd():
         cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article,ref_article) VALUES(?,?,?)''',
                        (nom_article, prix_article, liste_article[i]))
     con.commit()
+    cursor.execute('''DELETE FROM USERS''')
+    con.commit()
+    cursor.execute('''INSERT INTO USERS(nom, prenom, password, score) VALUES(?,?,?,?)''',
+                   ("test", "admin", "admin", 0))
+    con.commit()
 
 
 insertion_bd()
-
 
 if __name__ == '__main__':
     choisirArticle()
