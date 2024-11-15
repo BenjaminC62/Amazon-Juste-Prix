@@ -32,17 +32,19 @@ def home():
     form = juste_prix_accueil()
     global difficulty
 
-    if form.validate_on_submit() and form.difficulty.data == "easy":
-        difficulty = "easy"
-        return render_template('MainEasyGame.html', form=form)  # Easy ici -> a changer le MainGame
+    if form.validate_on_submit():
 
-    if form.validate_on_submit() and form.difficulty.data == "medium":
-        difficulty = "medium"
-        return render_template('MainMediumGame.html', form=form)  # Medium ici -> a faire
+        print("dificult avec form.diff", form.difficulty.data)
 
-    if form.validate_on_submit() and form.difficulty.data == "hard":
-        difficulty = "hard"
-        return render_template('MainHardGame.html', form=form)  # Hard ici -> a faire
+        if form.difficulty.data == "easy":
+            difficulty = "easy"
+            return redirect("/justePrixAmazon")
+        if form.difficulty.data == "medium":
+            difficulty = "medium"
+            return redirect("/justePrixAmazon")
+        if form.difficulty.data == "hard":
+            difficulty = "hard"
+            return redirect("/justePrixAmazon")
 
     return render_template('PageAccueil.html', form=form)
 
@@ -73,9 +75,11 @@ def justePrixAmazon():
 
         print(form.errors)
 
-        if (difficulty == "easy"):
+        print("la difficulté est : ", difficulty)
+
+        if difficulty == "easy":
             return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
-        elif (difficulty == "medium"):
+        elif difficulty == "medium":
             return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
         else:
             return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
