@@ -57,6 +57,7 @@ def home():
 
     return render_template('PageAccueil.html', form=form, user=user)
 
+
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
     global image, prix, nom, difficulty
