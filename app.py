@@ -137,6 +137,11 @@ def justePrixAmazon():
         return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
 
 
+@app.route('/rules', methods=['GET', 'POST'])
+def rules():
+    pygame.mixer.stop()
+    return render_template('regle.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     pygame.mixer.stop()
@@ -233,8 +238,6 @@ def leaderboard():
     sound_id = pygame.mixer.Sound("sons/classement.wav")
     sound_id.set_volume(0.03)
     sound_id.play(loops=-1)
-
-    cursor = con.cursor()
     cursor.execute("SELECT pseudo, score FROM USERS ORDER BY score DESC")
     users = cursor.fetchall()
     print(users)
@@ -309,6 +312,8 @@ def save_pseudo():
             conn.close()
             return "Pseudo saved successfully"
         return "Error saving pseudo"
+
+
 
 
 def recupereImageArticle(article):
