@@ -8,8 +8,6 @@ from wtforms.fields.choices import RadioField, SelectField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
 
-con = sqlite3.connect('justePrix.db', check_same_thread=False)
-
 app = Flask(__name__)
 app.secret_key = 'secret'
 
@@ -84,7 +82,7 @@ def justePrixAmazon():
                 session['score'] += 1
                 game_result(session['username'], True)
                 # Depend de si on dit qu'il peux changer de pseudo 1 fois ou plusieur fois
-                # cursor = con.cursor()
+                # cursor = conn.cursor()
                 # cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
                 # pseudo = cursor.fetchone()[0]
                 # print(pseudo)
@@ -182,12 +180,14 @@ def register():
 
 @app.route('/leaderboard', methods=['GET', 'POST'])
 def leaderboard():
-    cursor = con.cursor()
+    conn = sqlite3.connect('justePrix.db')
+    cursor = conn.cursor()
     cursor.execute("SELECT nom, score FROM USERS ORDER BY score DESC")
     users = cursor.fetchall()
     print(users)
     print(users[0][0])
-    con.commit()
+    conn.commit()
+    conn.close()
     return render_template('Classement.html', users=users)
 
 
@@ -200,8 +200,8 @@ def logout():
 
 def choisirArticle():
     global image, prix, nom, theme
-
-    cursor = con.cursor()
+    conn = sqlite3.connect('justePrix.db')
+    cursor = conn.cursor()
     print(f"Selected theme: {theme}")  # Debugging statement
 
     if theme == 'default':
@@ -209,7 +209,7 @@ def choisirArticle():
     else:
         cursor.execute("SELECT COUNT(*) FROM ARTICLE WHERE theme = ?", (theme,))
     nb_article = cursor.fetchone()[0]
-    con.commit()
+    conn.commit()
 
     print(f"Number of articles found: {nb_article}")  # Debugging statement
 
@@ -224,7 +224,8 @@ def choisirArticle():
     else:
         cursor.execute("SELECT * FROM ARTICLE WHERE theme = ? LIMIT 1 OFFSET ?", (theme, item_random - 1))
     article = cursor.fetchone()
-    con.commit()
+    conn.commit()
+    conn.close()
 
     print(f"Selected article: {article}")  # Debugging statement
 
@@ -239,6 +240,7 @@ def choisirArticle():
 
 @app.route('/save_pseudo', methods=['POST'])
 def save_pseudo():
+    conn = sqlite3.connect('justePrix.db')
     if request.method == 'POST':
         data = request.get_json()
         pseudo = data.get('pseudo')
@@ -247,9 +249,10 @@ def save_pseudo():
 
         if 'username' in session:
             username = session['username']
-            cursor = con.cursor()
+            cursor = conn.cursor()
             cursor.execute('UPDATE USERS SET pseudo = ? WHERE nom = ?', (pseudo, username))
-            con.commit()
+            conn.commit()
+            conn.close()
             return "Pseudo saved successfully"
         return "Error saving pseudo"
 
@@ -286,7 +289,8 @@ def get_prix_article(article):
 
 
 def verify_articles():
-    cursor = con.cursor()
+    conn = sqlite3.connect('justePrix.db')
+    cursor = conn.cursor()
     themes = ['default', 'livre', 'jeu_video', 'pc', 'carte_graphique']
     for theme in themes:
         if theme == 'default':
@@ -295,7 +299,7 @@ def verify_articles():
             cursor.execute("SELECT COUNT(*) FROM ARTICLE WHERE theme = ?", (theme,))
         nb_article = cursor.fetchone()[0]
         print(f"Theme: {theme}, Number of articles: {nb_article}")
-    con.commit()
+    conn.commit()
 
 
 def getNom(article):
@@ -311,18 +315,20 @@ def getNom(article):
 
 
 def creation_bd():
-    cursor = con.cursor()
+    conn = sqlite3.connect('justePrix.db')
+    cursor = conn.cursor()
     try:
         cursor.execute(
             '''CREATE TABLE ARTICLE(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom_article TEXT NOT NULL, prix_article FLOAT NOT NULL, ref_article TEXT NOT NULL , theme TEXT NOT NULL)''')
-        con.commit()
+        conn.commit()
+        conn.close()
     except sqlite3.OperationalError:
         print("La table ARTICLE existe déjà")
 
     try:
         cursor.execute(
             '''CREATE TABLE USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,pseudo TEXT NOT NULL, nom TEXT NOT NULL, prenom TEXT NOT NULL, password TEXT NOT NULL, score INTEGER NOT NULL)''')
-        con.commit()
+        conn.commit()
     except sqlite3.OperationalError:
         print("La table USERS existe déjà")
 
@@ -338,6 +344,7 @@ def fetch_and_insert_article(cursor, article, theme):
 
 
 def insertion_bd():
+    conn = sqlite3.connect('justePrix.db')
     global image, prix, nom
 
     # Listes d'articles par thème
@@ -349,19 +356,19 @@ def insertion_bd():
         'carte_graphique': ["B0BRYY1JX8", "B0B34M1YLW", "B09Y57F1HL", "B0CGRMJF6C", "B0C8ZSM1W2"]
     }
 
-    cursor = con.cursor()
+    cursor = conn.cursor()
     cursor.execute('''DELETE FROM ARTICLE''')
     cursor.execute('''DELETE FROM sqlite_sequence WHERE name='ARTICLE';''')
-    con.commit()
+    conn.commit()
 
     for theme, article_list in articles.items():
         for article in article_list:
             fetch_and_insert_article(cursor, article, theme)
 
-    con.commit()
+    conn.commit()
     cursor.execute('''INSERT INTO USERS(nom, prenom, password, score) VALUES(?,?,?,?)''',
                    ("test", "admin", "admin", 0))
-    con.commit()
+    conn.commit()
 
 
 if __name__ == '__main__':
