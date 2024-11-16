@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Règles du jeu</title>
+    <title>{% if session.get('lang') == 'en' %} Game Rules {% else %} Règles du jeu {% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
 </head>
 <body>
     <header class="flex justify-between items-center p-4 bg-white shadow-md w-full">
@@ -34,35 +35,36 @@
 
     <main class="flex items-center justify-center min-h-screen">
     <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center">
-        <h1 class="text-4xl font-bold mb-4 text-center">Voici les règles du Juste Prix Amazon !</h1>
+        <h1 class="text-4xl font-bold mb-4 text-center">{% if session.get('lang') == 'en' %} Here are the rules of Amazon Price is Right! {% else %} Voici les règles du Juste Prix Amazon ! {% endif %}</h1>
         <br>
         <div class="text-center">
-            <p class="mb-2">Vous devez effectuer des tentatives afin de trouver le bon prix de l'article.</p>
-            <p class="mb-2">Si vous trouvez le juste prix, vous gagnez un point.</p>
-            <p class="mb-2">Vous pouvez consulter le classement à tout moment, en cliquant sur le bouton en haut à gauche de la page.</p>
+            <p class="mb-2">{% if session.get('lang') == 'en' %} You must make attempts to find the correct price of the item. {% else %} Vous devez effectuer des tentatives afin de trouver le bon prix de l'article. {% endif %}</p>
+            <p class="mb-2">{% if session.get('lang') == 'en' %} If you find the right price, you earn a point. {% else %} Si vous trouvez le juste prix, vous gagnez un point. {% endif %}</p>
+            <p class="mb-2">{% if session.get('lang') == 'en' %} You can check the leaderboard at any time by clicking the button at the top left of the page. {% else %} Vous pouvez consulter le classement à tout moment, en cliquant sur le bouton en haut à gauche de la page. {% endif %}</p>
             <br>
-            <p class="mb-2">Plusieurs choix s'offrent à vous, le mode facile, moyen et difficile.</p>
-            <p class="mb-2">Le mode facile : l'image de l'article, son nom et une fourchette du prix.</p>
-            <p class="mb-2">Le mode moyen : l'image de l'article, son nom ainsi qu'un décompte de 1 minute. À la fin de ce décompte, la partie est finie.</p>
-            <p class="mb-2">Le mode difficile : uniquement l'article et un décompte de seulement 30 secondes.</p>
+            <p class="mb-2">{% if session.get('lang') == 'en' %} You have several choices: easy, medium, and hard mode. {% else %} Plusieurs choix s'offrent à vous, le mode facile, moyen et difficile. {% endif %}</p>
+            <p class="mb-2">{% if session.get('lang') == 'en' %} Easy mode: the item's image, its name, and a price range. {% else %} Le mode facile : l'image de l'article, son nom et une fourchette du prix. {% endif %}</p>
+            <p class="mb-2">{% if session.get('lang') == 'en' %} Medium mode: the item's image, its name, and a 1-minute countdown. At the end of this countdown, the game is over. {% else %} Le mode moyen : l'image de l'article, son nom ainsi qu'un décompte de 1 minute. À la fin de ce décompte, la partie est finie. {% endif %}</p>
+            <p class="mb-2">{% if session.get('lang') == 'en' %} Hard mode: only the item and a 30-second countdown. {% else %} Le mode difficile : uniquement l'article et un décompte de seulement 30 secondes. {% endif %}</p>
             <br>
-            <p class="mb-4">Vous aurez également l'occasion de choisir différents thèmes : des livres, des jeux vidéos, des cartes graphiques et des ordinateurs portables.</p>
+            <p class="mb-4">{% if session.get('lang') == 'en' %} You will also have the opportunity to choose different themes: books, video games, graphics cards, and laptops. {% else %} Vous aurez également l'occasion de choisir différents thèmes : des livres, des jeux vidéos, des cartes graphiques et des ordinateurs portables. {% endif %}</p>
             <br>
-            <p class="mb-4">Qu'attendez-vous pour commencer le jeu ? </p>
+            <p class="mb-4">{% if session.get('lang') == 'en' %} What are you waiting for to start the game? {% else %} Qu'attendez-vous pour commencer le jeu ? {% endif %}</p>
         </div>
         <a href="{{ url_for('home') }}"
                 class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
         <br>
-        <p class="mb-4 text-center" >JOUER</p>
+        <p class="mb-4 text-center">{% if session.get('lang') == 'en' %} PLAY {% else %} JOUER {% endif %}</p>
         </a>
     </div>
     </main>
 <footer class="bg-blue-600 text-white p-4 text-center w-full">
     <p>
-        Juste Prix Amazon
+        {% if session.get('lang') == 'en' %} Amazon Price is Right {% else %} Juste Prix Amazon {% endif %}
     </p>
     <p>
-        Réalisé par <a href="https://github.com/MatheoDalmasso" class="font-bold" target="_blank">Mathéo DALMASSO</a>,
+        {% if session.get('lang') == 'en' %} Created by {% else %} Réalisé par {% endif %}
+        <a href="https://github.com/MatheoDalmasso" class="font-bold" target="_blank">Mathéo DALMASSO</a>,
         <a href="https://github.com/SimonCail" class="font-bold" target="_blank">Simon CAILLIERET</a>,
         <a href="https://github.com/Mathias92-cmd" class="font-bold" target="_blank">Mathias MOREL</a>,
         <a href="https://github.com/BenjaminC62" class="font-bold" target="_blank">Benjamin CORNET</a>
