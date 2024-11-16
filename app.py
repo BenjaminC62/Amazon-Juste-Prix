@@ -130,7 +130,23 @@ def login():
 
 @app.route('/AjoutArticle', methods=['POST', 'GET'])
 def AjoutArticle():
-    return render_template('AjoutArticle.html')
+    add = False
+    if request.method == 'POST':
+        nom_article = request.form['nom_article']
+        prix_article = request.form['prix_article']
+        ref_article = request.form['ref_article']
+        theme = request.form['theme']
+
+        conn = sqlite3.connect('justePrix.db')
+        cursor = conn.cursor()
+        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
+                       (nom_article, prix_article, ref_article, theme))
+        conn.commit()
+        conn.close()
+        add = True
+        return render_template('AjoutArticle.html', add=add)
+
+    return render_template('AjoutArticle.html', add=add)
 
 
 def update_score(username, new_score, conn):
