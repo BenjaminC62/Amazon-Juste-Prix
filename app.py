@@ -1,6 +1,10 @@
 import random
 import sqlite3
 import threading
+import time
+from nava import play, Engine,stop
+import os
+
 
 import requests
 from flask import Flask, render_template, request, session, redirect
@@ -37,6 +41,11 @@ def home():
     form = juste_prix_accueil()
     global difficulty , theme
 
+    sound_path = os.path.join("sons", "menu.wav")
+    if os.path.exists(sound_path):
+        sound_id = play(sound_path, async_mode=True, engine=Engine.WINSOUND, loop=True)
+    else:
+        print(f"Sound file not found: {sound_path}")
     user = session.get('username')
 
     print("il passe dans la difficulté")
@@ -48,6 +57,9 @@ def home():
         difficulty = form.difficulty.data
         theme = form.theme.data
         choisirArticle()
+
+        if 'sound_id' in locals():
+            stop(sound_id)
 
         if form.difficulty.data == "easy":
             print("c bon ici")
@@ -81,7 +93,12 @@ def justePrixAmazon():
         print("passe dansle submit")
         if form.prix_article.data == prix:
             print("IL passe dans le result == prix")
+            sound_path = os.path.join("sons", "siu.wav")
             result = "Bravo, vous avez trouvé le juste prix !"
+            if os.path.exists(sound_path):
+                sound_id = play(sound_path, async_mode=True, engine=Engine.WINSOUND)
+            else:
+                print(f"Sound file not found: {sound_path}")
             if 'username' in session:
                 user = True
                 session['score'] += 1
@@ -127,7 +144,6 @@ def login():
             session['score'] = user[5]  # Assuming the score is stored in the 5th column
             return redirect('/')
     return render_template('login.html')
-
 
 def update_score(username, new_score):
     conn = sqlite3.connect('justePrix.db')
