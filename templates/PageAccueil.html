@@ -37,11 +37,6 @@
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen">
- <div class="flex justify-end items-center absolute top-0 right-0 m-4">
-        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer moon-icon">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
-        </svg>
-    </div>
 <header class="flex justify-between items-center p-4 bg-white shadow-md w-full">
     <div class="flex space-x-4">
         <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
@@ -52,6 +47,7 @@
         </a>
     </div>
     <div class="flex justify-between items-center space-x-4">
+
         {% if user %}
         <img class="w-10 h-10 rounded-full"
              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACEklEQVR4nO2Yz0tUURTH7yLLjX9DrS1DECTnnJyFLmzhUggC3zkTtAjc1Oz7CxSHxJbqXgRxqeYm0HOyVVYQrQxa1KppWjX94DyGihyneXdG31XuBy48eD/4ft89955zrnORSCRyrhil/QEgrSDrAbDUbNg1ssyPlPSaC5WJmbeXgHQRSb4j689mA1jrSLLQP3Vw0YUmHkmfHie8iZHtoEwg6ZN2xf8Z8tiFEvOtwqZVOMG0XM1bv2ss2Ix/v2GCZC4EA698DSDJy7z1OyD54m9AqyEs4Kq3AdbPees/+yGELPPei5h1Nm/9zsqDNMN6bKPIe/0uBKw8yL6FasWFgpUFwLqVIfY3h+7t97iQMBNWHrQKpzT7klaCE/83Vh5YhrUdxnJEmifsmnU2mJiPRCKRSEcUk51eIJ1E1mUg+YQs75B1vN33MZExZHkDJB+AdMm+ZQcD7qQpJDKIpCvNegAg/YYkD4qPdi4c977dA9Jy+myT3gBZl3F693rXhReT3StIutZmkfYaWB5as18oPeuz0TjsKttf//835AeQrI6UXlzuivhCSe4gydcOui7PXkFqmOjtjsRjIjOnLRyPVK5630s8JHs3fBqV7s+E1m/efT6c3QDpRt7i8fcsyLqHAdseAxDP6QHYx8wG8haN/4xoAM/aDADp+2DWAMthdgOst0IwASyHmMhEZgORSCTiToNf59jNJJZ1QWQAAAAASUVORK5CYII="
@@ -65,6 +61,11 @@
             {% if session.get('lang') == 'en' %} Login {% else %} Connexion {% endif %}
         </a>
         {% endif %}
+        <div class="m-4">
+        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer moon-icon">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
+        </svg>
+        </div>
     </div>
 </header>
 
