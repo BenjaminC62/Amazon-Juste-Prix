@@ -5,7 +5,7 @@ import threading
 import requests
 from flask import Flask, render_template, request, session, redirect
 from flask_wtf import FlaskForm
-from wtforms.fields.choices import RadioField
+from wtforms.fields.choices import RadioField , SelectField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
 
@@ -18,6 +18,7 @@ image = ""
 prix = 0
 nom = ""
 difficulty = ""
+theme = ""
 
 
 class justePrix(FlaskForm):
@@ -26,12 +27,15 @@ class justePrix(FlaskForm):
 
 class juste_prix_accueil(FlaskForm):
     difficulty = RadioField("Difficulté", choices=[('easy', 'Facile'), ('medium', 'Moyen'), ('hard', 'Difficile')])
+    theme = SelectField("Thème", choices=[('default', 'Tous les thèmes'), ('livre', 'Livre'), ('jeu_video', 'Jeu vidéo'),
+                                            ('pc', 'PC'), ('carte_graphique', 'Carte graphique')])
+
 
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
     form = juste_prix_accueil()
-    global difficulty
+    global difficulty , theme
 
     user = session.get('username')
 
@@ -41,6 +45,9 @@ def home():
     if form.validate_on_submit():
 
         print("passe dans la submit")
+        difficulty = form.difficulty.data
+        theme = form.theme.data
+        choisirArticle()
 
         if form.difficulty.data == "easy":
             print("c bon ici")
@@ -60,7 +67,7 @@ def home():
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-    global image, prix, nom, difficulty
+    global image, prix, nom, difficulty , theme
     result = ""
     user = False
 
@@ -178,23 +185,42 @@ def logout():
 
 
 def choisirArticle():
-    global image, prix, nom
+    global image, prix, nom, theme
 
     cursor = con.cursor()
-    cursor.execute("SELECT COUNT(*) FROM ARTICLE")
+    print(f"Selected theme: {theme}")  # Debugging statement
+
+    if theme == 'default':
+        cursor.execute("SELECT COUNT(*) FROM ARTICLE")
+    else:
+        cursor.execute("SELECT COUNT(*) FROM ARTICLE WHERE theme = ?", (theme,))
     nb_article = cursor.fetchone()[0]
     con.commit()
+
+    print(f"Number of articles found: {nb_article}")  # Debugging statement
+
+    if nb_article == 0:
+        raise Exception("No articles found for the selected theme.")
+
     item_random = random.randint(1, nb_article)
-    print(item_random)
-    cursor.execute("SELECT * FROM ARTICLE WHERE id = ?", (item_random,))
+    print(f"Random item number: {item_random}")  # Debugging statement
+
+    if theme == 'default':
+        cursor.execute("SELECT * FROM ARTICLE WHERE id = ?", (item_random,))
+    else:
+        cursor.execute("SELECT * FROM ARTICLE WHERE theme = ? LIMIT 1 OFFSET ?", (theme, item_random - 1))
     article = cursor.fetchone()
     con.commit()
-    print(article)
 
-    nom = article[1]
-    prix = article[2]
-    ref = article[3]
-    image = recupereImageArticle(ref)
+    print(f"Selected article: {article}")  # Debugging statement
+
+    if article:
+        nom = article[1]
+        prix = article[2]
+        ref = article[3]
+        image = recupereImageArticle(ref)
+    else:
+        raise Exception("Failed to fetch the article from the database.")
 
 
 def recupereImageArticle(article):
@@ -227,6 +253,17 @@ def get_prix_article(article):
         print("why")
     return result
 
+def verify_articles():
+    cursor = con.cursor()
+    themes = ['default', 'livre', 'jeu_video', 'pc', 'carte_graphique']
+    for theme in themes:
+        if theme == 'default':
+            cursor.execute("SELECT COUNT(*) FROM ARTICLE")
+        else:
+            cursor.execute("SELECT COUNT(*) FROM ARTICLE WHERE theme = ?", (theme,))
+        nb_article = cursor.fetchone()[0]
+        print(f"Theme: {theme}, Number of articles: {nb_article}")
+    con.commit()
 
 def getNom(article):
     r = requests.get(" http://ws.chez-wam.info/" + article)
@@ -284,22 +321,15 @@ def insertion_bd():
     cursor.execute('''DELETE FROM sqlite_sequence WHERE name='ARTICLE';''')
     con.commit()
 
-    threads = []
     for theme, article_list in articles.items():
         for article in article_list:
-            thread = threading.Thread(target=fetch_and_insert_article, args=(cursor, article, theme))
-            threads.append(thread)
-            thread.start()
-
-    for thread in threads:
-        thread.join()
+            fetch_and_insert_article(cursor, article, theme)
 
     con.commit()
     cursor.execute('''INSERT INTO USERS(nom, prenom, password, score) VALUES(?,?,?,?)''',
                    ("test", "admin", "admin", 0))
     con.commit()
 
-
 if __name__ == '__main__':
-    choisirArticle()
-    app.run()
+    verify_articles()
+    app.run(debug=True)
