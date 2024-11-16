@@ -218,7 +218,7 @@ def leaderboard():
     sound_id.play(loops=-1)
 
     cursor = con.cursor()
-    cursor.execute("SELECT nom, score FROM USERS ORDER BY score DESC")
+    cursor.execute("SELECT pseudo, score FROM USERS ORDER BY score DESC")
     users = cursor.fetchall()
     print(users)
     print(users[0][0])
