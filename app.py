@@ -34,7 +34,8 @@ def home():
     form = juste_prix_accueil()
     global difficulty
 
-    user = session.get('username', None)
+    logout()
+    user = session.get('username')
 
     print("il passe dans la difficulté")
     print(form.errors)
