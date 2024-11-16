@@ -170,6 +170,7 @@ def login():
 
 @app.route('/AjoutArticle', methods=['POST', 'GET'])
 def AjoutArticle():
+    pygame.mixer.stop()
     add = False
     if request.method == 'POST':
         nom_article = request.form['nom_article']
