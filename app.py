@@ -150,7 +150,8 @@ def register():
 
         conn = sqlite3.connect('justePrix.db')
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO USERS(prenom, nom, password, score) VALUES(?, ?, ?, 0)', (prenom, nom, password))
+        cursor.execute('INSERT INTO USERS(pseudo, prenom, nom, password, score) VALUES("",?, ?, ?, 0)',
+                       (prenom, nom, password))
         conn.commit()
         conn.close()
         return redirect('/login')
@@ -249,7 +250,7 @@ def creation_bd():
 
     try:
         cursor.execute(
-            '''CREATE TABLE USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom TEXT NOT NULL, prenom TEXT NOT NULL, password TEXT NOT NULL, score INTEGER NOT NULL)''')
+            '''CREATE TABLE USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,pseudo TEXT NOT NULL, nom TEXT NOT NULL, prenom TEXT NOT NULL, password TEXT NOT NULL, score INTEGER NOT NULL)''')
         con.commit()
     except sqlite3.OperationalError:
         print("La table USERS existe déjà")

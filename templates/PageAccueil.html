@@ -12,7 +12,9 @@
         le classement</a>
     <div class="flex justify-between items-center space-x-4">
         {% if user %}
-        <img src="" alt="User Image" class="w-10 h-10 rounded-full">
+        <img class="w-10 h-10 rounded-full"
+             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACEklEQVR4nO2Yz0tUURTH7yLLjX9DrS1DECTnnJyFLmzhUggC3zkTtAjc1Oz7CxSHxJbqXgRxqeYm0HOyVVYQrQxa1KppWjX94DyGihyneXdG31XuBy48eD/4ft89955zrnORSCRyrhil/QEgrSDrAbDUbNg1ssyPlPSaC5WJmbeXgHQRSb4j689mA1jrSLLQP3Vw0YUmHkmfHie8iZHtoEwg6ZN2xf8Z8tiFEvOtwqZVOMG0XM1bv2ss2Ix/v2GCZC4EA698DSDJy7z1OyD54m9AqyEs4Kq3AdbPees/+yGELPPei5h1Nm/9zsqDNMN6bKPIe/0uBKw8yL6FasWFgpUFwLqVIfY3h+7t97iQMBNWHrQKpzT7klaCE/83Vh5YhrUdxnJEmifsmnU2mJiPRCKRSEcUk51eIJ1E1mUg+YQs75B1vN33MZExZHkDJB+AdMm+ZQcD7qQpJDKIpCvNegAg/YYkD4qPdi4c977dA9Jy+myT3gBZl3F693rXhReT3StIutZmkfYaWB5as18oPeuz0TjsKttf//835AeQrI6UXlzuivhCSe4gydcOui7PXkFqmOjtjsRjIjOnLRyPVK5630s8JHs3fBqV7s+E1m/efT6c3QDpRt7i8fcsyLqHAdseAxDP6QHYx8wG8haN/4xoAM/aDADp+2DWAMthdgOst0IwASyHmMhEZgORSCTiToNf59jNJJZ1QWQAAAAASUVORK5CYII="
+             alt="person-male">
         <span class="font-semibold">{{ user }}</span>
         <a href="{{url_for('logout')}}" class="text-blue-500 hover:text-blue-700">Déconnexion</a>
         {% else %}
@@ -37,7 +39,8 @@
             <div class="flex justify-center items-center space-x-2">
                 {{ form.csrf_token }}
                 <label class="font-semibold">{{ form.difficulty.label }} : </label>
-                {{ form.difficulty(class="text-blue-600 transition duration-150 ease-in-out flex flex-row") }}
+                {{ form.difficulty(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8")
+                }}
             </div>
             <button type="submit"
                     class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
@@ -51,10 +54,10 @@
 </main>
 <footer class="bg-blue-600 text-white p-4 text-center fixed bottom-0 w-full">
     <p>Juste Prix Amazon</p>
-    <p>Réalisé par <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
-        <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
-        <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
-        <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a></p>
+    <p>Réalisé par <a href="https://github.com/MatheoDalmasso" class="font-bold" target="_blank">Mathéo DALMASSO</a>,
+        <a href="https://github.com/SimonCail" class="font-bold" target="_blank">Simon CAILLIERET</a>,
+        <a href="https://github.com/Mathias92-cmd" class="font-bold" target="_blank">Mathias MOREL</a>,
+        <a href="https://github.com/BenjaminC62" class="font-bold" target="_blank">Benjamin CORNET</a></p>
 </footer>
 </body>
 
