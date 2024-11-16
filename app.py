@@ -154,7 +154,7 @@ def login():
         print(user)
         conn.close()
 
-        print(user[0][4])
+
 
         if user:
             for i in range(len(user)):
