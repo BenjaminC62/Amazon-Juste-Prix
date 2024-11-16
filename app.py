@@ -5,7 +5,7 @@ import threading
 import requests
 from flask import Flask, render_template, request, session, redirect
 from flask_wtf import FlaskForm
-from wtforms.fields.choices import RadioField , SelectField
+from wtforms.fields.choices import RadioField, SelectField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
 
@@ -27,9 +27,9 @@ class justePrix(FlaskForm):
 
 class juste_prix_accueil(FlaskForm):
     difficulty = RadioField("Difficulté", choices=[('easy', 'Facile'), ('medium', 'Moyen'), ('hard', 'Difficile')])
-    theme = SelectField("Thème", choices=[('default', 'Tous les thèmes'), ('livre', 'Livre'), ('jeu_video', 'Jeu vidéo'),
-                                            ('pc', 'PC'), ('carte_graphique', 'Carte graphique')])
-
+    theme = SelectField("Thème",
+                        choices=[('default', 'Tous les thèmes'), ('livre', 'Livre'), ('jeu_video', 'Jeu vidéo'),
+                                 ('pc', 'PC'), ('carte_graphique', 'Carte graphique')])
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -84,9 +84,17 @@ def justePrixAmazon():
                 user = True
                 session['score'] += 1
                 game_result(session['username'], True)
-                return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result, user=user)
+                # Depend de si on dit qu'il peux changer de pseudo 1 fois ou plusieur fois
+                # cursor = con.cursor()
+                # cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
+                # pseudo = cursor.fetchone()[0]
+                # print(pseudo)
+                return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
+                                       user=user)
             else:
-                return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result, user=user)
+                return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
+                                       user=user)
+
         elif form.prix_article.data > prix:
             result = "Le prix est trop grand" if lang == 'fr' else "The price is too high"
         else:
@@ -219,6 +227,23 @@ def choisirArticle():
         raise Exception("Failed to fetch the article from the database.")
 
 
+@app.route('/save_pseudo', methods=['POST'])
+def save_pseudo():
+    if request.method == 'POST':
+        data = request.get_json()
+        pseudo = data.get('pseudo')
+
+        print("Il passe dans le save pseudo")
+
+        if 'username' in session:
+            username = session['username']
+            cursor = con.cursor()
+            cursor.execute('UPDATE USERS SET pseudo = ? WHERE nom = ?', (pseudo, username))
+            con.commit()
+            return "Pseudo saved successfully"
+        return "Error saving pseudo"
+
+
 def recupereImageArticle(article):
     r = requests.get("http://ws.chez-wam.info/" + article)
     try:
@@ -249,6 +274,7 @@ def get_prix_article(article):
         print("why")
     return result
 
+
 def verify_articles():
     cursor = con.cursor()
     themes = ['default', 'livre', 'jeu_video', 'pc', 'carte_graphique']
@@ -260,6 +286,7 @@ def verify_articles():
         nb_article = cursor.fetchone()[0]
         print(f"Theme: {theme}, Number of articles: {nb_article}")
     con.commit()
+
 
 def getNom(article):
     r = requests.get(" http://ws.chez-wam.info/" + article)
@@ -325,6 +352,7 @@ def insertion_bd():
     cursor.execute('''INSERT INTO USERS(nom, prenom, password, score) VALUES(?,?,?,?)''',
                    ("test", "admin", "admin", 0))
     con.commit()
+
 
 if __name__ == '__main__':
     verify_articles()
