@@ -3,7 +3,7 @@ import sqlite3
 import threading
 
 import requests
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect
 from flask_wtf import FlaskForm
 from wtforms.fields.choices import RadioField
 from wtforms.fields.numeric import IntegerField
@@ -33,6 +33,8 @@ def home():
     form = juste_prix_accueil()
     global difficulty
 
+    user = session.get('username')
+
     print("il passe dans la difficulté")
     print(form.errors)
 
@@ -53,45 +55,50 @@ def home():
             difficulty = "hard"
             return redirect("/justePrixAmazon")  # Hard ici -> a faire
 
-    return render_template('PageAccueil.html', form=form)
-
+    return render_template('PageAccueil.html', form=form, user=user)
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-    if 'username' in session:
-        global image, prix, nom, difficulty
-        result = ""
+    global image, prix, nom, difficulty
+    result = ""
+    user = False
 
-        print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
+    print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
 
-        form = justePrix()
+    form = justePrix()
+    print(session)
 
-        if form.validate_on_submit():
-            print(form.errors)
-            print("passe dansle submit")
-            if form.prix_article.data == prix:
-                print("IL passe dans le result == prix")
-                result = "Bravo, vous avez trouvé le juste prix !"
+    if form.validate_on_submit():
+        print(form.errors)
+        print("passe dansle submit")
+        if form.prix_article.data == prix:
+            print("IL passe dans le result == prix")
+            result = "Bravo, vous avez trouvé le juste prix !"
+            if 'username' in session:
+                user = True
                 session['score'] += 1
                 game_result(session['username'], True)
-            elif form.prix_article.data > prix:
-                print("IL passe dans le result > prix")
-                result = "Le prix est trop grand"
+                return render_template('MainEndGame.html', form=form, image=image, prix=prix, nom=nom, result=result,
+                                       user=user)
             else:
-                print("IL passe dans le result jsp prix")
-                result = "Le prix est trop petit"
+                return render_template('MainEndGame.html', form=form, image=image, prix=prix, nom=nom, result=result,
+                                       user=user)
 
-        print(form.errors)
-
-        if (difficulty == "easy"):
-            return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
-        elif (difficulty == "medium"):
-            return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        elif form.prix_article.data > prix:
+            print("IL passe dans le result > prix")
+            result = "Le prix est trop grand"
         else:
-            return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+            print("IL passe dans le result jsp prix")
+            result = "Le prix est trop petit"
 
+    print(form.errors)
+
+    if (difficulty == "easy"):
+        return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+    elif (difficulty == "medium"):
+        return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
     else:
-        return redirect(url_for('home'))
+        return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -158,6 +165,13 @@ def leaderboard():
     print(users[0][0])
     con.commit()
     return render_template('Classement.html', users=users)
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.pop('username', None)
+    session.pop('score', None)
+    return redirect('/')
 
 
 def choisirArticle():

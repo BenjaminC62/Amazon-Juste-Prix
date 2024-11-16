@@ -5,14 +5,19 @@
     <title>Page d'accueil</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen">
-<div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto">
-    <div class="flex justify-center space-x-4 mb-4">
-        <a href="{{ url_for('register') }}"
-           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Register</a>
-        <a href="{{ url_for('login') }}"
-           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Login</a>
+<body class="bg-gray-100 text-gray-900  min-h-screen">
+<header class="p-4 bg-white shadow-md w-full">
+    <div class="flex justify-between items-center space-x-4">
+        {% if user %}
+        <img src="" alt="User Image" class="w-10 h-10 rounded-full">
+        <span class="font-semibold">{{ user }}</span>
+        <a href="{{url_for('logout')}}" class="text-blue-500 hover:text-blue-700">Déconnexion</a>
+        {% else %}
+        <a href="{{url_for('login')}}" class="text-blue-500 hover:text-blue-700">Connexion</a>
+        {% endif %}
     </div>
+</header>
+<div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto">
 
     <h1 class="text-4xl font-bold mb-4 text-center">Juste prix amazon</h1>
     <p class="mb-2 text-center">Bienvenue sur le jeu du juste prix amazon</p>
