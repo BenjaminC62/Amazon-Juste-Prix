@@ -137,6 +137,11 @@ def justePrixAmazon():
         return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
 
 
+@app.route('/rules', methods=['GET', 'POST'])
+def rules():
+    pygame.mixer.stop()
+    return render_template('regle.html')
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     pygame.mixer.stop()
@@ -308,6 +313,8 @@ def save_pseudo():
             conn.close()
             return "Pseudo saved successfully"
         return "Error saving pseudo"
+
+
 
 
 def recupereImageArticle(article):

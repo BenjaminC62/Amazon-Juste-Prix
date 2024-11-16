@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Règles du jeu</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="flex justify-between items-center p-4 bg-white shadow-md w-full">
+    <div class="flex space-x-4">
+        <a href="{{ url_for('leaderboard') }}"
+           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
+            {% if session.get('lang') == 'en' %} Show Leaderboard {% else %} Afficher le classement {% endif %}
+        </a>
+        <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
+        <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
+    </div>
+    <div class="flex justify-between items-center space-x-4">
+        {% if user %}
+        <img class="w-10 h-10 rounded-full"
+             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACEklEQVR4nO2Yz0tUURTH7yLLjX9DrS1DECTnnJyFLmzhUggC3zkTtAjc1Oz7CxSHxJbqXgRxqeYm0HOyVVYQrQxa1KppWjX94DyGihyneXdG31XuBy48eD/4ft89955zrnORSCRyrhil/QEgrSDrAbDUbNg1ssyPlPSaC5WJmbeXgHQRSb4j689mA1jrSLLQP3Vw0YUmHkmfHie8iZHtoEwg6ZN2xf8Z8tiFEvOtwqZVOMG0XM1bv2ss2Ix/v2GCZC4EA698DSDJy7z1OyD54m9AqyEs4Kq3AdbPees/+yGELPPei5h1Nm/9zsqDNMN6bKPIe/0uBKw8yL6FasWFgpUFwLqVIfY3h+7t97iQMBNWHrQKpzT7klaCE/83Vh5YhrUdxnJEmifsmnU2mJiPRCKRSEcUk51eIJ1E1mUg+YQs75B1vN33MZExZHkDJB+AdMm+ZQcD7qQpJDKIpCvNegAg/YYkD4qPdi4c977dA9Jy+myT3gBZl3F693rXhReT3StIutZmkfYaWB5as18oPeuz0TjsKttf//835AeQrI6UXlzuivhCSe4gydcOui7PXkFqmOjtjsRjIjOnLRyPVK5630s8JHs3fBqV7s+E1m/efT6c3QDpRt7i8fcsyLqHAdseAxDP6QHYx8wG8haN/4xoAM/aDADp+2DWAMthdgOst0IwASyHmMhEZgORSCTiToNf59jNJJZ1QWQAAAAASUVORK5CYII="
+             alt="person-male">
+        <span class="font-semibold">{{ user }}</span>
+        <a href="{{url_for('logout')}}" class="text-blue-500 hover:text-blue-700">
+            {% if session.get('lang') == 'en' %} Logout {% else %} Déconnexion {% endif %}
+        </a>
+        {% else %}
+        <a href="{{url_for('login')}}" class="text-blue-500 hover:text-blue-700">
+            {% if session.get('lang') == 'en' %} Login {% else %} Connexion {% endif %}
+        </a>
+        {% endif %}
+    </div>
+</header>
+
+    <main class="flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center">
+        <h1 class="text-4xl font-bold mb-4 text-center">Voici les règles du Juste Prix Amazon !</h1>
+        <br>
+        <div class="text-center">
+            <p class="mb-2">Vous devez effectuer des tentatives afin de trouver le bon prix de l'article.</p>
+            <p class="mb-2">Si vous trouvez le juste prix, vous gagnez un point.</p>
+            <p class="mb-2">Vous pouvez consulter le classement à tout moment, en cliquant sur le bouton en haut à gauche de la page.</p>
+            <br>
+            <p class="mb-2">Plusieurs choix s'offrent à vous, le mode facile, moyen et difficile.</p>
+            <p class="mb-2">Le mode facile : l'image de l'article, son nom et une fourchette du prix.</p>
+            <p class="mb-2">Le mode moyen : l'image de l'article, son nom ainsi qu'un décompte de 1 minute. À la fin de ce décompte, la partie est finie.</p>
+            <p class="mb-2">Le mode difficile : uniquement l'article et un décompte de seulement 30 secondes.</p>
+            <br>
+            <p class="mb-4">Vous aurez également l'occasion de choisir différents thèmes : des livres, des jeux vidéos, des cartes graphiques et des ordinateurs portables.</p>
+            <br>
+            <p class="mb-4">Qu'attendez-vous pour commencer le jeu ? </p>
+        </div>
+        <a href="{{ url_for('home') }}"
+                class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
+        <br>
+        <p class="mb-4 text-center" >JOUER</p>
+        </a>
+    </div>
+    </main>
+<footer class="bg-blue-600 text-white p-4 text-center w-full">
+    <p>
+        Juste Prix Amazon
+    </p>
+    <p>
+        Réalisé par <a href="https://github.com/MatheoDalmasso" class="font-bold" target="_blank">Mathéo DALMASSO</a>,
+        <a href="https://github.com/SimonCail" class="font-bold" target="_blank">Simon CAILLIERET</a>,
+        <a href="https://github.com/Mathias92-cmd" class="font-bold" target="_blank">Mathias MOREL</a>,
+        <a href="https://github.com/BenjaminC62" class="font-bold" target="_blank">Benjamin CORNET</a>
+    </p>
+</footer>
+</body>
+</html>
