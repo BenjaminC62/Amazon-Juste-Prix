@@ -1,10 +1,10 @@
 import random
 import sqlite3
 import threading
-import time
-from nava import play, Engine,stop
 import os
 
+import pygame
+pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
 
 import requests
 from flask import Flask, render_template, request, session, redirect
@@ -43,7 +43,9 @@ def home():
 
     sound_path = os.path.join("sons", "menu.wav")
     if os.path.exists(sound_path):
-        sound_id = play(sound_path, async_mode=True, engine=Engine.WINSOUND, loop=True)
+        sound_id = pygame.mixer.Sound("sons/menu.wav")
+        sound_id.set_volume(0.01)
+        sound_id.play(loops=-1)
     else:
         print(f"Sound file not found: {sound_path}")
     user = session.get('username')
@@ -58,8 +60,7 @@ def home():
         theme = form.theme.data
         choisirArticle()
 
-        if 'sound_id' in locals():
-            stop(sound_id)
+        pygame.mixer.stop()
 
         if form.difficulty.data == "easy":
             print("c bon ici")
@@ -96,7 +97,9 @@ def justePrixAmazon():
             sound_path = os.path.join("sons", "siu.wav")
             result = "Bravo, vous avez trouvé le juste prix !"
             if os.path.exists(sound_path):
-                sound_id = play(sound_path, async_mode=True, engine=Engine.WINSOUND)
+                sound_id = pygame.mixer.Sound("sons/siu.wav")
+                sound_id.set_volume(0.01)
+                sound_id.play()
             else:
                 print(f"Sound file not found: {sound_path}")
             if 'username' in session:
@@ -184,6 +187,7 @@ def register():
 
 @app.route('/leaderboard', methods=['GET', 'POST'])
 def leaderboard():
+    pygame.mixer.stop()
     cursor = con.cursor()
     cursor.execute("SELECT nom, score FROM USERS ORDER BY score DESC")
     users = cursor.fetchall()
