@@ -15,7 +15,7 @@
         <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
         <h2 class="text-center text-lg font-semibold mt-4">Le nom de l'article est : {{ nom }}</h2>
         <h3 class="text-center text-lg font-semibold mt-4">Voici une fourchette du prix {% if prix-300 < 0 %} 0 {% else
-            %} {{ prix-300 }} {% endif %} - {{ prix+300-prix }}</h3>
+            %} {{ (prix-300)|round(-2) }} {% endif %} - {{ (prix+300)|round(-2) }}</h3>
         {% if image %}
         <img src="{{ image }}" width="100px" height="100px" alt="image de l'article" class="mx-auto">
         {% else %}
@@ -31,4 +31,11 @@
     </form>
 </div>
 </body>
+<footer class="bg-blue-600 text-white p-4 text-center fixed bottom-0 w-full">
+    <p>Juste Prix Amazon</p>
+    <p>Réalisé par <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
+        <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
+        <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
+        <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a></p>
+</footer>
 </html>
