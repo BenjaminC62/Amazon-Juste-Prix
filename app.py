@@ -69,46 +69,36 @@ def home():
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-    global image, prix, nom, difficulty , theme
+    global image, prix, nom, difficulty, theme
     result = ""
     user = False
 
-    print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
-
+    lang = session.get('lang', 'fr')
     form = justePrix()
-    print(session)
+    form.prix_article.label.text = "Price of the item" if lang == 'en' else "Prix de l'article"
 
     if form.validate_on_submit():
-        print(form.errors)
-        print("passe dansle submit")
         if form.prix_article.data == prix:
-            print("IL passe dans le result == prix")
-            result = "Bravo, vous avez trouvé le juste prix !"
+            result = "Bravo, vous avez trouvé le juste prix !" if lang == 'fr' else "Congratulations, you found the right price!"
             if 'username' in session:
                 user = True
                 session['score'] += 1
                 game_result(session['username'], True)
-                return render_template('MainEndGame.html', form=form, image=image, prix=prix, nom=nom, result=result,
-                                       user=user)
+                return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result, user=user)
             else:
-                return render_template('MainEndGame.html', form=form, image=image, prix=prix, nom=nom, result=result,
-                                       user=user)
-
+                return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result, user=user)
         elif form.prix_article.data > prix:
-            print("IL passe dans le result > prix")
-            result = "Le prix est trop grand"
+            result = "Le prix est trop grand" if lang == 'fr' else "The price is too high"
         else:
-            print("IL passe dans le result jsp prix")
-            result = "Le prix est trop petit"
+            result = "Le prix est trop petit" if lang == 'fr' else "The price is too low"
 
-    print(form.errors)
-
-    if (difficulty == "easy"):
+    if difficulty == "easy":
         return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
-    elif (difficulty == "medium"):
+    elif difficulty == "medium":
         return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
     else:
         return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
