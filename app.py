@@ -238,6 +238,7 @@ def leaderboard():
     sound_id = pygame.mixer.Sound("sons/classement.wav")
     sound_id.set_volume(0.03)
     sound_id.play(loops=-1)
+
     cursor.execute("SELECT pseudo, score FROM USERS ORDER BY score DESC")
     users = cursor.fetchall()
     print(users)
