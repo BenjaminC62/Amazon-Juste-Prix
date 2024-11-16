@@ -36,7 +36,7 @@
         </div>
 
         {% if user == True %}
-        <div class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+        <div class="flex items-center justify-center font-poppins">
             <div class="bg-white p-4 rounded shadow-md w-full max-w-md text-center">
                 <h1 class="text-2xl font-bold mb-4">Choisissez votre pseudo</h1>
                 <div id="pseudo-display" class="text-4xl font-bold mb-6">AAA</div>
@@ -72,7 +72,30 @@
         document.getElementById("pseudo-display").textContent = currentPseudo.join("");
     }
 
-    
+    // Fleches
+    document.addEventListener("keydown", (event) => { // Pareil que java en vrai
+        if (event.key === "ArrowUp") {
+            // Fleche haut
+            currentPseudo[currentIndex] = alphabet[(alphabet.indexOf(currentPseudo[currentIndex]) + 1) % alphabet.length];
+        } else if (event.key === "ArrowDown") {
+            // Fleche bas
+            currentPseudo[currentIndex] = alphabet[(alphabet.indexOf(currentPseudo[currentIndex]) - 1 + alphabet.length) % alphabet.length];
+        } else if (event.key === "ArrowRight") {
+            // Fleche droite
+            currentIndex = (currentIndex + 1) % currentPseudo.length;
+        } else if (event.key === "ArrowLeft") {
+            // Fleche gauche
+            currentIndex = (currentIndex - 1 + currentPseudo.length) % currentPseudo.length;
+        }
+        updateDisplay();
+    });
+
+    document.getElementById("submit-pseudo").addEventListener("click", () => {
+        const pseudo = currentPseudo.join("");
+        // Faut le recup now
+    });
+
+    updateDisplay(); // On affiche le pseudo
 </script>
 
 </body>
