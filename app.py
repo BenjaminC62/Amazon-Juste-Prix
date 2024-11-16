@@ -38,6 +38,8 @@ class juste_prix_accueil(FlaskForm):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    pygame.mixer.stop()
+
     form = juste_prix_accueil()
     global difficulty , theme
 
@@ -60,8 +62,6 @@ def home():
         theme = form.theme.data
         choisirArticle()
 
-        pygame.mixer.stop()
-
         if form.difficulty.data == "easy":
             print("c bon ici")
             difficulty = "easy"
@@ -80,6 +80,9 @@ def home():
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
+
+    pygame.mixer.stop()
+
     global image, prix, nom, difficulty , theme
     result = ""
     user = False
@@ -131,6 +134,8 @@ def justePrixAmazon():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    pygame.mixer.stop()
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -170,6 +175,7 @@ def game_result(username, gagner):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    pygame.mixer.stop()
     if request.method == 'POST':
         prenom = request.form['prenom']
         nom = request.form['nom']
@@ -188,6 +194,10 @@ def register():
 @app.route('/leaderboard', methods=['GET', 'POST'])
 def leaderboard():
     pygame.mixer.stop()
+    sound_id = pygame.mixer.Sound("sons/classement.wav")
+    sound_id.set_volume(0.01)
+    sound_id.play(loops=-1)
+
     cursor = con.cursor()
     cursor.execute("SELECT nom, score FROM USERS ORDER BY score DESC")
     users = cursor.fetchall()
@@ -199,6 +209,7 @@ def leaderboard():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
+    pygame.mixer.stop()
     session.pop('username', None)
     session.pop('score', None)
     return redirect('/')
