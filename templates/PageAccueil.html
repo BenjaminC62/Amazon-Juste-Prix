@@ -12,9 +12,9 @@
         {% if user %}
         <img src="" alt="User Image" class="w-10 h-10 rounded-full">
         <span class="font-semibold">{{ user }}</span>
-        <a href="/logout" class="text-blue-500 hover:text-blue-700">Déconnexion</a>
+        <a href="{{url_for('logout')}}" class="text-blue-500 hover:text-blue-700">Déconnexion</a>
         {% else %}
-        <a href="/login" class="text-blue-500 hover:text-blue-700">Connexion</a>
+        <a href="{{url_for('login')}}" class="text-blue-500 hover:text-blue-700">Connexion</a>
         {% endif %}
     </div>
 </header>

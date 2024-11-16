@@ -30,11 +30,9 @@ class juste_prix_accueil(FlaskForm):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    choisirArticle()
     form = juste_prix_accueil()
     global difficulty
 
-    logout()
     user = session.get('username')
 
     print("il passe dans la difficulté")
@@ -159,6 +157,7 @@ def register():
     return render_template('register.html')
 
 
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('username', None)
     session.pop('score', None)
@@ -289,4 +288,5 @@ def insertion_bd():
 
 
 if __name__ == '__main__':
+    choisirArticle()
     app.run()
