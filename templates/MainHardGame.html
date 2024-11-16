@@ -1,41 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr-FR">
 <head>
     <meta charset="UTF-8">
-    <title>{% if session.get('lang') == 'en' %}Main Hard{% else %}Difficile Principal{% endif %}</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen">
-<header class="flex justify-between items-center p-4 bg-white shadow-md w-full">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+<header class="bg-blue-600 text-white p-4 flex items-center justify-between w-full fixed top-0">
     <div class="flex space-x-4">
-        <a href="{{ url_for('change_language', lang='fr') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">Fr</a>
-        <a href="{{ url_for('change_language', lang='en') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">En</a>
+        <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
+        <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
     </div>
+    <a href="{{ url_for('home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+        {% if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}
+    </a>
 </header>
-
-<main class="flex items-center justify-center min-h-screen">
-    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center mb-48">
-        <h1 class="text-4xl font-bold mb-4 text-center">
-            {% if session.get('lang') == 'en' %}Main Hard{% else %}Difficile Principal{% endif %}
-        </h1>
-        <p class="mb-2 text-center">
-            {% if session.get('lang') == 'en' %}Welcome to the Main Hard page{% else %}Bienvenue sur la page Difficile Principal{% endif %}
-        </p>
-        <p class="mb-2 text-center">
-            {% if session.get('lang') == 'en' %}Here you can find hard tasks{% else %}Ici, vous pouvez trouver des tâches difficiles{% endif %}
-        </p>
-        <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
-            <div class="flex justify-center items-center space-x-2">
-                <label class="font-semibold">
-                    {% if session.get('lang') == 'en' %}Task{% else %}Tâche{% endif %}
-                </label>
-                <input type="text" name="task" class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
-            </div>
-            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
-                {% if session.get('lang') == 'en' %}Submit{% else %}Soumettre{% endif %}
-            </button>
-        </form>
-    </div>
-</main>
+<div class="bg-white p-2 rounded shadow-md w-full max-w-lg mt-16">
+    <h1 class="text-3xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</h1>
+    <form action="" method="post" class="space-y-4">
+        <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
+        <h2 class="text-center text-lg font-semibold mt-4">{{ nom }}</h2>
+        {% if image %}
+        <img src="{{ image }}" width="100px" height="100px" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
+        {% else %}
+        <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}</p>
+        {% endif %}
+        <div class="flex justify-center">
+            {{ form.csrf_token }}
+            {{ form.prix_article.label }}: {{ form.prix_article() }}
+        </div>
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
+        </button>
+    </form>
+</div>
 </body>
+<footer class="bg-blue-600 text-white p-4 text-center fixed bottom-0 w-full">
+    <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
+    <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %} <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
+        <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
+        <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
+        <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a></p>
+</footer>
 </html>

@@ -1,35 +1,113 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr-FR">
 <head>
     <meta charset="UTF-8">
-    <title>{% if session.get('lang') == 'en' %}Main End{% else %}Fin Principale{% endif %}</title>
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen">
-<header class="flex justify-between items-center p-4 bg-white shadow-md w-full">
-    <div class="flex space-x-4">
-        <a href="{{ url_for('change_language', lang='fr') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">Fr</a>
-        <a href="{{ url_for('change_language', lang='en') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">En</a>
-    </div>
-</header>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+<div class="bg-white p-2 rounded shadow-md w-full max-w-lg">
 
-<main class="flex items-center justify-center min-h-screen">
-    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center mb-48">
-        <h1 class="text-4xl font-bold mb-4 text-center">
-            {% if session.get('lang') == 'en' %}Main End{% else %}Fin Principale{% endif %}
-        </h1>
-        <p class="mb-2 text-center">
-            {% if session.get('lang') == 'en' %}Thank you for playing{% else %}Merci d'avoir joué{% endif %}
+    <h1 class="text-3xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</h1>
+
+    <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
+    <h2 class="text-center text-lg font-semibold mt-4">{% if session.get('lang') == 'en' %}Here is the item: {% else %}Voici l'article : {% endif %}{{ nom }}</h2>
+    {% if image %}
+    <img src="{{ image }}" width="100px" height="100px" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
+    {% else %}
+    <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}</p>
+    {% endif %}
+    <div class="flex items-center justify-between mt-6">
+        <p class="text-lg font-medium">
+            {% if session.get('lang') == 'en' %}Congratulations, you found the right price! You can play again if you want:{% else %}Bravo, vous avez trouvé le juste prix! Vous pouvez rejouer si vous le souhaitez :{% endif %}
         </p>
-        <p class="mb-2 text-center">
-            {% if session.get('lang') == 'en' %}Your final score is{% else %}Votre score final est{% endif %} {{ score }}
-        </p>
-        <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
-            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
-                {% if session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}
-            </button>
-        </form>
+        <a href="{{ url_for('home') }}"
+           class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}</a>
     </div>
-</main>
+
+    {% if user == True %}
+    <div class="flex items-center justify-center font-poppins">
+        <div class="bg-white p-4 rounded shadow-md w-full max-w-md text-center">
+            <h1 class="text-2xl font-bold mb-4">{% if session.get('lang') == 'en' %}Choose your nickname{% else %}Choisissez votre pseudo{% endif %}</h1>
+            <div id="pseudo-display" class="text-4xl font-bold mb-6">AAA</div>
+            <p class="text-gray-600 mb-4">{% if session.get('lang') == 'en' %}Use the up and down arrows to change the letters, left and right to move to the next one.{% else %}Utilisez les flèches haut et bas pour changer les lettres, gauche et droite pour passer à la suivante.{% endif %}</p>
+            <button id="submit-pseudo"
+                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
+            </button>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if user == False %}
+    <p class="mt-6 text-center text-lg font-medium">{% if session.get('lang') == 'en' %}Or you can register or log in to save your score:{% else %}Ou vous pouvez vous inscrire ou connecter pour enregistrer votre score :{% endif %}</p>
+    <div class="flex justify-center items-center mt-4 space-x-4">
+        <a href="{{ url_for('register') }}"
+           class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Register{% else %}S'inscrire{% endif %}</a>
+        <a href="{{ url_for('login') }}"
+           class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Login{% else %}Se connecter{% endif %}</a>
+    </div>
+    {% endif %}
+</div>
+<script>
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let currentPseudo = ["A", "A", "A"];
+    let currentIndex = 0;
+    const pseudoDisplay = document.getElementById("pseudo-display");
+
+    function updateDisplay() {
+        pseudoDisplay.innerHTML = currentPseudo.map((letter, index) => {
+            return `<span class="${index === currentIndex ? 'selected-letter' : ''}">${letter}</span>`;
+        }).join("");
+    }
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowUp") {
+            currentPseudo[currentIndex] = alphabet[(alphabet.indexOf(currentPseudo[currentIndex]) + 1) % alphabet.length];
+        } else if (event.key === "ArrowDown") {
+            currentPseudo[currentIndex] = alphabet[(alphabet.indexOf(currentPseudo[currentIndex]) - 1 + alphabet.length) % alphabet.length];
+        } else if (event.key === "ArrowRight") {
+            currentIndex = (currentIndex + 1) % currentPseudo.length;
+        } else if (event.key === "ArrowLeft") {
+            currentIndex = (currentIndex - 1 + currentPseudo.length) % currentPseudo.length;
+        }
+        updateDisplay();
+    });
+
+    document.getElementById("submit-pseudo").addEventListener("click", () => {
+        const pseudo = currentPseudo.join("");
+        fetch('/save_pseudo', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({pseudo}),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    return response.text().then((error) => {
+                        throw new Error(error);
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error("{% if session.get('lang') == 'en' %}Error sending nickname:{% else %}Erreur lors de l'envoi du pseudo :{% endif %}", error);
+                alert("{% if session.get('lang') == 'en' %}An error occurred!{% else %}Une erreur s'est produite !{% endif %}");
+            });
+    });
+
+    updateDisplay();
+</script>
+
+<style>
+    .selected-letter {
+        color: blue;
+    }
+</style>
+
 </body>
 </html>
