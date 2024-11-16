@@ -2,25 +2,54 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>{% if session.get('lang') == 'en' %}Register{% else %}S'inscrire{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
 </head>
-<body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen">
-<form action="/register" method="post" class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-    <h2 class="text-2xl font-bold mb-4 text-center">Register</h2>
-    <div class="mb-4">
-        <label for="prenom" class="block text-gray-700">Prénom</label>
-        <input type="text" id="prenom" name="prenom" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+<body class="bg-gray-100 text-gray-900 min-h-screen">
+<header class="flex justify-between items-center p-4 bg-white shadow-md w-full">
+    <div class="flex space-x-4">
+        <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
+        <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
+        <a href="{{ url_for('home', lang='en') }}"
+           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{%
+            if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
     </div>
-    <div class="mb-4">
-        <label for="nom" class="block text-gray-700">Nom</label>
-        <input type="text" id="nom" name="nom" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+</header>
+
+<main class="flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center mb-48">
+        <h1 class="text-4xl font-bold mb-4 text-center">
+            {% if session.get('lang') == 'en' %}Register{% else %}S'inscrire{% endif %}
+        </h1>
+        <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
+            <div class="flex justify-center items-center space-x-2">
+                <label class="font-semibold">
+                    {% if session.get('lang') == 'en' %}Username{% else %}Nom{% endif %}
+                </label>
+                <input type="text" name="nom"
+                       class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
+            </div>
+            <div class="flex justify-center items-center space-x-2">
+                <label class="font-semibold">
+                    {% if session.get('lang') == 'en' %}Username{% else %}Prenom{% endif %}
+                </label>
+                <input type="text" name="prenom"
+                       class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
+            </div>
+            <div class="flex justify-center items-center space-x-2">
+                <label class="font-semibold">
+                    {% if session.get('lang') == 'en' %}Password{% else %}Mot de passe{% endif %}
+                </label>
+                <input type="password" name="password"
+                       class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
+            </div>
+            <button type="submit"
+                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
+                {% if session.get('lang') == 'en' %}Register{% else %}S'inscrire{% endif %}
+            </button>
+        </form>
     </div>
-    <div class="mb-4">
-        <label for="password" class="block text-gray-700">Mot de passe</label>
-        <input type="password" id="password" name="password" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-    </div>
-    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">S'inscrire</button>
-</form>
+</main>
 </body>
 </html>
