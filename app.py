@@ -36,7 +36,7 @@ def home():
     print("il passe dans la difficulté")
     print(form.errors)
 
-    if form.validate_on_submit() :
+    if form.validate_on_submit():
 
         print("passe dans la submit")
 
@@ -54,7 +54,6 @@ def home():
             return redirect("/justePrixAmazon")  # Hard ici -> a faire
 
     return render_template('PageAccueil.html', form=form)
-
 
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
@@ -149,6 +148,7 @@ def register():
         return redirect('/login')
     return render_template('register.html')
 
+
 @app.route('/leaderboard', methods=['GET', 'POST'])
 def leaderboard():
     cursor = con.cursor()
@@ -158,6 +158,7 @@ def leaderboard():
     print(users[0][0])
     con.commit()
     return render_template('Classement.html', users=users)
+
 
 def choisirArticle():
     global image, prix, nom
@@ -192,7 +193,6 @@ def recupereImageArticle(article):
         print(f"Error retrieving image: {e}")
         image = None
     return image
-
 
 
 def get_prix_article(article):
@@ -242,11 +242,13 @@ def creation_bd():
 
 creation_bd()
 
+
 def fetch_and_insert_article(cursor, article, theme):
     nom_article = getNom(article)
     prix_article = get_prix_article(article)
     cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
                    (nom_article, prix_article, article, theme))
+
 
 def insertion_bd():
     global image, prix, nom
