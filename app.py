@@ -135,7 +135,7 @@ def AjoutArticle():
         nom_article = request.form['nom_article']
         prix_article = request.form['prix_article']
         ref_article = request.form['ref_article']
-        theme = request.form['theme']
+        theme = request.form['theme_article']
 
         conn = sqlite3.connect('justePrix.db')
         cursor = conn.cursor()

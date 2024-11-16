@@ -43,11 +43,18 @@
         </div>
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="theme_article">{% if session.get('lang') ==
-                'en'
-                %}Thème{% else %}Theme{% endif %}</label>
-            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                   id="theme_article" name="theme_article" type="text"
-                   placeholder="{% if session.get('lang') == 'en' %}Theme{% else %}Thème{% endif %}" required/>
+                'en' %}Theme{% else %}Thème{% endif %}</label>
+            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="theme_article" name="theme_article" required>
+                <option value="default">{% if session.get('lang') == 'en' %}Default{% else %}Défaut{% endif %}</option>
+                <option value="livre">{% if session.get('lang') == 'en' %}Book{% else %}Livre{% endif %}</option>
+                <option value="jeu_video">{% if session.get('lang') == 'en' %}Video Game{% else %}Jeu Vidéo{% endif %}
+                </option>
+                <option value="pc">{% if session.get('lang') == 'en' %}PC{% else %}PC{% endif %}</option>
+                <option value="carte_graphique">{% if session.get('lang') == 'en' %}Graphics Card{% else %}Carte
+                    Graphique{% endif %}
+                </option>
+            </select>
         </div>
         <div class="flex items-center justify-between">
             <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -57,9 +64,10 @@
         </div>
         {% if add %}
         <div class="mt-4">
-            <p class="text-green text-center">{% if session.get('lang') == 'en' %}Article added{% else %}Article
-                ajouté{% endif %}</p>
+            <p class="text-green text-center">{% if session.get('lang') == 'en' %}Article added !{% else %}Article
+                ajouté !{% endif %}</p>
         </div>
+        {% endif %}
     </form>
     <div class="mt-8">
         <a href="{{ url_for('home') }}"
