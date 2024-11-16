@@ -1,5 +1,6 @@
 import random
 import sqlite3
+import threading
 
 import requests
 from flask import Flask, render_template, request, session, redirect, url_for
@@ -25,9 +26,6 @@ class justePrix(FlaskForm):
 
 class juste_prix_accueil(FlaskForm):
     difficulty = RadioField("Difficulté", choices=[('easy', 'Facile'), ('medium', 'Moyen'), ('hard', 'Difficile')])
-    theme = RadioField("Theme",
-                       choices=[('default', 'Default'), ('jeu_video', 'Jeu Vidéo'), ('livre', 'Livre'), ('pc', 'PC'),
-                                ('carte_graphique', 'Carte Graphique')])
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -35,48 +33,60 @@ def home():
     form = juste_prix_accueil()
     global difficulty
 
-    if form.validate_on_submit():
+    print("il passe dans la difficulté")
+    print(form.errors)
 
-        print("dificult avec form.diff", form.difficulty.data)
+    if form.validate_on_submit() :
+
+        print("passe dans la submit")
 
         if form.difficulty.data == "easy":
+            print("c bon ici")
             difficulty = "easy"
-            return redirect("/justePrixAmazon")
+            return redirect("/justePrixAmazon")  # Easy ici -> a changer le MainGame
+
         if form.difficulty.data == "medium":
             difficulty = "medium"
-            return redirect("/justePrixAmazon")
+            return redirect("/justePrixAmazon")  # Medium ici -> a faire
+
         if form.difficulty.data == "hard":
             difficulty = "hard"
-            return redirect("/justePrixAmazon")
+            return redirect("/justePrixAmazon")  # Hard ici -> a faire
 
     return render_template('PageAccueil.html', form=form)
 
 
+
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-    global image, prix, nom, difficulty
-    result = ""
+    if 'username' in session:
+        global image, prix, nom, difficulty
+        result = ""
 
-    form = justePrix()
+        print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
 
-    if form.validate_on_submit():
-        if form.prix_article.data == prix:
-            result = "Bravo, vous avez trouvé le juste prix !"
-            if 'username' in session:
+        form = justePrix()
+
+        if form.validate_on_submit():
+            print(form.errors)
+            print("passe dansle submit")
+            if form.prix_article.data == prix:
+                print("IL passe dans le result == prix")
+                result = "Bravo, vous avez trouvé le juste prix !"
                 session['score'] += 1
                 game_result(session['username'], True)
-        elif form.prix_article.data > prix:
-            result = "Le prix est trop grand"
-        else:
-            result = "Le prix est trop petit"
+            elif form.prix_article.data > prix:
+                print("IL passe dans le result > prix")
+                result = "Le prix est trop grand"
+            else:
+                print("IL passe dans le result jsp prix")
+                result = "Le prix est trop petit"
 
         print(form.errors)
 
-        print("la difficulté est : ", difficulty)
-
-        if difficulty == "easy":
+        if (difficulty == "easy"):
             return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
-        elif difficulty == "medium":
+        elif (difficulty == "medium"):
             return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
         else:
             return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
@@ -139,6 +149,15 @@ def register():
         return redirect('/login')
     return render_template('register.html')
 
+@app.route('/leaderboard', methods=['GET', 'POST'])
+def leaderboard():
+    cursor = con.cursor()
+    cursor.execute("SELECT nom, score FROM USERS ORDER BY score DESC")
+    users = cursor.fetchall()
+    print(users)
+    print(users[0][0])
+    con.commit()
+    return render_template('Classement.html', users=users)
 
 def choisirArticle():
     global image, prix, nom
@@ -162,24 +181,40 @@ def choisirArticle():
 
 def recupereImageArticle(article):
     r = requests.get("http://ws.chez-wam.info/" + article)
-    image = r.json()["images"][0]
+    try:
+        r.raise_for_status()
+        response_json = r.json()
+        if "images" in response_json and response_json["images"]:
+            image = response_json["images"][0]
+        else:
+            raise Exception("No images found for the article.")
+    except Exception as e:
+        print(f"Error retrieving image: {e}")
+        image = None
     return image
+
 
 
 def get_prix_article(article):
     r = requests.get("http://ws.chez-wam.info/" + article)
+    result = 0
     try:
-        price = r.json()["price"][:-1]  # récupère le prix de l'article
-        price = price.replace(",", ".").replace(" ", "")  # remplace la virgule par un point et un espace par rien
-        result = int(float(price))  # converti la valeur du prix str -> float -> int
-    except:
-        raise Exception("Prix de l'article n'est pas disponible !")
+        r.raise_for_status()  # Vérifie si le statut HTTP est une erreur (404, 500, etc.)
+        response_json = r.json()  # Tente de convertir la réponse en JSON
+        if "price" not in response_json:
+            raise Exception("Clé 'price' absente dans la réponse JSON.")
+        price = response_json["price"][:-1]
+        price = price.replace(",", ".").replace("\u202f", "").replace(" ", "")
+        result = int(float(price))  # Conversion str -> float -> int
+    except Exception:
+        print("why")
     return result
 
 
 def getNom(article):
     r = requests.get(" http://ws.chez-wam.info/" + article)
     try:
+        r.raise_for_status()
         name = r.json()["title"]
         name = name.split(" ")
         name = " ".join(name[:3])
@@ -207,60 +242,44 @@ def creation_bd():
 
 creation_bd()
 
+def fetch_and_insert_article(cursor, article, theme):
+    nom_article = getNom(article)
+    prix_article = get_prix_article(article)
+    cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
+                   (nom_article, prix_article, article, theme))
 
 def insertion_bd():
     global image, prix, nom
 
     # Listes d'articles par thème
-    liste_article = ["B07YQFZ6CJ", "B0BWS9WQDY"]
-    liste_article_livre = ["B09V121HM9", "B08R111DV7", "B0CRS894KW", "B08KFWJJW2", "B09WPK89X5"]
-    liste_article_jeu_video = ["B0D7HSRMHT", "B0DKFDRCGX", "B0821XHJB6", "B0D6M2FG43", "B07BB4R214"]
-    liste_article_pc = ["B0D9YR8DGH", "B0BB37LMJZ", "B0BQRXHMP8", "B0D8L79YR8", "B0DJTJT5VX"]
-    liste_article_carte_graphique = ["B0BRYY1JX8", "B0B34M1YLW", "B09Y57F1HL", "B0CGRMJF6C", "B0C8ZSM1W2"]
+    articles = {
+        'default': ["B07YQFZ6CJ", "B0BWS9WQDY"],
+        'livre': ["B09V121HM9", "B08R111DV7", "B0CRS894KW", "B08KFWJJW2", "B09WPK89X5"],
+        'jeu_video': ["B0D7HSRMHT", "B0DKFDRCGX", "B0821XHJB6", "B0D6M2FG43", "B07BB4R214"],
+        'pc': ["B0D9YR8DGH", "B0BB37LMJZ", "B0BQRXHMP8", "B0D8L79YR8", "B0DJTJT5VX"],
+        'carte_graphique': ["B0BRYY1JX8", "B0B34M1YLW", "B09Y57F1HL", "B0CGRMJF6C", "B0C8ZSM1W2"]
+    }
 
     cursor = con.cursor()
-    cursor.execute('''DELETE FROM ARTICLE''')  # Question de verif
+    cursor.execute('''DELETE FROM ARTICLE''')
     cursor.execute('''DELETE FROM sqlite_sequence WHERE name='ARTICLE';''')
     con.commit()
 
-    # Insertion des articles de chaque thème
-    for article in liste_article:
-        nom_article = getNom(article)
-        prix_article = get_prix_article(article)
-        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
-                       (nom_article, prix_article, article, 'default'))
+    threads = []
+    for theme, article_list in articles.items():
+        for article in article_list:
+            thread = threading.Thread(target=fetch_and_insert_article, args=(cursor, article, theme))
+            threads.append(thread)
+            thread.start()
 
-    for article in liste_article_livre:
-        nom_article = getNom(article)
-        prix_article = get_prix_article(article)
-        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
-                       (nom_article, prix_article, article, 'livre'))
-
-    for article in liste_article_jeu_video:
-        nom_article = getNom(article)
-        prix_article = get_prix_article(article)
-        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
-                       (nom_article, prix_article, article, 'jeu_video'))
-
-    for article in liste_article_pc:
-        nom_article = getNom(article)
-        prix_article = get_prix_article(article)
-        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
-                       (nom_article, prix_article, article, 'pc'))
-
-    for article in liste_article_carte_graphique:
-        nom_article = getNom(article)
-        prix_article = get_prix_article(article)
-        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
-                       (nom_article, prix_article, article, 'carte_graphique'))
+    for thread in threads:
+        thread.join()
 
     con.commit()
     cursor.execute('''INSERT INTO USERS(nom, prenom, password, score) VALUES(?,?,?,?)''',
                    ("test", "admin", "admin", 0))
     con.commit()
 
-
-insertion_bd()
 
 if __name__ == '__main__':
     choisirArticle()
