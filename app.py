@@ -61,7 +61,7 @@ def home():
     sound_path = os.path.join("sons", "menu.wav")
     if os.path.exists(sound_path):
         sound_id = pygame.mixer.Sound("sons/menu.wav")
-        sound_id.set_volume(0.01)
+        sound_id.set_volume(0.03)
         sound_id.play(loops=-1)
     else:
         print(f"Sound file not found: {sound_path}")
@@ -107,7 +107,7 @@ def justePrixAmazon():
             result = "Bravo, vous avez trouvé le juste prix !"
             if os.path.exists(sound_path):
                 sound_id = pygame.mixer.Sound("sons/siu.wav")
-                sound_id.set_volume(0.01)
+                sound_id.set_volume(0.03)
                 sound_id.play()
             else:
                 print(f"Sound file not found: {sound_path}")
@@ -214,7 +214,7 @@ def register():
 def leaderboard():
     pygame.mixer.stop()
     sound_id = pygame.mixer.Sound("sons/classement.wav")
-    sound_id.set_volume(0.01)
+    sound_id.set_volume(0.03)
     sound_id.play(loops=-1)
 
     cursor = con.cursor()
