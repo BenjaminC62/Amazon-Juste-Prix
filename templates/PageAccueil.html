@@ -5,36 +5,60 @@
     <title>Page d'accueil</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-900 flex items-center justify-center min-h-screen">
-<div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto">
-    <div class="flex justify-center space-x-4 mb-4">
-        <a href="{{ url_for('register') }}"
-           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Register</a>
-        <a href="{{ url_for('login') }}"
-           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Login</a>
+<body class="bg-gray-100 text-gray-900  min-h-screen">
+<header class="flex justify-between items-center p-4 bg-white shadow-md w-full">
+    <a href="{{ url_for('leaderboard') }}"
+       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">Afficher
+        le classement</a>
+    <div class="flex justify-between items-center space-x-4">
+        {% if user %}
+        <img class="w-10 h-10 rounded-full"
+             src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACEklEQVR4nO2Yz0tUURTH7yLLjX9DrS1DECTnnJyFLmzhUggC3zkTtAjc1Oz7CxSHxJbqXgRxqeYm0HOyVVYQrQxa1KppWjX94DyGihyneXdG31XuBy48eD/4ft89955zrnORSCRyrhil/QEgrSDrAbDUbNg1ssyPlPSaC5WJmbeXgHQRSb4j689mA1jrSLLQP3Vw0YUmHkmfHie8iZHtoEwg6ZN2xf8Z8tiFEvOtwqZVOMG0XM1bv2ss2Ix/v2GCZC4EA698DSDJy7z1OyD54m9AqyEs4Kq3AdbPees/+yGELPPei5h1Nm/9zsqDNMN6bKPIe/0uBKw8yL6FasWFgpUFwLqVIfY3h+7t97iQMBNWHrQKpzT7klaCE/83Vh5YhrUdxnJEmifsmnU2mJiPRCKRSEcUk51eIJ1E1mUg+YQs75B1vN33MZExZHkDJB+AdMm+ZQcD7qQpJDKIpCvNegAg/YYkD4qPdi4c977dA9Jy+myT3gBZl3F693rXhReT3StIutZmkfYaWB5as18oPeuz0TjsKttf//835AeQrI6UXlzuivhCSe4gydcOui7PXkFqmOjtjsRjIjOnLRyPVK5630s8JHs3fBqV7s+E1m/efT6c3QDpRt7i8fcsyLqHAdseAxDP6QHYx8wG8haN/4xoAM/aDADp+2DWAMthdgOst0IwASyHmMhEZgORSCTiToNf59jNJJZ1QWQAAAAASUVORK5CYII="
+             alt="person-male">
+        <span class="font-semibold">{{ user }}</span>
+        <a href="{{url_for('logout')}}" class="text-blue-500 hover:text-blue-700">Déconnexion</a>
+        {% else %}
+        <a href="{{url_for('login')}}" class="text-blue-500 hover:text-blue-700">Connexion</a>
+        {% endif %}
     </div>
+</header>
+<main class="flex items-center justify-center min-h-screen">
 
-    <h1 class="text-4xl font-bold mb-4 text-center">Juste prix amazon</h1>
-    <p class="mb-2 text-center">Bienvenue sur le jeu du juste prix amazon</p>
-    <p class="mb-2 text-center">Vous allez devoir deviner le prix d'un article sur amazon</p>
-    <p class="mb-2 text-center">Si vous trouvez le juste prix, vous gagnez un point</p>
-    <p class="mb-2 text-center">Si vous ne trouvez pas le juste prix, vous perdez un point</p>
-    <p class="mb-2 text-center">Vous pouvez jouer autant de fois que vous le souhaitez</p>
-    <p class="mb-4 text-center">Vous pouvez voir le classement des joueurs en cliquant sur le lien ci-dessous</p>
-    <br>
-    <p class="mb-4 text-center">Vous pouvez commencer à jouer en cliquant sur le lien ci-dessous</p>
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center mb-48">
 
-    <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
-        <div class="flex justify-center items-center space-x-2">
-            {{ form.csrf_token }}
-            <label class="font-semibold">{{ form.difficulty.label }} : </label>
-            {{ form.difficulty(class="text-blue-600 transition duration-150 ease-in-out flex flex-row") }}
+        <h1 class="text-4xl font-bold mb-4 text-center">Juste prix amazon</h1>
+        <p class="mb-2 text-center">Bienvenue sur le jeu du juste prix amazon</p>
+        <p class="mb-2 text-center">Vous allez devoir deviner le prix d'un article sur amazon</p>
+        <p class="mb-2 text-center">Si vous trouvez le juste prix, vous gagnez un point</p>
+        <p class="mb-2 text-center">Si vous ne trouvez pas le juste prix, vous perdez un point</p>
+        <p class="mb-2 text-center">Vous pouvez jouer autant de fois que vous le souhaitez</p>
+        <br>
+        <p class="mb-4 text-center">Vous pouvez commencer à jouer en cliquant sur le lien ci-dessous</p>
+
+        <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
+            <div class="flex justify-center items-center space-x-2">
+                {{ form.csrf_token }}
+                <label class="font-semibold">{{ form.difficulty.label }} : </label>
+                {{ form.difficulty(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8")
+                }}
+            </div>
+            <button type="submit"
+                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
+                Jouer
+            </button>
+        </form>
+        <div class="fixed top-4 left-4 z-10">
+
         </div>
-        <button type="submit"
-                class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
-            Jouer
-        </button>
-    </form>
-</div>
+    </div>
+</main>
+<footer class="bg-blue-600 text-white p-4 text-center fixed bottom-0 w-full">
+    <p>Juste Prix Amazon</p>
+    <p>Réalisé par <a href="https://github.com/MatheoDalmasso" class="font-bold" target="_blank">Mathéo DALMASSO</a>,
+        <a href="https://github.com/SimonCail" class="font-bold" target="_blank">Simon CAILLIERET</a>,
+        <a href="https://github.com/Mathias92-cmd" class="font-bold" target="_blank">Mathias MOREL</a>,
+        <a href="https://github.com/BenjaminC62" class="font-bold" target="_blank">Benjamin CORNET</a></p>
+</footer>
 </body>
+
 </html>

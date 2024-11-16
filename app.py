@@ -3,7 +3,7 @@ import sqlite3
 import threading
 
 import requests
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect
 from flask_wtf import FlaskForm
 from wtforms.fields.choices import RadioField
 from wtforms.fields.numeric import IntegerField
@@ -33,10 +33,12 @@ def home():
     form = juste_prix_accueil()
     global difficulty
 
+    user = session.get('username')
+
     print("il passe dans la difficulté")
     print(form.errors)
 
-    if form.validate_on_submit() :
+    if form.validate_on_submit():
 
         print("passe dans la submit")
 
@@ -53,46 +55,51 @@ def home():
             difficulty = "hard"
             return redirect("/justePrixAmazon")  # Hard ici -> a faire
 
-    return render_template('PageAccueil.html', form=form)
-
+    return render_template('PageAccueil.html', form=form, user=user)
 
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-    if 'username' in session:
-        global image, prix, nom, difficulty
-        result = ""
+    global image, prix, nom, difficulty
+    result = ""
+    user = False
 
-        print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
+    print("(((((((((((((((((((((((((((((((((((((((((((((((((((((((")
 
-        form = justePrix()
+    form = justePrix()
+    print(session)
 
-        if form.validate_on_submit():
-            print(form.errors)
-            print("passe dansle submit")
-            if form.prix_article.data == prix:
-                print("IL passe dans le result == prix")
-                result = "Bravo, vous avez trouvé le juste prix !"
+    if form.validate_on_submit():
+        print(form.errors)
+        print("passe dansle submit")
+        if form.prix_article.data == prix:
+            print("IL passe dans le result == prix")
+            result = "Bravo, vous avez trouvé le juste prix !"
+            if 'username' in session:
+                user = True
                 session['score'] += 1
                 game_result(session['username'], True)
-            elif form.prix_article.data > prix:
-                print("IL passe dans le result > prix")
-                result = "Le prix est trop grand"
+                return render_template('MainEndGame.html', form=form, image=image, prix=prix, nom=nom, result=result,
+                                       user=user)
             else:
-                print("IL passe dans le result jsp prix")
-                result = "Le prix est trop petit"
+                return render_template('MainEndGame.html', form=form, image=image, prix=prix, nom=nom, result=result,
+                                       user=user)
 
-        print(form.errors)
-
-        if (difficulty == "easy"):
-            return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
-        elif (difficulty == "medium"):
-            return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        elif form.prix_article.data > prix:
+            print("IL passe dans le result > prix")
+            result = "Le prix est trop grand"
         else:
-            return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+            print("IL passe dans le result jsp prix")
+            result = "Le prix est trop petit"
 
+    print(form.errors)
+
+    if (difficulty == "easy"):
+        return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+    elif (difficulty == "medium"):
+        return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
     else:
-        return redirect(url_for('home'))
+        return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -105,11 +112,12 @@ def login():
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM USERS WHERE nom = ?', (username,))
         user = cursor.fetchone()
+        print(user)
         conn.close()
 
-        if user and user[3] == password:
+        if user and user[4] == password:
             session['username'] = username
-            session['score'] = user[4]  # Assuming the score is stored in the 5th column
+            session['score'] = user[5]  # Assuming the score is stored in the 5th column
             return redirect('/')
     return render_template('login.html')
 
@@ -143,11 +151,30 @@ def register():
 
         conn = sqlite3.connect('justePrix.db')
         cursor = conn.cursor()
-        cursor.execute('INSERT INTO USERS(prenom, nom, password, score) VALUES(?, ?, ?, 0)', (prenom, nom, password))
+        cursor.execute('INSERT INTO USERS(pseudo, prenom, nom, password, score) VALUES("",?, ?, ?, 0)',
+                       (prenom, nom, password))
         conn.commit()
         conn.close()
         return redirect('/login')
     return render_template('register.html')
+
+
+@app.route('/leaderboard', methods=['GET', 'POST'])
+def leaderboard():
+    cursor = con.cursor()
+    cursor.execute("SELECT nom, score FROM USERS ORDER BY score DESC")
+    users = cursor.fetchall()
+    print(users)
+    print(users[0][0])
+    con.commit()
+    return render_template('Classement.html', users=users)
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.pop('username', None)
+    session.pop('score', None)
+    return redirect('/')
 
 
 def choisirArticle():
@@ -183,7 +210,6 @@ def recupereImageArticle(article):
         print(f"Error retrieving image: {e}")
         image = None
     return image
-
 
 
 def get_prix_article(article):
@@ -225,7 +251,7 @@ def creation_bd():
 
     try:
         cursor.execute(
-            '''CREATE TABLE USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom TEXT NOT NULL, prenom TEXT NOT NULL, password TEXT NOT NULL, score INTEGER NOT NULL)''')
+            '''CREATE TABLE USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,pseudo TEXT NOT NULL, nom TEXT NOT NULL, prenom TEXT NOT NULL, password TEXT NOT NULL, score INTEGER NOT NULL)''')
         con.commit()
     except sqlite3.OperationalError:
         print("La table USERS existe déjà")
@@ -233,11 +259,13 @@ def creation_bd():
 
 creation_bd()
 
+
 def fetch_and_insert_article(cursor, article, theme):
     nom_article = getNom(article)
     prix_article = get_prix_article(article)
     cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
                    (nom_article, prix_article, article, theme))
+
 
 def insertion_bd():
     global image, prix, nom

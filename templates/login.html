@@ -6,19 +6,35 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-8 rounded shadow-md w-full max-w-lg">
-        <h1 class="text-3xl font-bold text-center mb-3">Login</h1>
-        <form method="post" class="space-y-4">
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-                <input type="text" id="username" name="username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Username" required>
-            </div>
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" id="password" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" placeholder="Password" required>
-            </div>
-            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Login</button>
-        </form>
-    </div>
+<div class="bg-white p-8 rounded shadow-md w-full max-w-lg">
+    <h1 class="text-3xl font-bold text-center mb-3">Login</h1>
+    <form method="post" class="space-y-4">
+        <div>
+            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+            <input type="text" id="username" name="username"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                   placeholder="Username" required>
+        </div>
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" id="password" name="password"
+                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                   placeholder="Password" required>
+        </div>
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Login
+        </button>
+    </form>
+    <a type="button" href="{{url_for('home')}}"
+       class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">New Button</a>
+</div>
+
 </body>
+<footer class="bg-blue-600 text-white p-4 text-center fixed bottom-0 w-full">
+    <p>Juste Prix Amazon</p>
+    <p>Réalisé par <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
+        <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
+        <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
+        <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a></p>
+</footer>
 </html>

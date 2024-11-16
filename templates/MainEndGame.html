@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr-FR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Juste prix amazon</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+<div class="bg-white p-2 rounded shadow-md w-full max-w-lg">
+    <h1 class="text-3xl font-bold text-center mb-3">Juste prix amazon</h1>
+    <form action="" method="post" class="space-y-4">
+        <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
+        <h2 class="text-center text-lg font-semibold mt-4">Voici l'article : {{ nom }}</h2>
+        {% if image %}
+        <img src="{{ image }}" width="100px" height="100px" alt="image de l'article" class="mx-auto">
+        {% else %}
+        <p class="text-center text-gray-500">Image non disponible</p>
+        {% endif %}
+        <div class="flex justify-center">
+            {{ form.csrf_token }}
+            {{ form.prix_article.label }} : {{ form.prix_article(disabled=True) }}
+        </div>
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                disabled>
+            Valider
+        </button>
+        <div class="flex items-center justify-between mt-6">
+            <p class="text-lg font-medium">
+                Bravo, vous avez trouvé le juste prix! Vous pouvez rejouer si vous le souhaitez :
+            </p>
+            <a href="{{ url_for('home') }}"
+               class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Rejouer</a>
+        </div>
+
+        {% if user == True %}
+        <div class="flex items-center justify-center font-poppins">
+            <div class="bg-white p-4 rounded shadow-md w-full max-w-md text-center">
+                <h1 class="text-2xl font-bold mb-4">Choisissez votre pseudo</h1>
+                <div id="pseudo-display" class="text-4xl font-bold mb-6">AAA</div>
+                <p class="text-gray-600 mb-4">Utilisez les flèches haut et bas pour changer les lettres, gauche et
+                    droite pour passer à la suivante.</p>
+                <button id="submit-pseudo"
+                        class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Valider
+                </button>
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if user == False %}
+        <p class="mt-6 text-center text-lg font-medium">Ou vous pouvez vous inscrire ou connecter pour enregistrer votre
+            score :</p>
+        <div class="flex justify-center items-center mt-4 space-x-4">
+            <a href="{{ url_for('register') }}"
+               class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Register</a>
+            <a href="{{ url_for('login') }}"
+               class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">Login</a>
+        </div>
+        {% endif %}
+
+    </form>
+</div>
+<script>
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let currentPseudo = ["A", "A", "A"];
+    let currentIndex = 0;
+
+    function updateDisplay() { // Recup la lettre actuelle
+        document.getElementById("pseudo-display").textContent = currentPseudo.join("");
+    }
+
+    // Fleches
+    document.addEventListener("keydown", (event) => { // Pareil que java en vrai
+        if (event.key === "ArrowUp") {
+            // Fleche haut
+            currentPseudo[currentIndex] = alphabet[(alphabet.indexOf(currentPseudo[currentIndex]) + 1) % alphabet.length];
+        } else if (event.key === "ArrowDown") {
+            // Fleche bas
+            currentPseudo[currentIndex] = alphabet[(alphabet.indexOf(currentPseudo[currentIndex]) - 1 + alphabet.length) % alphabet.length];
+        } else if (event.key === "ArrowRight") {
+            // Fleche droite
+            currentIndex = (currentIndex + 1) % currentPseudo.length;
+        } else if (event.key === "ArrowLeft") {
+            // Fleche gauche
+            currentIndex = (currentIndex - 1 + currentPseudo.length) % currentPseudo.length;
+        }
+        updateDisplay();
+    });
+
+    document.getElementById("submit-pseudo").addEventListener("click", () => {
+        const pseudo = currentPseudo.join("");
+        // Faut le recup now
+    });
+
+    updateDisplay(); // On affiche le pseudo
+</script>
+
+</body>
+</html>
