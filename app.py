@@ -132,6 +132,11 @@ def login():
     return render_template('login.html')
 
 
+@app.route('/AjoutArticle', methods=['POST', 'GET'])
+def AjoutArticle():
+    return render_template('AjoutArticle.html')
+
+
 def update_score(username, new_score):
     conn = sqlite3.connect('justePrix.db')
     cursor = conn.cursor()
