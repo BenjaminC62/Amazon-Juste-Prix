@@ -20,14 +20,19 @@
     </a>
 </header>
 <div class="bg-white p-2 rounded shadow-md w-full max-w-lg mt-16">
-    <h1 class="text-3xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</h1>
+    <h1 class="text-3xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
+        %}Juste prix Amazon{% endif %}</h1>
     <form action="" method="post" class="space-y-4">
         <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
         <h2 class="text-center text-lg font-semibold mt-4">{{ nom }}</h2>
+
         {% if image %}
-        <img src="{{ image }}" width="100px" height="100px" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
+        <img src="{{ image }}" width="100px" height="100px"
+             alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
+             class="mx-auto">
         {% else %}
-        <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}</p>
+        <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non
+            disponible{% endif %}</p>
         {% endif %}
         <div class="flex justify-center">
             {{ form.csrf_token }}
@@ -41,7 +46,8 @@
 </body>
 <footer class="bg-blue-600 text-white p-4 text-center fixed bottom-0 w-full">
     <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
-    <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %} <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
+    <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %} <a
+            href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
         <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
         <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
         <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a></p>

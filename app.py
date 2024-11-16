@@ -1,6 +1,5 @@
 import random
 import sqlite3
-import threading
 
 import requests
 from flask import Flask, render_template, request, session, redirect
@@ -108,7 +107,6 @@ def justePrixAmazon():
         return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
 
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -118,14 +116,19 @@ def login():
         conn = sqlite3.connect('justePrix.db')
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM USERS WHERE nom = ?', (username,))
-        user = cursor.fetchone()
+        user = cursor.fetchall()
         print(user)
         conn.close()
 
-        if user and user[4] == password:
-            session['username'] = username
-            session['score'] = user[5]  # Assuming the score is stored in the 5th column
-            return redirect('/')
+        print(user[0][4])
+
+        if user:
+            for i in range(len(user)):
+                print(i)
+                if user[i][4] == password:
+                    session['username'] = username
+                    session['score'] = user[i][5]  # Assuming the score is stored in the 5th column
+                    return redirect('/')
     return render_template('login.html')
 
 
@@ -136,10 +139,12 @@ def update_score(username, new_score):
     conn.commit()
     conn.close()
 
+
 @app.route('/change_language/<lang>')
 def change_language(lang):
     session['lang'] = lang
     return redirect(request.referrer)
+
 
 def game_result(username, gagner):
     if gagner:
