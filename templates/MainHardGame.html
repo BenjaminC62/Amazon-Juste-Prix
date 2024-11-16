@@ -1,39 +1,41 @@
-<!doctype html>
-<html lang="fr-FR">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Juste prix amazon</title>
+    <title>{% if session.get('lang') == 'en' %}Main Hard{% else %}Difficile Principal{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
-<div class="bg-white p-2 rounded shadow-md w-full max-w-lg">
-    <h1 class="text-3xl font-bold text-center mb-3">Juste prix amazon</h1>
-    <form action="" method="post" class="space-y-4">
+<body class="bg-gray-100 text-gray-900 min-h-screen">
+<header class="flex justify-between items-center p-4 bg-white shadow-md w-full">
+    <div class="flex space-x-4">
+        <a href="{{ url_for('change_language', lang='fr') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">Fr</a>
+        <a href="{{ url_for('change_language', lang='en') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">En</a>
+    </div>
+</header>
 
-        <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
-        {% if image %}
-        <img src="{{ image }}" width="100px" height="100px" alt="image de l'article" class="mx-auto">
-        {% else %}
-        <p class="text-center text-gray-500">Image non disponible</p>
-        {% endif %}
-        <div class="flex justify-center">
-            {{ form.csrf_token }}
-            {{ form.prix_article.label }} : {{ form.prix_article() }}
-        </div>
-        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Valider
-        </button>
-    </form>
-</div>
+<main class="flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center mb-48">
+        <h1 class="text-4xl font-bold mb-4 text-center">
+            {% if session.get('lang') == 'en' %}Main Hard{% else %}Difficile Principal{% endif %}
+        </h1>
+        <p class="mb-2 text-center">
+            {% if session.get('lang') == 'en' %}Welcome to the Main Hard page{% else %}Bienvenue sur la page Difficile Principal{% endif %}
+        </p>
+        <p class="mb-2 text-center">
+            {% if session.get('lang') == 'en' %}Here you can find hard tasks{% else %}Ici, vous pouvez trouver des tâches difficiles{% endif %}
+        </p>
+        <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
+            <div class="flex justify-center items-center space-x-2">
+                <label class="font-semibold">
+                    {% if session.get('lang') == 'en' %}Task{% else %}Tâche{% endif %}
+                </label>
+                <input type="text" name="task" class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
+            </div>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
+                {% if session.get('lang') == 'en' %}Submit{% else %}Soumettre{% endif %}
+            </button>
+        </form>
+    </div>
+</main>
 </body>
-<footer class="bg-blue-600 text-white p-4 text-center fixed bottom-0 w-full">
-    <p>Juste Prix Amazon</p>
-    <p>Réalisé par <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
-        <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
-        <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
-        <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a></p>
-</footer>
 </html>

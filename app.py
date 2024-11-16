@@ -34,33 +34,35 @@ class juste_prix_accueil(FlaskForm):
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    lang = session.get('lang', 'en')
     form = juste_prix_accueil()
-    global difficulty , theme
+    form.difficulty.choices = [
+        ('easy', 'Facile' if lang == 'fr' else 'Easy'),
+        ('medium', 'Moyen' if lang == 'fr' else 'Medium'),
+        ('hard', 'Difficile' if lang == 'fr' else 'Hard')
+    ]
+    form.theme.choices = [
+        ('default', 'Tous les thèmes' if lang == 'fr' else 'All themes'),
+        ('livre', 'Livre' if lang == 'fr' else 'Book'),
+        ('jeu_video', 'Jeu vidéo' if lang == 'fr' else 'Video game'),
+        ('pc', 'PC'),
+        ('carte_graphique', 'Carte graphique' if lang == 'fr' else 'Graphics card')
+    ]
 
+    global difficulty, theme
     user = session.get('username')
 
-    print("il passe dans la difficulté")
-    print(form.errors)
-
     if form.validate_on_submit():
-
-        print("passe dans la submit")
         difficulty = form.difficulty.data
         theme = form.theme.data
         choisirArticle()
 
-        if form.difficulty.data == "easy":
-            print("c bon ici")
-            difficulty = "easy"
-            return redirect("/justePrixAmazon")  # Easy ici -> a changer le MainGame
-
-        if form.difficulty.data == "medium":
-            difficulty = "medium"
-            return redirect("/justePrixAmazon")  # Medium ici -> a faire
-
-        if form.difficulty.data == "hard":
-            difficulty = "hard"
-            return redirect("/justePrixAmazon")  # Hard ici -> a faire
+        if difficulty == "easy":
+            return redirect("/justePrixAmazon")
+        elif difficulty == "medium":
+            return redirect("/justePrixAmazon")
+        elif difficulty == "hard":
+            return redirect("/justePrixAmazon")
 
     return render_template('PageAccueil.html', form=form, user=user)
 
@@ -136,6 +138,10 @@ def update_score(username, new_score):
     conn.commit()
     conn.close()
 
+@app.route('/change_language/<lang>')
+def change_language(lang):
+    session['lang'] = lang
+    return redirect(request.referrer)
 
 def game_result(username, gagner):
     if gagner:

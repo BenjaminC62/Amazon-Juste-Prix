@@ -2,39 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>{% if session.get('lang') == 'en' %}Login{% else %}Connexion{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-<div class="bg-white p-8 rounded shadow-md w-full max-w-lg">
-    <h1 class="text-3xl font-bold text-center mb-3">Login</h1>
-    <form method="post" class="space-y-4">
-        <div>
-            <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
-            <input type="text" id="username" name="username"
-                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                   placeholder="Username" required>
-        </div>
-        <div>
-            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-            <input type="password" id="password" name="password"
-                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                   placeholder="Password" required>
-        </div>
-        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Login
-        </button>
-    </form>
-    <a type="button" href="{{url_for('home')}}"
-       class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">New Button</a>
-</div>
+<body class="bg-gray-100 text-gray-900 min-h-screen">
+<header class="flex justify-between items-center p-4 bg-white shadow-md w-full">
+    <div class="flex space-x-4">
+        <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
+        <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
+        <a href="{{ url_for('home', lang='en') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{% if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
+    </div>
+</header>
 
+<main class="flex items-center justify-center min-h-screen">
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center mb-48">
+        <h1 class="text-4xl font-bold mb-4 text-center">
+            {% if session.get('lang') == 'en' %}Login{% else %}Connexion{% endif %}
+        </h1>
+        <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
+            <div class="flex justify-center items-center space-x-2">
+                <label class="font-semibold">
+                    {% if session.get('lang') == 'en' %}Username{% else %}Nom d'utilisateur{% endif %}
+                </label>
+                <input type="text" name="username" class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
+            </div>
+            <div class="flex justify-center items-center space-x-2">
+                <label class="font-semibold">
+                    {% if session.get('lang') == 'en' %}Password{% else %}Mot de passe{% endif %}
+                </label>
+                <input type="password" name="password" class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
+            </div>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
+                {% if session.get('lang') == 'en' %}Login{% else %}Connexion{% endif %}
+            </button>
+        </form>
+    </div>
+</main>
 </body>
-<footer class="bg-blue-600 text-white p-4 text-center fixed bottom-0 w-full">
-    <p>Juste Prix Amazon</p>
-    <p>Réalisé par <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
-        <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
-        <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
-        <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a></p>
-</footer>
 </html>
