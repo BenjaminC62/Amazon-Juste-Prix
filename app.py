@@ -118,8 +118,6 @@ def login():
         print(user)
         conn.close()
 
-        print(user[0][4])
-
         if user:
             for i in range(len(user)):
                 print(i)
@@ -135,8 +133,7 @@ def AjoutArticle():
     return render_template('AjoutArticle.html')
 
 
-def update_score(username, new_score):
-    conn = sqlite3.connect('justePrix.db')
+def update_score(username, new_score, conn):
     cursor = conn.cursor()
     cursor.execute('UPDATE USERS SET score = ? WHERE nom = ?', (new_score, username))
     conn.commit()
@@ -155,10 +152,9 @@ def game_result(username, gagner):
         cursor = conn.cursor()
         cursor.execute('SELECT score FROM USERS WHERE nom = ?', (username,))
         current_score = cursor.fetchone()[0]
-        conn.close()
 
         new_score = current_score + 1
-        update_score(username, new_score)
+        update_score(username, new_score, conn)
 
 
 @app.route('/register', methods=['GET', 'POST'])
