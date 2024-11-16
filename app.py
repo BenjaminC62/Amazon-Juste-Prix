@@ -3,7 +3,7 @@ import sqlite3
 import threading
 
 import requests
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_wtf import FlaskForm
 from wtforms.fields.choices import RadioField, SelectField
 from wtforms.fields.numeric import IntegerField
@@ -125,7 +125,7 @@ def login():
         if user and user[4] == password:
             session['username'] = username
             session['score'] = user[5]  # Assuming the score is stored in the 5th column
-            return redirect('/')
+            return redirect(url_for('home'))
     return render_template('login.html')
 
 
