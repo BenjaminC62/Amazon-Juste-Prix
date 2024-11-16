@@ -44,10 +44,6 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
     </svg>
 </div>
-
-    <div class="text-center mb-14">
-        <div id="countdown" class="text-6xl font-bold text-white-600 mb-4"> 01:00 </div>
-    </div>
     <header class="bg-blue-600 text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
         <div class="flex space-x-4">
             <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
@@ -55,12 +51,14 @@
             <a href="{{ url_for('home', lang='en') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{% if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
         </div>
     </header>
+    <div class="flex flex-col"><div class="text-center mb-14">
+        <div id="countdown" class="text-6xl font-bold text-white-600 mb-4"> 01:00 </div>
+    </div>
     <div class="bg-white p-2 rounded shadow-md w-full max-w-lg mt-16">
         <h1 class="text-3xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</h1>
         <form action="" method="post" class="space-y-4">
             <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
             <h2 class="text-center text-lg font-semibold mt-4">{{ nom }}</h2>
-            <h3 class="text-center text-lg font-semibold mt-4">Voici une fourchette du prix {% if prix-300 < 0 %} 0 {% else %} {{ (prix-300)|round(-2) }} {% endif %} - {{ (prix+300)|round(-2) }}</h3>
             {% if image %}
                 <img src="{{ image }}" width="100px" height="100px" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
             {% else %}
@@ -75,6 +73,7 @@
             </button>
         </form>
     </div>
+</div>
     <footer class="bg-blue-600 text-white p-4  bg-white text-center fixed bottom-0 w-full">
         <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
         <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
