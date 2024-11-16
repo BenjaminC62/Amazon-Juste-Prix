@@ -1,11 +1,15 @@
 import random
 import sqlite3
 import threading
+import os
+
+import pygame
+pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
 
 import requests
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect
 from flask_wtf import FlaskForm
-from wtforms.fields.choices import RadioField, SelectField
+from wtforms.fields.choices import RadioField , SelectField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
 
@@ -32,8 +36,10 @@ class juste_prix_accueil(FlaskForm):
                                  ('pc', 'PC'), ('carte_graphique', 'Carte graphique')])
 
 
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    pygame.mixer.stop()
     lang = session.get('lang', 'en')
     form = juste_prix_accueil()
     form.difficulty.choices = [
@@ -50,9 +56,23 @@ def home():
     ]
 
     global difficulty, theme
+    global difficulty , theme
+
+    sound_path = os.path.join("sons", "menu.wav")
+    if os.path.exists(sound_path):
+        sound_id = pygame.mixer.Sound("sons/menu.wav")
+        sound_id.set_volume(0.01)
+        sound_id.play(loops=-1)
+    else:
+        print(f"Sound file not found: {sound_path}")
     user = session.get('username')
 
+    print("il passe dans la difficulté")
+    print(form.errors)
+
     if form.validate_on_submit():
+
+        print("passe dans la submit")
         difficulty = form.difficulty.data
         theme = form.theme.data
         choisirArticle()
@@ -69,7 +89,10 @@ def home():
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-    global image, prix, nom, difficulty, theme
+
+    pygame.mixer.stop()
+
+    global image, prix, nom, difficulty , theme
     result = ""
     user = False
 
@@ -79,7 +102,15 @@ def justePrixAmazon():
 
     if form.validate_on_submit():
         if form.prix_article.data == prix:
-            result = "Bravo, vous avez trouvé le juste prix !" if lang == 'fr' else "Congratulations, you found the right price!"
+            print("IL passe dans le result == prix")
+            sound_path = os.path.join("sons", "siu.wav")
+            result = "Bravo, vous avez trouvé le juste prix !"
+            if os.path.exists(sound_path):
+                sound_id = pygame.mixer.Sound("sons/siu.wav")
+                sound_id.set_volume(0.01)
+                sound_id.play()
+            else:
+                print(f"Sound file not found: {sound_path}")
             if 'username' in session:
                 user = True
                 session['score'] += 1
@@ -108,9 +139,10 @@ def justePrixAmazon():
         return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
 
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    pygame.mixer.stop()
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -118,14 +150,19 @@ def login():
         conn = sqlite3.connect('justePrix.db')
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM USERS WHERE nom = ?', (username,))
-        user = cursor.fetchone()
+        user = cursor.fetchall()
         print(user)
         conn.close()
 
-        if user and user[4] == password:
-            session['username'] = username
-            session['score'] = user[5]  # Assuming the score is stored in the 5th column
-            return redirect(url_for('home'))
+        print(user[0][4])
+
+        if user:
+            for i in range(len(user)):
+                print(i)
+                if user[i][4] == password:
+                    session['username'] = username
+                    session['score'] = user[i][5]  # Assuming the score is stored in the 5th column
+                    return redirect('/')
     return render_template('login.html')
 
 
@@ -136,10 +173,12 @@ def update_score(username, new_score):
     conn.commit()
     conn.close()
 
+
 @app.route('/change_language/<lang>')
 def change_language(lang):
     session['lang'] = lang
     return redirect(request.referrer)
+
 
 def game_result(username, gagner):
     if gagner:
@@ -155,6 +194,7 @@ def game_result(username, gagner):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    pygame.mixer.stop()
     if request.method == 'POST':
         prenom = request.form['prenom']
         nom = request.form['nom']
@@ -172,6 +212,11 @@ def register():
 
 @app.route('/leaderboard', methods=['GET', 'POST'])
 def leaderboard():
+    pygame.mixer.stop()
+    sound_id = pygame.mixer.Sound("sons/classement.wav")
+    sound_id.set_volume(0.01)
+    sound_id.play(loops=-1)
+
     cursor = con.cursor()
     cursor.execute("SELECT nom, score FROM USERS ORDER BY score DESC")
     users = cursor.fetchall()
@@ -183,6 +228,7 @@ def leaderboard():
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
+    pygame.mixer.stop()
     session.pop('username', None)
     session.pop('score', None)
     return redirect('/')
