@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if session.get('lang') == 'en' %}Add Article{% else %}Ajouter un article{% endif %}</title>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+<header class="bg-blue-600 text-white p-4 flex items-center justify-between">
+    <div class="flex space-x-4">
+        <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
+        <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
+    </div>
+    <h1 class="text-2xl font-bold flex-grow text-center">{% if session.get('lang') == 'en' %}Add Article{% else
+        %}Ajouter un article{% endif %}</h1>
+</header>
+<main class="container mx-auto p-4 flex flex-col items-center justify-center flex-grow">
+    <form action="{{ url_for('add_article') }}" method="post"
+          class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-lg">
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="title">{% if session.get('lang') == 'en'
+                %}Title{% else %}Titre{% endif %}</label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   id="title" name="title" type="text"
+                   placeholder="{% if session.get('lang') == 'en' %}Title{% else %}Titre{% endif %}">
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="description">{% if session.get('lang') ==
+                'en' %}Description{% else %}Description{% endif %}</label>
+            <textarea
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="description" name="description"
+                    placeholder="{% if session.get('lang') == 'en' %}Description{% else %}Description{% endif %}"></textarea>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="price">{% if session.get('lang') == 'en'
+                %}Price{% else %}Prix{% endif %}</label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                   id="price" name="price" type="number" step="0.01"
+                   placeholder="{% if session.get('lang') == 'en' %}Price{% else %}Prix{% endif %}">
+        </div>
+        <div class="flex items-center justify-between">
+            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit">
+                {% if session.get('lang') == 'en' %}Add{% else %}Ajouter{% endif %}
+            </button>
+        </div>
+    </form>
+    <div class="mt-8">
+        <a href="{{ url_for('home') }}"
+           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">{% if session.get('lang')
+            == 'en' %}Back to Home{% else %}Retour à la page d'accueil{% endif %}</a>
+    </div>
+</main>
+</body>
+</html>
