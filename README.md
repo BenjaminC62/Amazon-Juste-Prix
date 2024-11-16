@@ -15,6 +15,8 @@
 
 ### Benjamin : 
 * Fonction qui récupère l'image de l'article
+* Rectification des différentes fonctions de la base de données
+* 
 
 ### Mathéo :
 * Fonction qui récupère le nom de l'article
@@ -50,4 +52,3 @@ Nous avons choisi d'utiliser une "developer branch workflow".
 * Création d'une fonction qui récupère le nom de l'article placé en paramètre
 * Création de la fonction principale du jeu
 * Création d'un fichier de styles 
-
