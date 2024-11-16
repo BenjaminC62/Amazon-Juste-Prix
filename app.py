@@ -140,7 +140,8 @@ def justePrixAmazon():
 @app.route('/rules', methods=['GET', 'POST'])
 def rules():
     pygame.mixer.stop()
-    return render_template('regle.html')
+    user = session.get('username')
+    return render_template('regle.html', user=user)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
