@@ -35,6 +35,21 @@
                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Rejouer</a>
         </div>
 
+        {% if user == True %}
+        <div class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+            <div class="bg-white p-4 rounded shadow-md w-full max-w-md text-center">
+                <h1 class="text-2xl font-bold mb-4">Choisissez votre pseudo</h1>
+                <div id="pseudo-display" class="text-4xl font-bold mb-6">AAA</div>
+                <p class="text-gray-600 mb-4">Utilisez les flèches haut et bas pour changer les lettres, gauche et
+                    droite pour passer à la suivante.</p>
+                <button id="submit-pseudo"
+                        class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Valider
+                </button>
+            </div>
+        </div>
+        {% endif %}
+
+
         {% if user == False %}
         <p class="mt-6 text-center text-lg font-medium">Ou vous pouvez vous inscrire ou connecter pour enregistrer votre
             score :</p>
@@ -48,5 +63,17 @@
 
     </form>
 </div>
+<script>
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let currentPseudo = ["A", "A", "A"];
+    let currentIndex = 0;
+
+    function updateDisplay() { // Recup la lettre actuelle
+        document.getElementById("pseudo-display").textContent = currentPseudo.join("");
+    }
+
+    
+</script>
+
 </body>
 </html>

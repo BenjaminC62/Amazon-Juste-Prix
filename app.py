@@ -112,11 +112,12 @@ def login():
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM USERS WHERE nom = ?', (username,))
         user = cursor.fetchone()
+        print(user)
         conn.close()
 
-        if user and user[3] == password:
+        if user and user[4] == password:
             session['username'] = username
-            session['score'] = user[4]  # Assuming the score is stored in the 5th column
+            session['score'] = user[5]  # Assuming the score is stored in the 5th column
             return redirect('/')
     return render_template('login.html')
 
