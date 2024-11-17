@@ -37,7 +37,7 @@
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen font-poppins">
-    <header class="flex justify-between items-center p-4 bg-blue-600 shadow-md w-full">
+    <header class="flex justify-between items-center p-4 bg-blue-600 bg-white shadow-md w-full">
         <div class="flex space-x-4">
             <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
             <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
@@ -69,13 +69,17 @@
                 <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
                     {% if session.get('lang') == 'en' %}Login{% else %}Connexion{% endif %}
                 </button>
+                <br>
+                <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline">
+                    {% if session.get('lang') == 'en' %}Don't have an account? Register{% else %}Pas de compte? Inscrivez-vous{% endif %}
+                </a>
             </form>
             <div class="mt-8">
                 <a href="{{ url_for('home') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">{% if session.get('lang') == 'en' %}Back to Home{% else %}Retour à la page d'accueil{% endif %}</a>
             </div>
         </div>
     </main>
-    <footer class="bg-blue-600 text-white p-4 text-center w-full">
+    <footer class="bg-blue-600 bg-white text-white p-4 text-center w-full">
         <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
         <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
             <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,

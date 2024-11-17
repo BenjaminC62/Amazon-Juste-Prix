@@ -60,7 +60,7 @@ def home():
         ('plusieurs_articles', 'Plusieurs articles' if lang == 'fr' else 'Multiple items')
     ]
 
-    global difficulty, theme, mode
+    global difficulty, theme, mode, liste_article
 
     sound_path = os.path.join("sons", "menu.wav")
     if os.path.exists(sound_path):
@@ -79,6 +79,7 @@ def home():
         difficulty = form.difficulty.data
         theme = form.theme.data
         mode = form.mode.data
+        liste_article = []
         if mode == 'un_article':
             choisirArticle()
         else:
@@ -110,7 +111,6 @@ def justePrixAmazon():
         if form.prix_article.data == prix:
             print("IL passe dans le result == prix")
             sound_path = os.path.join("sons", "siu.wav")
-            result = "Bravo, vous avez trouvé le juste prix !"
             if os.path.exists(sound_path):
                 sound_id = pygame.mixer.Sound("sons/siu.wav")
                 sound_id.set_volume(0.03)
@@ -165,6 +165,9 @@ def justePrixAmazon():
 @app.route('/rules', methods=['GET', 'POST'])
 def rules():
     pygame.mixer.stop()
+    sound_id = pygame.mixer.Sound("sons/regles.wav")
+    sound_id.set_volume(0.03)
+    sound_id.play()
     user = session.get('username')
     return render_template('regle.html', user=user)
 
@@ -172,7 +175,9 @@ def rules():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     pygame.mixer.stop()
-
+    sound_id = pygame.mixer.Sound("sons/connexion.wav")
+    sound_id.set_volume(0.03)
+    sound_id.play()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -197,6 +202,9 @@ def login():
 @app.route('/AjoutArticle', methods=['POST', 'GET'])
 def AjoutArticle():
     pygame.mixer.stop()
+    sound_id = pygame.mixer.Sound("sons/ajouterArticle.wav")
+    sound_id.set_volume(0.03)
+    sound_id.play()
     add = False
     if request.method == 'POST':
         nom_article = request.form['nom_article']
@@ -243,6 +251,9 @@ def game_result(username, gagner):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     pygame.mixer.stop()
+    sound_id = pygame.mixer.Sound("sons/connexion.wav")
+    sound_id.set_volume(0.03)
+    sound_id.play()
     if request.method == 'POST':
         prenom = request.form['prenom']
         nom = request.form['nom']

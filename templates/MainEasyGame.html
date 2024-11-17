@@ -86,7 +86,7 @@
     </div>
 </header>
 {% if mode == "un_article" %}
-<div class="bg-white p-2 rounded shadow-md w-full max-w-lg mt-16">
+<div class="bg-white p-2 rounded shadow-md w-full max-w-lg ">
     <h1 class="text-4xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
         %}Juste Prix Amazon{% endif %}</h1>
     <form action="" method="post" class="space-y-4">
@@ -115,14 +115,14 @@
     </form>
 </div>
 {% else %}
-<div class="bg-white p-2 rounded shadow-md w-full mt-16">
+<div class="bg-white p-2 rounded shadow-md w-full">
     <h1 class="text-4xl font-bold text-center mb-3">
         {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
     </h1>
     <form action="" method="post" class="space-y-4">
         <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
 
-        <div class="flex flex-wrap justify-center gap-8">
+        <div class="flex flex-wrap justify-center items-center gap-8">
             {% for article in liste_article %}
             <div class="w-full max-w-xs">
                 <h2 class="text-center text-xl font-semibold mt-4">{{ article[1] }}</h2>
@@ -135,9 +135,9 @@
                 </h3>
 
                 {% if article[5] %}
-                <img src="{{ article[5] }}" width="150px" height="150px"
+                <img src="{{ article[5] }}"
                      alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-                     class="mx-auto">
+                     class="mx-auto w-52 h-52 object-contain">
                 {% else %}
                 <p class="text-center text-gray-500 mb-4">
                     {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
@@ -149,7 +149,7 @@
 
         <div class="flex justify-center text-lg mt-8 flex-col items-center">
             {{ form.csrf_token }}
-            <div class="form-group">
+            <div class="mt-8">
                 <label class="text-gray-700 font-bold">{{ form.prix_article.label }}</label>
                 {{ form.prix_article(class="border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2
                 focus:ring-blue-500") }}
