@@ -321,7 +321,7 @@ def choisirArticle():
 
 def choisirPlusieursArticle():
     global liste_article
-    global image, prix, nom, theme
+    global prix, nom, theme
     conn = sqlite3.connect('justePrix.db')
     cursor = conn.cursor()
 
@@ -380,7 +380,7 @@ def recupereImageArticle(article):
             raise Exception("No images found for the article.")
     except Exception as e:
         print(f"Error retrieving image: {e}")
-        image = None
+        image = ""
     return image
 
 
@@ -431,7 +431,7 @@ def creation_bd():
     cursor = conn.cursor()
     try:
         cursor.execute(
-            '''CREATE TABLE ARTICLE(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom_article TEXT NOT NULL, prix_article FLOAT NOT NULL, ref_article TEXT NOT NULL , theme TEXT NOT NULL)''')
+            '''CREATE TABLE ARTICLE(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom_article TEXT NOT NULL, prix_article FLOAT NOT NULL, ref_article TEXT NOT NULL , theme TEXT NOT NULL, image TEXT NOT NULL)''')
         conn.commit()
         conn.close()
     except sqlite3.OperationalError:
@@ -451,8 +451,9 @@ creation_bd()
 def fetch_and_insert_article(cursor, article, theme):
     nom_article = getNom(article)
     prix_article = get_prix_article(article)
-    cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
-                   (nom_article, prix_article, article, theme))
+    image = recupereImageArticle(article)
+    cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme, image) VALUES(?,?,?,?,?)''',
+                   (nom_article, prix_article, article, theme, image))
 
 
 def insertion_bd():
@@ -469,17 +470,10 @@ def insertion_bd():
     }
 
     cursor = conn.cursor()
-    cursor.execute('''DELETE FROM ARTICLE''')
-    cursor.execute('''DELETE FROM sqlite_sequence WHERE name='ARTICLE';''')
-    conn.commit()
 
     for theme, article_list in articles.items():
         for article in article_list:
             fetch_and_insert_article(cursor, article, theme)
-
-    conn.commit()
-    cursor.execute('''INSERT INTO USERS(nom, prenom, password, score) VALUES(?,?,?,?)''',
-                   ("test", "admin", "admin", 0))
     conn.commit()
 
 
