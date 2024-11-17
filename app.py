@@ -103,7 +103,6 @@ def justePrixAmazon():
         if form.prix_article.data == prix:
             print("IL passe dans le result == prix")
             sound_path = os.path.join("sons", "siu.wav")
-            result = "Bravo, vous avez trouvé le juste prix !"
             if os.path.exists(sound_path):
                 sound_id = pygame.mixer.Sound("sons/siu.wav")
                 sound_id.set_volume(0.03)
