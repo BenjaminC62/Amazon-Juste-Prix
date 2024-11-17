@@ -172,7 +172,9 @@ def rules():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     pygame.mixer.stop()
-
+    sound_id = pygame.mixer.Sound("sons/connexion.wav")
+    sound_id.set_volume(0.03)
+    sound_id.play()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -246,6 +248,9 @@ def game_result(username, gagner):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     pygame.mixer.stop()
+    sound_id = pygame.mixer.Sound("sons/connexion.wav")
+    sound_id.set_volume(0.03)
+    sound_id.play()
     if request.method == 'POST':
         prenom = request.form['prenom']
         nom = request.form['nom']
