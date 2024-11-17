@@ -162,6 +162,9 @@ def justePrixAmazon():
 @app.route('/rules', methods=['GET', 'POST'])
 def rules():
     pygame.mixer.stop()
+    sound_id = pygame.mixer.Sound("sons/regles.wav")
+    sound_id.set_volume(0.03)
+    sound_id.play()
     user = session.get('username')
     return render_template('regle.html', user=user)
 
