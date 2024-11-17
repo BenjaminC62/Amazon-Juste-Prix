@@ -335,9 +335,7 @@ def choisirPlusieursArticle():
     if nb_article == 0:
         raise Exception("No articles found for the selected theme.")
 
-    nb_random_article = random.randint(1, nb_article)
-
-    for _ in range(nb_random_article):
+    for _ in range(4):
         item_random = random.randint(1, nb_article)
         if theme == 'default':
             cursor.execute("SELECT * FROM ARTICLE WHERE id = ?", (item_random,))

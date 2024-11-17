@@ -57,76 +57,104 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
-<div class="flex justify-end items-center absolute top-0 right-0 m-4 z-10">
-    <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27"
-         fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-         class="cursor-pointer moon-icon">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
-    </svg>
-</div>
-<header class="bg-blue-600 text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
-    <div class="flex space-x-4">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins flex-col">
+<header class="bg-blue-600 text-white p-4 flex items-center justify-between w-full fixed top-0 left-0 z-50 shadow-md">
+    <div class="flex items-center space-x-4">
         <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
         <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
         <a href="{{ url_for('home', lang='en') }}"
            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{%
             if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
     </div>
+
+    <div class="flex items-center">
+        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="cursor-pointer moon-icon">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" class="fill-current"></path>
+        </svg>
+    </div>
 </header>
-<div class="bg-white p-2 rounded shadow-md w-full max-w-lg mt-16">
-    <h1 class="text-3xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
-        %}Juste prix Amazon{% endif %}</h1>
+
+
+<div class="bg-white p-4 rounded shadow-md mx-auto mt-24">
+    <h1 class="text-3xl font-bold text-center mb-6">
+        {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
+    </h1>
+
     {% if mode == "un_article" %}
-    <form action="" method="post" class="space-y-4">
-        <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
-        <h2 class="text-center text-lg font-semibold mt-4">{{ nom }}</h2>
-        <h3 class="text-center text-lg font-semibold mt-4">Voici une fourchette du prix {% if prix-300 < 0 %} 0 {% else
-            %} {{ (prix-300)|round(-2) }} {% endif %} - {{ (prix+300)|round(-2) }}</h3>
+    <div class="bg-gray-50 p-6 rounded shadow-md">
+        <h2 class="text-center text-lg font-semibold mb-4">{{ result }}</h2>
+        <h2 class="text-center text-lg font-semibold text-gray-800 mb-4">{{ nom }}</h2>
+        <h3 class="text-center text-sm font-medium text-gray-600 mb-6">
+            {% if prix - 300 < 0 %} 0 {% else %} {{ (prix-300)|round(-2) }} {% endif %}
+            - {{ (prix+300)|round(-2) }}
+        </h3>
+
         {% if image %}
-        <img src="{{ image }}" width="100px" height="100px"
-             alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-             class="mx-auto">
-        {% else %}
-        <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non
-            disponible{% endif %}</p>
-        {% endif %}
-        <div class="flex justify-center">
-            {{ form.csrf_token }}
-            {{ form.prix_article.label }}: {{ form.prix_article() }}
+        <div class="flex justify-center mb-6">
+            <img src="{{ image }}" width="150" height="150"
+                 alt="{% if session.get('lang') == 'en' %}Item image{% else %}Image de l'article{% endif %}"
+                 class="rounded shadow-lg">
         </div>
-        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
-        </button>
-    </form>
+        {% else %}
+        <p class="text-center text-gray-500 mb-6">
+            {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
+        </p>
+        {% endif %}
+
+        <form action="" method="post" class="space-y-4">
+            <div class="flex justify-center items-center gap-4">
+                {{ form.csrf_token }}
+                <label class="text-gray-700 font-bold">{{ form.prix_article.label }}</label>
+                {{ form.prix_article(class="border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2
+                focus:ring-blue-500") }}
+            </div>
+            <button type="submit"
+                    class="block w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+                {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
+            </button>
+        </form>
+    </div>
     {% else %}
-    <form action="" method="post" class="space-y-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {% for article in liste_article %}
-        <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
-        <h2 class="text-center text-lg font-semibold mt-4">{{ article[1] }}</h2>
-        <h3 class="text-center text-lg font-semibold mt-4">Voici une fourchette du prix {% if article[2]-300 < 0 %} 0
-            {% else
-            %} {{ (article[2]-300)|round(-2) }} {% endif %} - {{ (article[2]+300)|round(-2) }}</h3>
-        {% if article[5] %}
-        <img src="{{ article[5] }}" width="100px" height="100px"
-             alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-             class="mx-auto">
-        {% else %}
-        <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non
-            disponible{% endif %}</p>
-        {% endif %}
-        {% endfor %}
-        <div class="flex justify-center">
-            {{ form.csrf_token }}
-            {{ form.prix_article.label }}: {{ form.prix_article() }}
+        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
+            <h2 class="text-center text-lg font-semibold text-gray-800 mb-4">{{ article[1] }}</h2>
+            <h3 class="text-center text-sm font-medium text-gray-600 mb-4">
+                Voici une fourchette du prix :
+                {% if article[2]-300 < 0 %} 0 {% else %} {{ (article[2]-300)|round(-2) }} {% endif %}
+                - {{ (article[2]+300)|round(-2) }}
+            </h3>
+            {% if article[5] %}
+            <img src="{{ article[5] }}"
+                 alt="{% if session.get('lang') == 'en' %}Item image{% else %}Image de l'article{% endif %}"
+                 class="w-32 h-32 mx-auto object-cover rounded mb-4">
+            {% else %}
+            <p class="text-center text-gray-500 mb-4">
+                {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
+            </p>
+            {% endif %}
         </div>
-        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        {% endfor %}
+    </div>
+
+    <form action="" method="post" class="space-y-4 mt-6">
+        <div class="flex justify-center items-center gap-4">
+            {{ form.csrf_token }}
+            <label class="text-gray-700 font-bold">{{ form.prix_article.label }}</label>
+            {{ form.prix_article(class="border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2
+            focus:ring-blue-500") }}
+        </div>
+        <button type="submit"
+                class="block w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
             {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
         </button>
     </form>
     {% endif %}
 </div>
-<footer class="bg-blue-600 text-white p-4  bg-white text-center w-full">
+
+<footer class="bg-blue-600 text-white w-full p-4 text-center mt-10">
     <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
     <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
         <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
