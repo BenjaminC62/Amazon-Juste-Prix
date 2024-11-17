@@ -107,8 +107,8 @@
         <h3 class="text-center text-lg font-semibold mt-4">Voici une fourchette du prix {% if article[2]-300 < 0 %} 0
             {% else
             %} {{ (article[2]-300)|round(-2) }} {% endif %} - {{ (article[2]+300)|round(-2) }}</h3>
-        {% if article[?] %}
-        <img src="{{ article.image }}" width="100px" height="100px"
+        {% if article[5] %}
+        <img src="{{ article[5] }}" width="100px" height="100px"
              alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
              class="mx-auto">
         {% else %}
@@ -126,7 +126,7 @@
     </form>
     {% endif %}
 </div>
-<footer class="bg-blue-600 text-white p-4  bg-white text-center fixed bottom-0 w-full">
+<footer class="bg-blue-600 text-white p-4  bg-white text-center w-full">
     <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
     <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
         <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,

@@ -433,7 +433,6 @@ def creation_bd():
         cursor.execute(
             '''CREATE TABLE ARTICLE(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom_article TEXT NOT NULL, prix_article FLOAT NOT NULL, ref_article TEXT NOT NULL , theme TEXT NOT NULL, image TEXT NOT NULL)''')
         conn.commit()
-        conn.close()
     except sqlite3.OperationalError:
         print("La table ARTICLE existe déjà")
 
@@ -441,6 +440,7 @@ def creation_bd():
         cursor.execute(
             '''CREATE TABLE USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,pseudo TEXT NOT NULL, nom TEXT NOT NULL, prenom TEXT NOT NULL, password TEXT NOT NULL, score INTEGER NOT NULL)''')
         conn.commit()
+        conn.close()
     except sqlite3.OperationalError:
         print("La table USERS existe déjà")
 
