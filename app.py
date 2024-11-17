@@ -60,7 +60,7 @@ def home():
         ('plusieurs_articles', 'Plusieurs articles' if lang == 'fr' else 'Multiple items')
     ]
 
-    global difficulty, theme, mode
+    global difficulty, theme, mode, liste_article
 
     sound_path = os.path.join("sons", "menu.wav")
     if os.path.exists(sound_path):
@@ -79,6 +79,7 @@ def home():
         difficulty = form.difficulty.data
         theme = form.theme.data
         mode = form.mode.data
+        liste_article = []
         if mode == 'un_article':
             choisirArticle()
         else:
