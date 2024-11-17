@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr-FR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
+    <style>
+        .dark {
+            background-color: #1a202c;
+            color: #ffffff;
+        }
+
+        .dark .bg-white {
+            background-color: #2d3748;
+        }
+
+        .dark svg {
+            stroke: #ffffff;
+        }
+        header, footer {
+            background-color: #2d3748;
+        }
+
+        .dark .table-header {
+            background-color: #2d3748;
+            color: #ffffff;
+        }
+
+        .dark .table-row {
+            background-color: #4a5568;
+            color: #ffffff;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: #4a5568;
+        }
+
+        .dark .text-gray-900 {
+            color: #f7fafc;
+        }
+
+        .dark .text-blue-600 {
+            color: #63b3ed;
+        }
+
+        .dark .bg-blue-500 {
+            background-color: #3182ce;
+        }
+        .dark .bg-blue-700 {
+            background-color: #2b6cb0;
+        }
+        .dark input {
+        color: black;
+        background-color: white;
+        }
+        .form-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; /* Ajoute de l'espace entre les éléments */
+    }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+    <div class="flex justify-end items-center absolute top-0 right-0 m-4 z-10">
+        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer moon-icon">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
+        </svg>
+    </div>
+    <header class="bg-blue-600 text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
+        <div class="flex space-x-4">
+            <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
+            <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
+            <a href="{{ url_for('home', lang='en') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{% if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
+        </div>
+    </header>
+    <div class="bg-white p-2 rounded shadow-md w-full max-w-lg mt-16">
+        <h1 class="text-4xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</h1>
+        <form action="" method="post" class="space-y-4">
+            <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
+            <h2 class="text-center text-xl font-semibold mt-4">{{ nom }}</h2>
+            <h3 class="text-center text-lg font-semibold mt-4">Voici une fourchette du prix : {% if prix-300 < 0 %} 0 {% else %} {{ (prix-300)|round(-2) }} {% endif %} - {{ (prix+300)|round(-2) }}</h3>
+            {% if image %}
+                <img src="{{ image }}" width="150px" height="150px" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
+            {% else %}
+            <p class="text-center text-gray-500 mb-4">
+                {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
+            </p>
+            {% endif %}
+            <div class="flex justify-center text-lg">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                {{ form.prix_article.label }}: {{ form.prix_article() }}
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
+            </button>
+        </form>
+    </div>
+    <footer class="bg-blue-600 text-white p-4  bg-white text-center fixed bottom-0 w-full">
+        <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
+        <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
+            <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
+            <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
+            <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
+            <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a>
+        </p>
+    </footer>
+    <script>
+        const themeIcon = document.getElementById('theme-toggle-icon');
+        const body = document.body;
+        if (localStorage.getItem('dark-mode') === 'true') {
+            body.classList.add('dark');
+            updateIcon('dark');
+        }
+        themeIcon.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            const isDarkMode = body.classList.contains('dark');
+            localStorage.setItem('dark-mode', isDarkMode);
+            updateIcon(isDarkMode ? 'dark' : 'light');
+        });
+        function updateIcon(mode) {
+            if (mode === 'dark') {
+                themeIcon.innerHTML = `
+                    <circle cx="12" cy="12" r="5" fill="white"/>
+                    <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="white"/>
+                `;
+            } else {
+                themeIcon.innerHTML = `
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
