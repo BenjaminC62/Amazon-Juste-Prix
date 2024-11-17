@@ -95,6 +95,10 @@ def justePrixAmazon():
     result = ""
     user = False
 
+    if mode == "plusieurs_articles":
+        for i in range(len(liste_article)):
+            prix += liste_article[i][2]
+
     lang = session.get('lang', 'fr')
     form = justePrix()
     form.prix_article.label.text = "Price of the item" if lang == 'en' else "Prix de l'article"
