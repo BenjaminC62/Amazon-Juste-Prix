@@ -60,7 +60,7 @@ def home():
         ('plusieurs_articles', 'Plusieurs articles' if lang == 'fr' else 'Multiple items')
     ]
 
-    global difficulty, theme, mode, liste_article
+    global difficulty, theme, mode, liste_article, passage
 
     sound_path = os.path.join("sons", "menu.wav")
     if os.path.exists(sound_path):
@@ -80,6 +80,7 @@ def home():
         theme = form.theme.data
         mode = form.mode.data
         liste_article = []
+        passage = 0
         if mode == 'un_article':
             choisirArticle()
         else:
@@ -98,6 +99,7 @@ def justePrixAmazon():
     user = False
 
     if mode == "plusieurs_articles" and passage == 0:
+        prix = 0
         passage += 1
         for i in range(len(liste_article)):
             prix += liste_article[i][2]
@@ -121,12 +123,14 @@ def justePrixAmazon():
                 user = True
                 session['score'] += 1
                 game_result(session['username'], True)
-                # cursor = conn.cursor()
-                # cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
-                # pseudo = cursor.fetchone()[0]
-                # print(pseudo)
+                conn = sqlite3.connect('justePrix.db')
+                cursor = conn.cursor()
+                cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
+                pseudo = cursor.fetchone()[0]
+                conn.close()
+                print(pseudo)
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
-                                       user=user, mode=mode, liste_article=liste_article)
+                                       user=user, mode=mode, liste_article=liste_article, pseudo=pseudo)
             else:
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
                                        user=user, mode=mode, liste_article=liste_article)
@@ -326,8 +330,7 @@ def choisirArticle():
     if article:
         nom = article[1]
         prix = article[2]
-        ref = article[3]
-        image = recupereImageArticle(ref)
+        image = article[5]
     else:
         raise Exception("Failed to fetch the article from the database.")
 
