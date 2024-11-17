@@ -7,52 +7,35 @@
     <title>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
-    <style>
-        body {
-            background-color: #1a202c;
-        }
+   <style>
+    body {
+        background-color: #f0f0f0; /* Couleur de fond par défaut */
+    }
 
-        .dark {
-            background-color: #1a202c;
-            color: #ffffff;
-        }
+    .dark {
+        background-color: #1a202c; /* Couleur de fond pour le mode sombre */
+        color: #ffffff;
+    }
 
-        header, footer {
-            background-color: #2d3748;
-        }
+    .highlight {
+        background-color: #f0f8ff;
+        padding: 10px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
 
-        .dark header, .dark footer {
-            background-color: #2d3748;
-        }
+    .highlight:hover {
+        background-color: #e0e8ff;
+    }
 
-        .section-central {
-            background-color: #2d3748;
-        }
+    .dark .highlight {
+        background-color: #2d3748; /* Couleur de fond pour le mode sombre */
+    }
 
-        .dark .table-header {
-            background-color: #2d3748;
-            color: #ffffff;
-        }
-        .dark .table-row {
-            background-color: #4a5568;
-            color: #ffffff;
-        }
-        .dark .bg-gray-50 {
-            background-color: #4a5568;
-        }
-        .dark .text-gray-900 {
-            color: #f7fafc;
-        }
-        .dark .text-blue-600 {
-            color: #63b3ed;
-        }
-        .dark .bg-blue-500 {
-            background-color: #3182ce;
-        }
-        .dark .bg-blue-700 {
-            background-color: #2b6cb0;
-        }
-    </style>
+    .dark .highlight:hover {
+        background-color: #3b4758; /* Couleur de fond au survol pour le mode sombre */
+    }
+</style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen font-poppins">
     <header class="flex justify-between items-center p-4 bg-blue-600 shadow-md w-full">
@@ -92,9 +75,13 @@
             {% else %}
             <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}</p>
             {% endif %}
-            <div class="flex items-center justify-between mt-6">
-                <p class="text-lg font-medium">
-                    {% if session.get('lang') == 'en' %}Congratulations, you found the right price! You can play again if you want:{% else %}Bravo, vous avez trouvé le juste prix! Vous pouvez rejouer si vous le souhaitez :{% endif %}
+            <div class="flex items-center justify-between mt-6 highlight">
+                 <p class="text-lg font-medium">
+                    {% if session.get('lang') == 'en' %}
+                    Congratulations, you found the right price! You can play again if you want or you can register or log in to save your score :
+                    {% else %}
+                    Bravo, vous avez trouvé le juste prix! Vous pouvez rejouer si vous le souhaitez ou vous pouvez vous inscrire ou connecter pour enregistrer votre score :
+                    {% endif %}
                 </p>
             </div>
             {% if user == True %}
@@ -108,7 +95,6 @@
             </div>
             {% endif %}
             {% if user == False %}
-            <p class="mt-6 text-center text-lg font-medium">{% if session.get('lang') == 'en' %}Or you can register or log in to save your score :{% else %}Ou vous pouvez vous inscrire ou connecter pour enregistrer votre score :{% endif %}</p>
             <div class="flex justify-center items-center mt-4 space-x-4">
                 <a href="{{ url_for('register') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Register{% else %}S'inscrire{% endif %}</a>
                 <a href="{{ url_for('login') }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Login{% else %}Se connecter{% endif %}</a>
