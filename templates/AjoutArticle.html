@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>{% if session.get('lang') == 'en' %}Add Article{% else %}Ajouter un article{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
+
     <style>
         .dark {
             background-color: #1a202c;
@@ -63,18 +65,18 @@
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="nom_article">{% if session.get('lang') ==
                 'en'
-                %}Nom{% else %}Name{% endif %}</label>
+                %}Name{% else %}Nom{% endif %}</label>
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                    id="nom_article" name="nom_article" type="text"
-                   placeholder="{% if session.get('lang') == 'en' %}Title{% else %}Titre{% endif %}" required/>
+                   placeholder="{% if session.get('lang') == 'en' %}Item name{% else %}Nom de l'article{% endif %}" required/>
         </div>
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="ref_article">{% if session.get('lang') ==
-                'en' %}Réference{% else %}Ref{% endif %}</label>
+                'en' %}Reference{% else %}Référence{% endif %}</label>
             <input
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="ref_article" name="ref_article" type="text"
-                    placeholder="{% if session.get('lang') == 'en' %}Ref{% else %}Réference{% endif %}" required/>
+                    placeholder="{% if session.get('lang') == 'en' %}Article référence{% else %}Référence de l'article{% endif %}" required/>
         </div>
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="prix_article">{% if session.get('lang') ==
@@ -82,7 +84,7 @@
                 %}Price{% else %}Prix{% endif %}</label>
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                    id="prix_article" name="prix_article" type="number" step="0"
-                   placeholder="{% if session.get('lang') == 'en' %}Price{% else %}Prix{% endif %}" required/>
+                   placeholder="{% if session.get('lang') == 'en' %}Item price{% else %}Prix de l'article{% endif %}" required/>
         </div>
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="theme_article">{% if session.get('lang') ==
