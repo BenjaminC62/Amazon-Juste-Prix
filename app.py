@@ -1,7 +1,6 @@
+import os
 import random
 import sqlite3
-import threading
-import os
 
 import pygame
 
@@ -10,7 +9,7 @@ pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
 import requests
 from flask import Flask, render_template, request, session, redirect
 from flask_wtf import FlaskForm
-from wtforms.fields.choices import RadioField , SelectField
+from wtforms.fields.choices import RadioField, SelectField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
 
@@ -33,7 +32,7 @@ class juste_prix_accueil(FlaskForm):
     theme = SelectField("Thème",
                         choices=[('default', 'Tous les thèmes'), ('livre', 'Livre'), ('jeu_video', 'Jeu vidéo'),
                                  ('pc', 'PC'), ('carte_graphique', 'Carte graphique')])
-
+    mode = RadioField("Mode", choices=[('un_article', 'Un seul article'), ('plusieurs_articles', 'Plusieurs articles')])
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -55,7 +54,6 @@ def home():
     ]
 
     global difficulty, theme
-    global difficulty , theme
 
     sound_path = os.path.join("sons", "menu.wav")
     if os.path.exists(sound_path):
@@ -70,28 +68,21 @@ def home():
     print(form.errors)
 
     if form.validate_on_submit():
-
         print("passe dans la submit")
         difficulty = form.difficulty.data
         theme = form.theme.data
         choisirArticle()
 
-        if difficulty == "easy":
-            return redirect("/justePrixAmazon")
-        elif difficulty == "medium":
-            return redirect("/justePrixAmazon")
-        elif difficulty == "hard":
-            return redirect("/justePrixAmazon")
+        redirect('/justePrixAmazon')
 
     return render_template('PageAccueil.html', form=form, user=user)
 
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-
     pygame.mixer.stop()
 
-    global image, prix, nom, difficulty , theme
+    global image, prix, nom, difficulty, theme
     result = ""
     user = False
 
@@ -143,6 +134,7 @@ def rules():
     pygame.mixer.stop()
     user = session.get('username')
     return render_template('regle.html', user=user)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -316,8 +308,6 @@ def save_pseudo():
             conn.close()
             return "Pseudo saved successfully"
         return "Error saving pseudo"
-
-
 
 
 def recupereImageArticle(article):
