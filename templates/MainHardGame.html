@@ -36,6 +36,15 @@
         .dark .bg-blue-700 {
             background-color: #2b6cb0;
         }
+        .dark input {
+        color: black;
+        background-color: white;
+        }
+        .form-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; /* Ajoute de l'espace entre les éléments */
+    }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
@@ -51,22 +60,25 @@
             <a href="{{ url_for('home', lang='en') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{% if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
         </div>
     </header>
-    <div class="flex flex-col"><div class="text-center mb-14">
-        <div id="countdown" class="text-6xl font-bold text-white-600 mb-4"> 01:00 </div>
+    <div class="flex flex-col"><div class="text-center mb-6 mt-14">
+        <p class="text-4xl mb-3">Temps restant : </p>
+        <div id="countdown" class="text-6xl font-bold text-white-600"> 00:30 </div>
     </div>
-    <div class="bg-white p-2 rounded shadow-md w-full max-w-lg mt-16">
-        <h1 class="text-3xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</h1>
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-lg mt-8">
+        <h1 class="text-4xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</h1>
         <form action="" method="post" class="space-y-4">
             <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
-            <h2 class="text-center text-lg font-semibold mt-4">{{ nom }}</h2>
+            <h2 class="text-center text-xl font-semibold mt-4">{{ nom }}</h2>
             {% if image %}
                 <img src="{{ image }}" width="100px" height="100px" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
             {% else %}
                 <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}</p>
             {% endif %}
-            <div class="flex justify-center">
+            <div class="flex justify-center text-lg">
                 {{ form.csrf_token }}
+                <div class="form-group">
                 {{ form.prix_article.label }}: {{ form.prix_article() }}
+                </div>
             </div>
             <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
