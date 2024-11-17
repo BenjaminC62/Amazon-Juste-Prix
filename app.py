@@ -3,6 +3,7 @@ import random
 import sqlite3
 
 import pygame
+from werkzeug.utils import secure_filename
 
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
 
@@ -15,6 +16,16 @@ from wtforms.validators import DataRequired
 
 app = Flask(__name__)
 app.secret_key = 'secret'
+
+UPLOAD_FOLDER = './static/images'  # On stocks les imgs ici
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Extensions qu'on peut seulement mettre
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER  # On met le dossier de stockage des images dans la config de l'app
+
+
+def allowed_file(filename):  # Fonction qui vérifie si le fichier est une image
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 image = ""
 prix = 0
@@ -212,15 +223,23 @@ def AjoutArticle():
         prix_article = request.form['prix_article']
         ref_article = request.form['ref_article']
         theme = request.form['theme_article']
+        image_file = request.files['image_article']
 
-        conn = sqlite3.connect('justePrix.db')
-        cursor = conn.cursor()
-        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
-                       (nom_article, prix_article, ref_article, theme))
-        conn.commit()
-        conn.close()
-        add = True
-        return render_template('AjoutArticle.html', add=add)
+        if image_file and allowed_file(image_file.filename):  # Check si le fichier est une image
+            filename = secure_filename(image_file.filename)  # On sécurise le nom du fichier
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)  # On recup le chemin
+            image_file.save(filepath)  # On save l'image dans le dossier
+
+            conn = sqlite3.connect('justePrix.db')
+            cursor = conn.cursor()
+            cursor.execute(
+                '''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme, image) VALUES(?,?,?,?,?)''',
+                (nom_article, prix_article, ref_article, theme, filepath))
+            conn.commit()
+            conn.close()
+
+            add = True
+            return render_template('AjoutArticle.html', add=add)
 
     return render_template('AjoutArticle.html', add=add)
 
