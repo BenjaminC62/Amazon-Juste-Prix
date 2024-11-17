@@ -197,6 +197,9 @@ def login():
 @app.route('/AjoutArticle', methods=['POST', 'GET'])
 def AjoutArticle():
     pygame.mixer.stop()
+    sound_id = pygame.mixer.Sound("sons/ajouterArticle.wav")
+    sound_id.set_volume(0.03)
+    sound_id.play()
     add = False
     if request.method == 'POST':
         nom_article = request.form['nom_article']
