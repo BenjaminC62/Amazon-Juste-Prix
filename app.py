@@ -60,7 +60,7 @@ def home():
         ('plusieurs_articles', 'Plusieurs articles' if lang == 'fr' else 'Multiple items')
     ]
 
-    global difficulty, theme, mode
+    global difficulty, theme, mode, liste_article
 
     sound_path = os.path.join("sons", "menu.wav")
     if os.path.exists(sound_path):
@@ -79,6 +79,7 @@ def home():
         difficulty = form.difficulty.data
         theme = form.theme.data
         mode = form.mode.data
+        liste_article = []
         if mode == 'un_article':
             choisirArticle()
         else:
@@ -120,6 +121,7 @@ def justePrixAmazon():
                 user = True
                 session['score'] += 1
                 game_result(session['username'], True)
+                liste_article = []
                 # Depend de si on dit qu'il peux changer de pseudo 1 fois ou plusieur fois
                 # cursor = conn.cursor()
                 # cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
@@ -128,6 +130,7 @@ def justePrixAmazon():
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
                                        user=user)
             else:
+                liste_article = []
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
                                        user=user)
 
