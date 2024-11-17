@@ -52,6 +52,10 @@ def home():
         ('pc', 'PC'),
         ('carte_graphique', 'Carte graphique' if lang == 'fr' else 'Graphics card')
     ]
+    form.mode.choices = [
+        ('un_article', 'Un seul article' if lang == 'fr' else 'Single item'),
+        ('plusieurs_articles', 'Plusieurs articles' if lang == 'fr' else 'Multiple items')
+    ]
 
     global difficulty, theme
 
@@ -289,6 +293,36 @@ def choisirArticle():
         image = recupereImageArticle(ref)
     else:
         raise Exception("Failed to fetch the article from the database.")
+
+
+def choisirPlusieursArticle():
+    liste_article = []
+    global image, prix, nom, theme
+    conn = sqlite3.connect('justePrix.db')
+    cursor = conn.cursor()
+
+    if theme == 'default':
+        cursor.execute("SELECT COUNT(*) FROM ARTICLE")
+    else:
+        cursor.execute("SELECT COUNT(*) FROM ARTICLE WHERE theme = ?", (theme,))
+    nb_article = cursor.fetchone()[0]
+    conn.commit()
+
+    if nb_article == 0:
+        raise Exception("No articles found for the selected theme.")
+
+    nb_random_article = random.randint(1, nb_article)
+
+    for _ in range(nb_random_article):
+        item_random = random.randint(1, nb_article)
+        if theme == 'default':
+            cursor.execute("SELECT * FROM ARTICLE WHERE id = ?", (item_random,))
+        else:
+            cursor.execute("SELECT * FROM ARTICLE WHERE theme = ? LIMIT 1 OFFSET ?", (theme, item_random - 1))
+        article = cursor.fetchone()
+        liste_article.append(article)
+    conn.commit()
+    conn.close()
 
 
 @app.route('/save_pseudo', methods=['POST'])
