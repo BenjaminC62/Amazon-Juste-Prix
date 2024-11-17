@@ -121,18 +121,15 @@ def justePrixAmazon():
                 user = True
                 session['score'] += 1
                 game_result(session['username'], True)
-                liste_article = []
-                # Depend de si on dit qu'il peux changer de pseudo 1 fois ou plusieur fois
                 # cursor = conn.cursor()
                 # cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
                 # pseudo = cursor.fetchone()[0]
                 # print(pseudo)
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
-                                       user=user)
+                                       user=user, mode=mode, liste_article=liste_article)
             else:
-                liste_article = []
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
-                                       user=user)
+                                       user=user, mode=mode, liste_article=liste_article)
 
         elif form.prix_article.data > prix:
             result = "Le prix est trop grand" if lang == 'fr' else "The price is too high"
