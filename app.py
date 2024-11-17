@@ -123,12 +123,14 @@ def justePrixAmazon():
                 user = True
                 session['score'] += 1
                 game_result(session['username'], True)
-                # cursor = conn.cursor()
-                # cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
-                # pseudo = cursor.fetchone()[0]
-                # print(pseudo)
+                conn = sqlite3.connect('justePrix.db')
+                cursor = conn.cursor()
+                cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
+                pseudo = cursor.fetchone()[0]
+                conn.close()
+                print(pseudo)
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
-                                       user=user, mode=mode, liste_article=liste_article)
+                                       user=user, mode=mode, liste_article=liste_article, pseudo=pseudo)
             else:
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
                                        user=user, mode=mode, liste_article=liste_article)
@@ -328,8 +330,7 @@ def choisirArticle():
     if article:
         nom = article[1]
         prix = article[2]
-        ref = article[3]
-        image = recupereImageArticle(ref)
+        image = article[5]
     else:
         raise Exception("Failed to fetch the article from the database.")
 
