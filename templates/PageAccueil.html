@@ -97,8 +97,12 @@
                 <label class="font-semibold">
                     {% if session.get('lang') == 'en' %} {{ form.difficulty.label }} {% else %} Difficulté {% endif %}
                 </label>
-                {{ form.difficulty(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8")
-                }}
+                {{ form.difficulty(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8", required=True) }}
+            </div>
+
+            <div class="flex justify-center items-center space-x-2">
+                <label class="font-semibold">{% if session.get('lang') == 'en'%} {{ form.mode.label}} {%else%} {{ form.mode.label }} {%endif%}</label>
+                {{ form.mode(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8", name="mode", id="mode", required=True) }}
             </div>
 
             <div class="flex justify-center items-center space-x-2">
@@ -106,7 +110,7 @@
                 <label class="font-semibold">
                     {% if session.get('lang') == 'en' %} {{ form.theme.label }} {% else %} Thème {% endif %}
                 </label>
-                {{ form.theme(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8") }}
+                {{ form.theme(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8", required=True) }}
             </div>
             <button type="submit"
                     class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">

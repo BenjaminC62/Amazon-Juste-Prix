@@ -1,7 +1,6 @@
+import os
 import random
 import sqlite3
-import threading
-import os
 
 import pygame
 
@@ -10,7 +9,7 @@ pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
 import requests
 from flask import Flask, render_template, request, session, redirect
 from flask_wtf import FlaskForm
-from wtforms.fields.choices import RadioField , SelectField
+from wtforms.fields.choices import RadioField, SelectField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
 
@@ -22,6 +21,9 @@ prix = 0
 nom = ""
 difficulty = ""
 theme = ""
+liste_article = []
+mode = ""
+passage = 0
 
 
 class justePrix(FlaskForm):
@@ -33,7 +35,7 @@ class juste_prix_accueil(FlaskForm):
     theme = SelectField("Thème",
                         choices=[('default', 'Tous les thèmes'), ('livre', 'Livre'), ('jeu_video', 'Jeu vidéo'),
                                  ('pc', 'PC'), ('carte_graphique', 'Carte graphique')])
-
+    mode = RadioField("Mode", choices=[('un_article', 'Un seul article'), ('plusieurs_articles', 'Plusieurs articles')])
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -53,9 +55,12 @@ def home():
         ('pc', 'PC'),
         ('carte_graphique', 'Carte graphique' if lang == 'fr' else 'Graphics card')
     ]
+    form.mode.choices = [
+        ('un_article', 'Un seul article' if lang == 'fr' else 'Single item'),
+        ('plusieurs_articles', 'Plusieurs articles' if lang == 'fr' else 'Multiple items')
+    ]
 
-    global difficulty, theme
-    global difficulty , theme
+    global difficulty, theme, mode
 
     sound_path = os.path.join("sons", "menu.wav")
     if os.path.exists(sound_path):
@@ -70,30 +75,32 @@ def home():
     print(form.errors)
 
     if form.validate_on_submit():
-
         print("passe dans la submit")
         difficulty = form.difficulty.data
         theme = form.theme.data
-        choisirArticle()
-
-        if difficulty == "easy":
-            return redirect("/justePrixAmazon")
-        elif difficulty == "medium":
-            return redirect("/justePrixAmazon")
-        elif difficulty == "hard":
-            return redirect("/justePrixAmazon")
+        mode = form.mode.data
+        if mode == 'un_article':
+            choisirArticle()
+        else:
+            choisirPlusieursArticle()
+        return redirect('/justePrixAmazon')
 
     return render_template('PageAccueil.html', form=form, user=user)
 
 
 @app.route('/justePrixAmazon', methods=['GET', 'POST'])
 def justePrixAmazon():
-
     pygame.mixer.stop()
 
-    global image, prix, nom, difficulty , theme
+    global image, prix, nom, difficulty, theme, liste_article, mode, passage
     result = ""
     user = False
+
+    if mode == "plusieurs_articles" and passage == 0:
+        passage += 1
+        for i in range(len(liste_article)):
+            prix += liste_article[i][2]
+        print(f"Total price: {prix}")
 
     lang = session.get('lang', 'fr')
     form = justePrix()
@@ -130,11 +137,26 @@ def justePrixAmazon():
             result = "Le prix est trop petit" if lang == 'fr' else "The price is too low"
 
     if difficulty == "easy":
-        return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        if mode == "un_article":
+            return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result,
+                                   mode=mode)
+        else:
+            return render_template('MainEasyGame.html', liste_article=liste_article, form=form, result=result,
+                                   mode=mode)
     elif difficulty == "medium":
-        return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        if mode == "un_article":
+            return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result,
+                                   mode=mode)
+        else:
+            return render_template('MainMediumGame.html', liste_article=liste_article, form=form, result=result,
+                                   mode=mode)
     else:
-        return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        if mode == "un_article":
+            return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result,
+                                   mode=mode)
+        else:
+            return render_template('MainHardGame.html', liste_article=liste_article, form=form, result=result,
+                                   mode=mode)
 
 
 @app.route('/rules', methods=['GET', 'POST'])
@@ -142,6 +164,7 @@ def rules():
     pygame.mixer.stop()
     user = session.get('username')
     return render_template('regle.html', user=user)
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -298,6 +321,35 @@ def choisirArticle():
         raise Exception("Failed to fetch the article from the database.")
 
 
+def choisirPlusieursArticle():
+    global liste_article
+    global prix, nom, theme
+    conn = sqlite3.connect('justePrix.db')
+    cursor = conn.cursor()
+
+    if theme == 'default':
+        cursor.execute("SELECT COUNT(*) FROM ARTICLE")
+    else:
+        cursor.execute("SELECT COUNT(*) FROM ARTICLE WHERE theme = ?", (theme,))
+    nb_article = cursor.fetchone()[0]
+    conn.commit()
+
+    if nb_article == 0:
+        raise Exception("No articles found for the selected theme.")
+
+    for _ in range(4):
+        item_random = random.randint(1, nb_article)
+        if theme == 'default':
+            cursor.execute("SELECT * FROM ARTICLE WHERE id = ?", (item_random,))
+        else:
+            cursor.execute("SELECT * FROM ARTICLE WHERE theme = ? LIMIT 1 OFFSET ?", (theme, item_random - 1))
+        article = cursor.fetchone()
+        liste_article.append(article)
+    conn.commit()
+    print(liste_article)
+    conn.close()
+
+
 @app.route('/save_pseudo', methods=['POST'])
 def save_pseudo():
     conn = sqlite3.connect('justePrix.db')
@@ -317,8 +369,6 @@ def save_pseudo():
         return "Error saving pseudo"
 
 
-
-
 def recupereImageArticle(article):
     r = requests.get("http://ws.chez-wam.info/" + article)
     try:
@@ -330,7 +380,7 @@ def recupereImageArticle(article):
             raise Exception("No images found for the article.")
     except Exception as e:
         print(f"Error retrieving image: {e}")
-        image = None
+        image = ""
     return image
 
 
@@ -381,9 +431,8 @@ def creation_bd():
     cursor = conn.cursor()
     try:
         cursor.execute(
-            '''CREATE TABLE ARTICLE(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom_article TEXT NOT NULL, prix_article FLOAT NOT NULL, ref_article TEXT NOT NULL , theme TEXT NOT NULL)''')
+            '''CREATE TABLE ARTICLE(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, nom_article TEXT NOT NULL, prix_article FLOAT NOT NULL, ref_article TEXT NOT NULL , theme TEXT NOT NULL, image TEXT NOT NULL)''')
         conn.commit()
-        conn.close()
     except sqlite3.OperationalError:
         print("La table ARTICLE existe déjà")
 
@@ -391,6 +440,7 @@ def creation_bd():
         cursor.execute(
             '''CREATE TABLE USERS (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,pseudo TEXT NOT NULL, nom TEXT NOT NULL, prenom TEXT NOT NULL, password TEXT NOT NULL, score INTEGER NOT NULL)''')
         conn.commit()
+        conn.close()
     except sqlite3.OperationalError:
         print("La table USERS existe déjà")
 
@@ -401,8 +451,9 @@ creation_bd()
 def fetch_and_insert_article(cursor, article, theme):
     nom_article = getNom(article)
     prix_article = get_prix_article(article)
-    cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
-                   (nom_article, prix_article, article, theme))
+    image = recupereImageArticle(article)
+    cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme, image) VALUES(?,?,?,?,?)''',
+                   (nom_article, prix_article, article, theme, image))
 
 
 def insertion_bd():
@@ -419,17 +470,10 @@ def insertion_bd():
     }
 
     cursor = conn.cursor()
-    cursor.execute('''DELETE FROM ARTICLE''')
-    cursor.execute('''DELETE FROM sqlite_sequence WHERE name='ARTICLE';''')
-    conn.commit()
 
     for theme, article_list in articles.items():
         for article in article_list:
             fetch_and_insert_article(cursor, article, theme)
-
-    conn.commit()
-    cursor.execute('''INSERT INTO USERS(nom, prenom, password, score) VALUES(?,?,?,?)''',
-                   ("test", "admin", "admin", 0))
     conn.commit()
 
 
