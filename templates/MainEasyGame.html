@@ -106,7 +106,9 @@
         <div class="flex justify-center text-lg">
             {{ form.csrf_token }}
             <div class="form-group">
-                {{ form.prix_article.label }}: {{ form.prix_article() }}
+                {{ form.prix_article.label(class="dark:text-white") }} : {{ form.prix_article(class="border
+                rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+                dark:bg-gray-800 dark:text-white") }}
             </div>
         </div>
         <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
@@ -150,9 +152,10 @@
         <div class="flex justify-center text-lg mt-8 flex-col items-center">
             {{ form.csrf_token }}
             <div class="mt-8">
-                <label class="text-gray-700 font-bold">{{ form.prix_article.label }}</label>
-                {{ form.prix_article(class="border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2
-                focus:ring-blue-500") }}
+                <label class="text-gray-700 font-bold">{{ form.prix_article.label(class="dark:text-white") }} :</label>
+                {{ form.prix_article(class="border
+                rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+                dark:bg-gray-800 dark:text-white") }}
             </div>
             <button type="submit"
                     class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">

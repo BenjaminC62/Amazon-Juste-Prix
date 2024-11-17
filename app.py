@@ -3,6 +3,7 @@ import random
 import sqlite3
 
 import pygame
+from werkzeug.utils import secure_filename
 
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
 
@@ -15,6 +16,16 @@ from wtforms.validators import DataRequired
 
 app = Flask(__name__)
 app.secret_key = 'secret'
+
+UPLOAD_FOLDER = './static/images'  # On stocks les imgs ici
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Extensions qu'on peut seulement mettre
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER  # On met le dossier de stockage des images dans la config de l'app
+
+
+def allowed_file(filename):  # Fonction qui vérifie si le fichier est une image
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 image = ""
 prix = 0
@@ -60,7 +71,7 @@ def home():
         ('plusieurs_articles', 'Plusieurs articles' if lang == 'fr' else 'Multiple items')
     ]
 
-    global difficulty, theme, mode, liste_article
+    global difficulty, theme, mode, liste_article, passage
 
     sound_path = os.path.join("sons", "menu.wav")
     if os.path.exists(sound_path):
@@ -80,6 +91,7 @@ def home():
         theme = form.theme.data
         mode = form.mode.data
         liste_article = []
+        passage = 0
         if mode == 'un_article':
             choisirArticle()
         else:
@@ -98,6 +110,7 @@ def justePrixAmazon():
     user = False
 
     if mode == "plusieurs_articles" and passage == 0:
+        prix = 0
         passage += 1
         for i in range(len(liste_article)):
             prix += liste_article[i][2]
@@ -121,18 +134,17 @@ def justePrixAmazon():
                 user = True
                 session['score'] += 1
                 game_result(session['username'], True)
-                liste_article = []
-                # Depend de si on dit qu'il peux changer de pseudo 1 fois ou plusieur fois
-                # cursor = conn.cursor()
-                # cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
-                # pseudo = cursor.fetchone()[0]
-                # print(pseudo)
+                conn = sqlite3.connect('justePrix.db')
+                cursor = conn.cursor()
+                cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
+                pseudo = cursor.fetchone()[0]
+                conn.close()
+                print(pseudo)
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
-                                       user=user)
+                                       user=user, mode=mode, liste_article=liste_article, pseudo=pseudo)
             else:
-                liste_article = []
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
-                                       user=user)
+                                       user=user, mode=mode, liste_article=liste_article)
 
         elif form.prix_article.data > prix:
             result = "Le prix est trop grand" if lang == 'fr' else "The price is too high"
@@ -211,15 +223,23 @@ def AjoutArticle():
         prix_article = request.form['prix_article']
         ref_article = request.form['ref_article']
         theme = request.form['theme_article']
+        image_file = request.files['image_article']
 
-        conn = sqlite3.connect('justePrix.db')
-        cursor = conn.cursor()
-        cursor.execute('''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme) VALUES(?,?,?,?)''',
-                       (nom_article, prix_article, ref_article, theme))
-        conn.commit()
-        conn.close()
-        add = True
-        return render_template('AjoutArticle.html', add=add)
+        if image_file and allowed_file(image_file.filename):  # Check si le fichier est une image
+            filename = secure_filename(image_file.filename)  # On sécurise le nom du fichier
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)  # On recup le chemin
+            image_file.save(filepath)  # On save l'image dans le dossier
+
+            conn = sqlite3.connect('justePrix.db')
+            cursor = conn.cursor()
+            cursor.execute(
+                '''INSERT INTO ARTICLE(nom_article, prix_article, ref_article, theme, image) VALUES(?,?,?,?,?)''',
+                (nom_article, prix_article, ref_article, theme, filepath))
+            conn.commit()
+            conn.close()
+
+            add = True
+            return render_template('AjoutArticle.html', add=add)
 
     return render_template('AjoutArticle.html', add=add)
 
@@ -329,8 +349,7 @@ def choisirArticle():
     if article:
         nom = article[1]
         prix = article[2]
-        ref = article[3]
-        image = recupereImageArticle(ref)
+        image = article[5]
     else:
         raise Exception("Failed to fetch the article from the database.")
 
