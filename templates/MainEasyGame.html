@@ -121,6 +121,7 @@
         {% for article in liste_article %}
         <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
             <h2 class="text-center text-lg font-semibold text-gray-800 mb-4">{{ article[1] }}</h2>
+            <h2 class="text-center text-lg font-semibold text-gray-800 mb-4">{{ result }}</h2>
             <h3 class="text-center text-sm font-medium text-gray-600 mb-4">
                 Voici une fourchette du prix :
                 {% if article[2]-300 < 0 %} 0 {% else %} {{ (article[2]-300)|round(-2) }} {% endif %}

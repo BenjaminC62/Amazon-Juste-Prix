@@ -23,6 +23,7 @@ difficulty = ""
 theme = ""
 liste_article = []
 mode = ""
+passage = 0
 
 
 class justePrix(FlaskForm):
@@ -91,13 +92,15 @@ def home():
 def justePrixAmazon():
     pygame.mixer.stop()
 
-    global image, prix, nom, difficulty, theme, liste_article, mode
+    global image, prix, nom, difficulty, theme, liste_article, mode, passage
     result = ""
     user = False
 
-    if mode == "plusieurs_articles":
+    if mode == "plusieurs_articles" and passage == 0:
+        passage += 1
         for i in range(len(liste_article)):
             prix += liste_article[i][2]
+        print(f"Total price: {prix}")
 
     lang = session.get('lang', 'fr')
     form = justePrix()
