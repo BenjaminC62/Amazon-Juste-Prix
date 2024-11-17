@@ -56,7 +56,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins flex flex-col">
 <header class="bg-blue-600 text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
     <div class="flex space-x-4">
         <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
@@ -219,7 +219,7 @@
 {% endif %}
 
 
-<footer class="bg-blue-600 text-white p-4  bg-white text-center fixed bottom-0 w-full">
+<footer class="bg-blue-600 text-white p-4  bg-white text-center mt-8 w-full">
     <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
     <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
         <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
