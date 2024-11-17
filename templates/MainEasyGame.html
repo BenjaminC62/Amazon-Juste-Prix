@@ -2,7 +2,8 @@
 <html lang="fr-FR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -12,32 +13,40 @@
             background-color: #1a202c;
             color: #ffffff;
         }
+
         .dark .bg-white {
             background-color: #2d3748;
         }
+
         .dark svg {
             stroke: #ffffff;
         }
         header, footer {
             background-color: #2d3748;
         }
+
         .dark .table-header {
             background-color: #2d3748;
             color: #ffffff;
         }
+
         .dark .table-row {
             background-color: #4a5568;
             color: #ffffff;
         }
+
         .dark .bg-gray-50 {
             background-color: #4a5568;
         }
+
         .dark .text-gray-900 {
             color: #f7fafc;
         }
+
         .dark .text-blue-600 {
             color: #63b3ed;
         }
+
         .dark .bg-blue-500 {
             background-color: #3182ce;
         }
@@ -77,7 +86,9 @@
             {% if image %}
                 <img src="{{ image }}" width="150px" height="150px" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
             {% else %}
-                <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}</p>
+            <p class="text-center text-gray-500 mb-4">
+                {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
+            </p>
             {% endif %}
             <div class="flex justify-center text-lg">
                 {{ form.csrf_token }}
