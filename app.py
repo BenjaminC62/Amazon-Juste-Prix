@@ -21,6 +21,8 @@ prix = 0
 nom = ""
 difficulty = ""
 theme = ""
+liste_article = []
+mode = ""
 
 
 class justePrix(FlaskForm):
@@ -57,7 +59,7 @@ def home():
         ('plusieurs_articles', 'Plusieurs articles' if lang == 'fr' else 'Multiple items')
     ]
 
-    global difficulty, theme
+    global difficulty, theme, mode
 
     sound_path = os.path.join("sons", "menu.wav")
     if os.path.exists(sound_path):
@@ -75,9 +77,12 @@ def home():
         print("passe dans la submit")
         difficulty = form.difficulty.data
         theme = form.theme.data
-        choisirArticle()
-
-        redirect('/justePrixAmazon')
+        mode = form.mode.data
+        if mode == 'un_article':
+            choisirArticle()
+        else:
+            choisirPlusieursArticle()
+        return redirect('/justePrixAmazon')
 
     return render_template('PageAccueil.html', form=form, user=user)
 
@@ -86,7 +91,7 @@ def home():
 def justePrixAmazon():
     pygame.mixer.stop()
 
-    global image, prix, nom, difficulty, theme
+    global image, prix, nom, difficulty, theme, liste_article, mode
     result = ""
     user = False
 
@@ -126,11 +131,26 @@ def justePrixAmazon():
             result = "Le prix est trop petit" if lang == 'fr' else "The price is too low"
 
     if difficulty == "easy":
-        return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        if mode == "un_article":
+            return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result,
+                                   mode=mode)
+        else:
+            return render_template('MainEasyGame.html', liste_article=liste_article, form=form, result=result,
+                                   mode=mode)
     elif difficulty == "medium":
-        return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        if mode == "un_article":
+            return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result,
+                                   mode=mode)
+        else:
+            return render_template('MainMediumGame.html', liste_article=liste_article, form=form, result=result,
+                                   mode=mode)
     else:
-        return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result)
+        if mode == "un_article":
+            return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result,
+                                   mode=mode)
+        else:
+            return render_template('MainHardGame.html', liste_article=liste_article, form=form, result=result,
+                                   mode=mode)
 
 
 @app.route('/rules', methods=['GET', 'POST'])
@@ -296,7 +316,7 @@ def choisirArticle():
 
 
 def choisirPlusieursArticle():
-    liste_article = []
+    global liste_article
     global image, prix, nom, theme
     conn = sqlite3.connect('justePrix.db')
     cursor = conn.cursor()
@@ -322,6 +342,7 @@ def choisirPlusieursArticle():
         article = cursor.fetchone()
         liste_article.append(article)
     conn.commit()
+    print(liste_article)
     conn.close()
 
 
