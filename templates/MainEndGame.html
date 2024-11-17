@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
     <style>
         body {
             background-color: #1a202c;
@@ -53,28 +54,50 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
-    <div class="flex justify-end items-center absolute top-0 right-0 m-4">
-        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer moon-icon">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
-        </svg>
-    </div>
-    <div class="bg-white p-2 rounded shadow-md w-full max-w-lg section-central">
-        <h1 class="text-3xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</h1>
-        <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
-        <h2 class="text-center text-lg font-semibold mt-4">{% if session.get('lang') == 'en' %}Here is the item: {% else %}Voici l'article : {% endif %}{{ nom }}</h2>
-        {% if image %}
-            <img src="{{ image }}" width="100px" height="100px" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
-        {% else %}
-            <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}</p>
-        {% endif %}
-        <div class="flex items-center justify-between mt-6">
-            <p class="text-lg font-medium">
-                {% if session.get('lang') == 'en' %}Congratulations, you found the right price! You can play again if you want:{% else %}Bravo, vous avez trouvé le juste prix! Vous pouvez rejouer si vous le souhaitez :{% endif %}
-            </p>
-            <a href="{{ url_for('home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}</a>
+<body class="bg-gray-100 flex flex-col min-h-screen font-poppins">
+    <header class="flex justify-between items-center p-4 bg-blue-600 shadow-md w-full">
+        <div class="flex space-x-4">
+            <a href="{{ url_for('leaderboard') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
+                Leaderboard
+            </a>
+            <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
+            <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
         </div>
-        {% if user == True %}
+        <div class="flex justify-between items-center space-x-4">
+            {% if user %}
+            <img class="w-10 h-10 rounded-full" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAAAsTAAALEwEAmpwYAAACEklEQVR4nO2Yz0tUURTH7yLLjX9DrS1DECTnnJyFLmzhUggC3zkTtAjc1Oz7CxSHxJbqXgRxqeYm0HOyVVYQrQxa1KppWjX94DyGihyneXdG31XuBy48eD/4ft89955zrnORSCRyrhil/QEgrSDrAbDUbNg1ssyPlPSaC5WJmbeXgHQRSb4j689mA1jrSLLQP3Vw0YUmHkmfHie8iZHtoEwg6ZN2xf8Z8tiFEvOtwqZVOMG0XM1bv2ss2Ix/v2GCZC4EA698DSDJy7z1OyD54m9AqyEs4Kq3AdbPees/+yGELPPei5h1Nm/9zsqDNMN6bKPIe/0uBKw8yL6FasWFgpUFwLqVIfY3h+7t97iQMBNWHrQKpzT7klaCE/83Vh5YhrUdxnJEmifsmnU2mJiPRCKRSEcUk51eIJ1E1mUg+YQs75B1vN33MZExZHkDJB+AdMm+ZQcD7qQpJDKIpCvNegAg/YYkD4qPdi4c977dA9Jy+myT3gBZl3F693rXhReT3StIutZmkfYaWB5as18oPeuz0TjsKttf//835AeQrI6UXlzuivhCSe4gydcOui7PXkFqmOjtjsRjIjOnLRyPVK5630s8JHs3fBqV7s+E1m/efT6c3QDpRt7i8fcsyLqHAdseAxDP6QHYx8wG8haN/4xoAM/aDADp+2DWAMthdgOst0IwASyHmMhEZgORSCTiToNf59jNJJZ1QWQAAAAASUVORK5CYII=" alt="person-male">
+            <span class="font-semibold">{{ user }}</span>
+            <a href="{{url_for('logout')}}" class="text-blue-500 hover:text-blue-700">
+                {% if session.get('lang') == 'en' %} Logout {% else %} Déconnexion {% endif %}
+            </a>
+            {% else %}
+            <a href="{{url_for('login')}}" class="text-blue-500 hover:text-blue-700">
+                {% if session.get('lang') == 'en' %} Login {% else %} Connexion {% endif %}
+            </a>
+            {% endif %}
+            <div class="m-4">
+                <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer moon-icon">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+    <main class="flex-grow flex items-center justify-center">
+        <div class="bg-white p-2 rounded shadow-md w-full max-w-lg section-central">
+            <h1 class="text-3xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</h1>
+            <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
+            <h2 class="text-center text-lg font-semibold mt-4">{% if session.get('lang') == 'en' %}Here is the item: {% else %}Voici l'article : {% endif %}{{ nom }}</h2>
+            {% if image %}
+            <img src="{{ image }}" width="100px" height="100px" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
+            {% else %}
+            <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}</p>
+            {% endif %}
+            <div class="flex items-center justify-between mt-6">
+                <p class="text-lg font-medium">
+                    {% if session.get('lang') == 'en' %}Congratulations, you found the right price! You can play again if you want:{% else %}Bravo, vous avez trouvé le juste prix! Vous pouvez rejouer si vous le souhaitez :{% endif %}
+                </p>
+            </div>
+            {% if user == True %}
             <div class="flex items-center justify-center font-poppins">
                 <div class="bg-white p-4 rounded shadow-md w-full max-w-md text-center">
                     <h1 class="text-2xl font-bold mb-4">{% if session.get('lang') == 'en' %}Choose your nickname{% else %}Choisissez votre pseudo{% endif %}</h1>
@@ -83,15 +106,26 @@
                     <button id="submit-pseudo" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}</button>
                 </div>
             </div>
-        {% endif %}
-        {% if user == False %}
+            {% endif %}
+            {% if user == False %}
             <p class="mt-6 text-center text-lg font-medium">{% if session.get('lang') == 'en' %}Or you can register or log in to save your score :{% else %}Ou vous pouvez vous inscrire ou connecter pour enregistrer votre score :{% endif %}</p>
             <div class="flex justify-center items-center mt-4 space-x-4">
                 <a href="{{ url_for('register') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Register{% else %}S'inscrire{% endif %}</a>
                 <a href="{{ url_for('login') }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Login{% else %}Se connecter{% endif %}</a>
+                <a href="{{ url_for('home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}</a>
             </div>
-        {% endif %}
-    </div>
+            {% endif %}
+        </div>
+    </main>
+    <footer class="bg-blue-600 text-white p-4 text-center w-full">
+        <p>{% if session.get('lang') == 'en' %} Amazon Price is Right {% else %} Juste Prix Amazon {% endif %}</p>
+        <p>{% if session.get('lang') == 'en' %} Created by {% else %} Réalisé par {% endif %}
+            <a href="https://github.com/MatheoDalmasso" class="font-bold" target="_blank">Mathéo DALMASSO</a>,
+            <a href="https://github.com/SimonCail" class="font-bold" target="_blank">Simon CAILLIERET</a>,
+            <a href="https://github.com/Mathias92-cmd" class="font-bold" target="_blank">Mathias MOREL</a>,
+            <a href="https://github.com/BenjaminC62" class="font-bold" target="_blank">Benjamin CORNET</a>
+        </p>
+    </footer>
     <script>
         const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         let currentPseudo = ["A", "A", "A"];
