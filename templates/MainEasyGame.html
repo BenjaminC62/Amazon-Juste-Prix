@@ -21,7 +21,6 @@
         .dark svg {
             stroke: #ffffff;
         }
-
         header, footer {
             background-color: #2d3748;
         }
@@ -51,145 +50,91 @@
         .dark .bg-blue-500 {
             background-color: #3182ce;
         }
-
         .dark .bg-blue-700 {
             background-color: #2b6cb0;
         }
+        .dark input {
+        color: black;
+        background-color: white;
+        }
+        .form-group {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem; /* Ajoute de l'espace entre les éléments */
+    }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins flex-col">
-<header class="bg-blue-600 text-white p-4 flex items-center justify-between w-full fixed top-0 left-0 z-50 shadow-md">
-    <div class="flex items-center space-x-4">
-        <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
-        <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
-        <a href="{{ url_for('home', lang='en') }}"
-           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{%
-            if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
-    </div>
-
-    <div class="flex items-center">
-        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27"
-             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-             class="cursor-pointer moon-icon">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" class="fill-current"></path>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+    <div class="flex justify-end items-center absolute top-0 right-0 m-4 z-10">
+        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer moon-icon">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
         </svg>
     </div>
-</header>
-
-
-<div class="bg-white p-4 rounded shadow-md mx-auto mt-24">
-    <h1 class="text-3xl font-bold text-center mb-6">
-        {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
-    </h1>
-
-    {% if mode == "un_article" %}
-    <div class="bg-gray-50 p-6 rounded shadow-md">
-        <h2 class="text-center text-lg font-semibold mb-4">{{ result }}</h2>
-        <h2 class="text-center text-lg font-semibold text-gray-800 mb-4">{{ nom }}</h2>
-        <h3 class="text-center text-sm font-medium text-gray-600 mb-6">
-            {% if prix - 300 < 0 %} 0 {% else %} {{ (prix-300)|round(-2) }} {% endif %}
-            - {{ (prix+300)|round(-2) }}
-        </h3>
-
-        {% if image %}
-        <div class="flex justify-center mb-6">
-            <img src="{{ image }}" width="150" height="150"
-                 alt="{% if session.get('lang') == 'en' %}Item image{% else %}Image de l'article{% endif %}"
-                 class="rounded shadow-lg">
+    <header class="bg-blue-600 text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
+        <div class="flex space-x-4">
+            <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
+            <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
+            <a href="{{ url_for('home', lang='en') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{% if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
         </div>
-        {% else %}
-        <p class="text-center text-gray-500 mb-6">
-            {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
-        </p>
-        {% endif %}
-
+    </header>
+    <div class="bg-white p-2 rounded shadow-md w-full max-w-lg mt-16">
+        <h1 class="text-4xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</h1>
         <form action="" method="post" class="space-y-4">
-            <div class="flex justify-center items-center gap-4">
-                {{ form.csrf_token }}
-                <label class="text-gray-700 font-bold">{{ form.prix_article.label }}</label>
-                {{ form.prix_article(class="border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2
-                focus:ring-blue-500") }}
-            </div>
-            <button type="submit"
-                    class="block w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
-                {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
-            </button>
-        </form>
-    </div>
-    {% else %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-        {% for article in liste_article %}
-        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200">
-            <h2 class="text-center text-lg font-semibold text-gray-800 mb-4">{{ article[1] }}</h2>
-            <h2 class="text-center text-lg font-semibold text-gray-800 mb-4">{{ result }}</h2>
-            <h3 class="text-center text-sm font-medium text-gray-600 mb-4">
-                Voici une fourchette du prix :
-                {% if article[2]-300 < 0 %} 0 {% else %} {{ (article[2]-300)|round(-2) }} {% endif %}
-                - {{ (article[2]+300)|round(-2) }}
-            </h3>
-            {% if article[5] %}
-            <img src="{{ article[5] }}"
-                 alt="{% if session.get('lang') == 'en' %}Item image{% else %}Image de l'article{% endif %}"
-                 class="w-32 h-32 mx-auto object-cover rounded mb-4">
+            <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
+            <h2 class="text-center text-xl font-semibold mt-4">{{ nom }}</h2>
+            <h3 class="text-center text-lg font-semibold mt-4">Voici une fourchette du prix : {% if prix-300 < 0 %} 0 {% else %} {{ (prix-300)|round(-2) }} {% endif %} - {{ (prix+300)|round(-2) }}</h3>
+            {% if image %}
+                <img src="{{ image }}" width="150px" height="150px" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
             {% else %}
             <p class="text-center text-gray-500 mb-4">
                 {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
             </p>
             {% endif %}
-        </div>
-        {% endfor %}
+            <div class="flex justify-center text-lg">
+                {{ form.csrf_token }}
+                <div class="form-group">
+                {{ form.prix_article.label }}: {{ form.prix_article() }}
+                </div>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
+            </button>
+        </form>
     </div>
-
-    <form action="" method="post" class="space-y-4 mt-6">
-        <div class="flex justify-center items-center gap-4">
-            {{ form.csrf_token }}
-            <label class="text-gray-700 font-bold">{{ form.prix_article.label }}</label>
-            {{ form.prix_article(class="border rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2
-            focus:ring-blue-500") }}
-        </div>
-        <button type="submit"
-                class="block w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
-            {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
-        </button>
-    </form>
-    {% endif %}
-</div>
-
-<footer class="bg-blue-600 text-white w-full p-4 text-center mt-10">
-    <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
-    <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
-        <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
-        <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
-        <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
-        <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a>
-    </p>
-</footer>
-<script>
-    const themeIcon = document.getElementById('theme-toggle-icon');
-    const body = document.body;
-    if (localStorage.getItem('dark-mode') === 'true') {
-        body.classList.add('dark');
-        updateIcon('dark');
-    }
-    themeIcon.addEventListener('click', () => {
-        body.classList.toggle('dark');
-        const isDarkMode = body.classList.contains('dark');
-        localStorage.setItem('dark-mode', isDarkMode);
-        updateIcon(isDarkMode ? 'dark' : 'light');
-    });
-
-    function updateIcon(mode) {
-        if (mode === 'dark') {
-            themeIcon.innerHTML = `
+    <footer class="bg-blue-600 text-white p-4  bg-white text-center fixed bottom-0 w-full">
+        <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
+        <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
+            <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
+            <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
+            <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
+            <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a>
+        </p>
+    </footer>
+    <script>
+        const themeIcon = document.getElementById('theme-toggle-icon');
+        const body = document.body;
+        if (localStorage.getItem('dark-mode') === 'true') {
+            body.classList.add('dark');
+            updateIcon('dark');
+        }
+        themeIcon.addEventListener('click', () => {
+            body.classList.toggle('dark');
+            const isDarkMode = body.classList.contains('dark');
+            localStorage.setItem('dark-mode', isDarkMode);
+            updateIcon(isDarkMode ? 'dark' : 'light');
+        });
+        function updateIcon(mode) {
+            if (mode === 'dark') {
+                themeIcon.innerHTML = `
                     <circle cx="12" cy="12" r="5" fill="white"/>
                     <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="white"/>
                 `;
-        } else {
-            themeIcon.innerHTML = `
+            } else {
+                themeIcon.innerHTML = `
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
                 `;
+            }
         }
-    }
-</script>
+    </script>
 </body>
 </html>
