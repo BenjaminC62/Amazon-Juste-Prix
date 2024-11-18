@@ -61,6 +61,16 @@
         .dark .bg-blue-500:hover {
             background-color: #2b6cb0;
         }
+
+        @keyframes blink-animation {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .blink {
+            animation: blink-animation 1s infinite;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen flex flex-col font-poppins">
@@ -149,14 +159,16 @@
                 {% endfor %}
                 <div class="flex justify-center text-lg mt-8 flex-col items-center">
                 {{ form.csrf_token }}
-                <div class="mt-8">
+
+            </div>
+            </div>
+            <br>
+            <div class="mt-8 flex items-center justify-center mt-8 form-group">
                     <label class="text-gray-900 font-bold">{{ form.prix_article.label(class="dark:text-white") }} :</label>
                     {{ form.prix_article(class="border
                     rounded-lg py-2 px-3 text-black focus:outline-none focus:ring-2 focus:ring-blue-500
                     dark:bg-gray-800 dark:text-white") }}
                 </div>
-            </div>
-            </div>
         </form>
         <div id="resultMessage2" class="mt-4 text-center text-xl"></div>
     </div>
@@ -197,27 +209,45 @@
 
     let interval; // Variable pour stocker l'intervalle du compteur
 
-    // Fonction pour démarrer le countdown
+   // Fonction pour démarrer le countdown
     function startCountdown(duration, display) {
-        let timer = duration, minutes, seconds;
-        interval = setInterval(function () {
-            if (timer < 0) {
-                clearInterval(interval);
-                display.textContent = "00:00";
-                window.location.href = "{{ url_for('lose') }}";
-            }
+        let timer = duration; // Durée initiale en secondes
+        let minutes, seconds;
+
+        const interval = setInterval(function () {
+            // Calcul des minutes et secondes
             minutes = parseInt(timer / 60, 10);
             seconds = parseInt(timer % 60, 10);
+
+            // Formater pour avoir 2 chiffres
             minutes = minutes < 10 ? "0" + minutes : minutes;
             seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            // Afficher le timer
             display.textContent = minutes + ":" + seconds;
-            timer--;
-        }, 1000);
+
+            // Ajouter l'effet de clignotement si le timer est <= 5 secondes
+            if (timer <= 5) {
+                display.classList.add('blink'); // Ajouter la classe pour l'animation
+                display.classList.remove('text-white-600'); // Optionnel : enlever une couleur précédente
+                display.classList.add('text-red-500'); // Changer la couleur en rouge
+            }
+
+            // Vérifier si le timer est terminé
+            if (timer <= 0) {
+                clearInterval(interval); // Arrêter le timer
+                display.textContent = "00:00"; // Timer fini
+                window.location.href = "{{ url_for('lose') }}"; // Rediriger si nécessaire
+            }
+
+            timer--; // Décrémenter le timer
+        }, 1000); // Intervalle : 1 seconde
     }
+
 
     // Au chargement de la page, démarre le timer
     window.onload = function () {
-        const duration = 30;
+        const duration = 30; // 60 secondes
         const mode = "{{ mode }}";
         if (mode === "un_article") {
             const display = document.querySelector('#countdown');

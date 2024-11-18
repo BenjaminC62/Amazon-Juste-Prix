@@ -134,7 +134,9 @@
                 {% endif %}
             </div>
             {% endfor %}
-            <div class="flex justify-center text-lg mt-8 flex-col items-center">
+
+        </div>
+        <div class="mt-8 flex items-center justify-center mt-8 form-group">
                 {{ form.csrf_token }}
                 <div class="mt-8">
                     <label class="text-gray-900 font-bold">{{ form.prix_article.label }}
@@ -144,7 +146,6 @@
                     dark:bg-gray-800 dark:text-white") }}
                 </div>
             </div>
-        </div>
     </form>
     <div id="resultMessage2" class="mt-4 text-center text-xl"></div>
 </div>

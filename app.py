@@ -83,11 +83,8 @@ def home():
         print(f"Sound file not found: {sound_path}")
     user = session.get('username')
 
-    print("il passe dans la difficulté")
-    print(form.errors)
 
     if form.validate_on_submit():
-        print("passe dans la submit")
         difficulty = form.difficulty.data
         theme = form.theme.data
         mode = form.mode.data
@@ -115,7 +112,6 @@ def justePrixAmazon():
         passage += 1
         for i in range(len(liste_article)):
             prix += liste_article[i][2]
-        print(f"Total price: {prix}")
 
     lang = session.get('lang', 'fr')
     form = justePrix()
@@ -123,7 +119,6 @@ def justePrixAmazon():
 
     if form.validate_on_submit():
         if form.prix_article.data == prix:
-            print("IL passe dans le result == prix")
             sound_path = os.path.join("sons", "siu.wav")
             if os.path.exists(sound_path):
                 sound_id = pygame.mixer.Sound("sons/siu.wav")
@@ -140,7 +135,6 @@ def justePrixAmazon():
                 cursor.execute("SELECT pseudo FROM USERS WHERE nom = ?", (session['username'],))
                 pseudo = cursor.fetchone()[0]
                 conn.close()
-                print(pseudo)
                 return render_template('MainEndGame.html', image=image, prix=prix, nom=nom, result=result,
                                        user=user, mode=mode, liste_article=liste_article, pseudo=pseudo)
             else:
@@ -210,15 +204,13 @@ def login():
         cursor = conn.cursor()
         cursor.execute('SELECT * FROM USERS WHERE nom = ?', (username,))
         user = cursor.fetchall()
-        print(user)
         conn.close()
 
         if user:
             for i in range(len(user)):
-                print(i)
                 if user[i][4] == password:
                     session['username'] = username
-                    session['score'] = user[i][5]  # Assuming the score is stored in the 5th column
+                    session['score'] = user[i][5]
                     return redirect('/')
     return render_template('login.html')
 
@@ -331,7 +323,6 @@ def choisirArticle():
     global image, prix, nom, theme
     conn = sqlite3.connect('justePrix.db')
     cursor = conn.cursor()
-    print(f"Selected theme: {theme}")  # Debugging statement
 
     if theme == 'default':
         cursor.execute("SELECT COUNT(*) FROM ARTICLE")
@@ -340,13 +331,13 @@ def choisirArticle():
     nb_article = cursor.fetchone()[0]
     conn.commit()
 
-    print(f"Number of articles found: {nb_article}")  # Debugging statement
+
 
     if nb_article == 0:
         raise Exception("No articles found for the selected theme.")
 
     item_random = random.randint(1, nb_article)
-    print(f"Random item number: {item_random}")  # Debugging statement
+
 
     if theme == 'default':
         cursor.execute("SELECT * FROM ARTICLE WHERE id = ?", (item_random,))
@@ -356,7 +347,7 @@ def choisirArticle():
     conn.commit()
     conn.close()
 
-    print(f"Selected article: {article}")  # Debugging statement
+
 
     if article:
         nom = article[1]
@@ -391,7 +382,6 @@ def choisirPlusieursArticle():
         article = cursor.fetchone()
         liste_article.append(article)
     conn.commit()
-    print(liste_article)
     conn.close()
 
 
