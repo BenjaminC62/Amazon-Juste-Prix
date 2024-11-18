@@ -176,8 +176,8 @@ def justePrixAmazon():
 
 @app.route('/lose', methods=['GET', 'POST'])
 def lose():
-    global image, prix, nom, mode, liste_article
     pygame.mixer.stop()
+    global image, prix, nom, mode, liste_article
     return render_template('MainEndGameLose.html', image=image, prix=prix, nom=nom, result="Vous avez perdu", user=False,
                            mode=mode, liste_article=liste_article)
 
