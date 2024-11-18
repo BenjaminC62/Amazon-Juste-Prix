@@ -95,9 +95,9 @@
         <h3 class="text-center text-lg font-semibold mt-4">{% if prix-300 < 0 %} 0 {%
             else %} {{ (prix-300)|round(-2) }} {% endif %} - {{ (prix+300)|round(-2) }}</h3>
         {% if image %}
-        <img src="{{ image }}" width="150px" height="150px"
+        <img src="{{ image }}"
              alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-             class="mx-auto">
+             class="mx-auto w-52 h-52 object-contain">
         {% else %}
         <p class="text-center text-gray-500 mb-4">
             {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
