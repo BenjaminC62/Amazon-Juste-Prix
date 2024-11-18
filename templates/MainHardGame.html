@@ -103,7 +103,9 @@
             <div class="flex justify-center text-lg">
                 {{ form.csrf_token }}
                 <div class="form-group">
-                    {{ form.prix_article.label }}: {{ form.prix_article() }}
+                    {{ form.prix_article.label }}: {{ form.prix_article(class="border
+                rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+                dark:bg-gray-800 dark:text-white") }}
                 </div>
             </div>
         </form>

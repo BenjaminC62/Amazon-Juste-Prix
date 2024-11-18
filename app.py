@@ -179,6 +179,9 @@ def justePrixAmazon():
 def lose():
     pygame.mixer.stop()
     global image, prix, nom, mode, liste_article
+    sound_id = pygame.mixer.Sound("sons/lose.wav")
+    sound_id.set_volume(0.03)
+    sound_id.play()
     return render_template('MainEndGameLose.html', image=image, prix=prix, nom=nom, result="Vous avez perdu", user=False,
                            mode=mode, liste_article=liste_article)
 
