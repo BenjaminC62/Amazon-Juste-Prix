@@ -13,37 +13,48 @@
         body {
             transition: background-color 0.3s, color 0.3s;
         }
+
         body.dark {
             background-color: #1a202c;
             color: #ffffff;
         }
+
         .dark .bg-white {
             background-color: #2d3748;
         }
+
         header, footer {
             background-color: #2d3748;
         }
+
         .dark header, .dark footer {
             background-color: #2d3748;
         }
+
         .dark .bg-gray-50 {
             background-color: #4a5568;
         }
+
         .dark .text-gray-900 {
             color: #f7fafc;
         }
+
         .dark .text-gray-600 {
             color: white;
         }
+
         .dark .text-blue-600 {
             color: #63b3ed;
         }
+
         .dark .bg-blue-500 {
             background-color: #3182ce;
         }
+
         .dark .bg-blue-700 {
             background-color: #2b6cb0;
         }
+
         .button-container {
             display: flex;
             justify-content: center;
@@ -75,28 +86,31 @@
 
     <div class="bg-white p-6 rounded shadow-md w-full max-w-lg">
         <h1 class="text-5xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
-        %}Juste Prix Amazon{% endif %}</h1>
-    <h2 class="text-center text-2xl font-semibold mt-4">{% if session.get('lang') == 'en' %} Lost ! You didn't find the price within the time limit!
-        {% else %} Perdu ! Vous n'avez pas trouvé le prix dans le temps imparti ! {% endif
-        %}</h2>
-    <h2 class="text-center text-xl font-semibold mt-4">{% if session.get('lang') == 'en' %}Here is the price of the item: {% else
-        %}Voici le vrai prix de l'article : {% endif %}{{ prix }}</h2>
-    {% if image %}
-    <img src="{{ image }}"
-         alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-         class="mx-auto w-52 h-52 object-contain">
-    {% else %}
-    <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non
-        disponible{% endif %}</p>
-    {% endif %}
-    <div class="flex items-center justify-between mt-6">
-        <p class="text-lg font-medium">
-            {% if session.get('lang') == 'en' %} Click here to play again : {% else %} Cliquez ici pour rejouer : {%
-            endif %}
-        </p>
-        <a href="{{ url_for('home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{% if
-            session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}</a>
-    </div>
+            %}Juste Prix Amazon{% endif %}</h1>
+        <h2 class="text-center text-2xl font-semibold mt-4">{% if session.get('lang') == 'en' %} Lost ! You didn't find
+            the price within the time limit!
+            {% else %} Perdu ! Vous n'avez pas trouvé le prix dans le temps imparti ! {% endif
+            %}</h2>
+        <h2 class="text-center text-xl font-semibold mt-4">{% if session.get('lang') == 'en' %}Here is the price of the
+            item: {% else
+            %}Voici le vrai prix de l'article : {% endif %}{{ prix }}</h2>
+        {% if image %}
+        <img src="{{ image }}"
+             alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
+             class="mx-auto w-52 h-52 object-contain">
+        {% else %}
+        <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non
+            disponible{% endif %}</p>
+        {% endif %}
+        <div class="flex items-center justify-between mt-6">
+            <p class="text-lg font-medium">
+                {% if session.get('lang') == 'en' %} Click here to play again : {% else %} Cliquez ici pour rejouer : {%
+                endif %}
+            </p>
+            <a href="{{ url_for('home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{%
+                if
+                session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}</a>
+        </div>
     </div>
 </div>
 {% else %}
@@ -104,51 +118,52 @@
 
     <div class="bg-white p-6 rounded shadow-md w-full max-w-lg">
         <h1 class="text-5xl font-bold text-center mb-3">
-        {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
-    </h1>
-    <h2 class="text-center text-2xl font-semibold mt-4">
-        {% if session.get('lang') == 'en' %}
-        Lost ! You didn't find the price within the time limit!
-        {% else %}
-        Perdu ! Vous n'avez pas trouvé le prix dans le temps imparti !
-        {% endif %}
-    </h2>
-    <h2 class="text-center text-xl font-semibold mt-4">
-        {% if session.get('lang') == 'en' %}Here is the price of all these items {% else %}Voici le prix de tous ces articles : {% endif %}
-        {{ prix }}
-    </h2>
-
-    <!-- Boucle pour afficher les images -->
-    <div class="grid grid-cols-4 gap-4 mt-6 items-center">
-        {% for article in liste_article %}
-        <div class="text-center">
-            {% if article[5] %}
-            <img src="{{ article[5] }}" width="200" height="200"
-                 alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-                 class="mx-auto rounded shadow-md">
-            {% else %}
-            <p class="text-gray-500">
-                {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
-            </p>
-            {% endif %}
-            <p class="text-lg font-semibold mt-2">{{ article[2] }}</p>
-        </div>
-        {% endfor %}
-    </div>
-
-    <div class="flex items-center justify-between mt-6">
-        <p class="text-lg font-medium">
+            {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
+        </h1>
+        <h2 class="text-center text-2xl font-semibold mt-4">
             {% if session.get('lang') == 'en' %}
-            Click here to play again :
+            Lost ! You didn't find the price within the time limit!
             {% else %}
-            Cliquez ici pour rejouer :
+            Perdu ! Vous n'avez pas trouvé le prix dans le temps imparti !
             {% endif %}
-        </p>
-        <a href="{{ url_for('home') }}"
-           class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-            {% if session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}
-        </a>
-    </div>
+        </h2>
+        <h2 class="text-center text-xl font-semibold mt-4">
+            {% if session.get('lang') == 'en' %}Here is the price of all these items {% else %}Voici le prix de tous ces
+            articles : {% endif %}
+            {{ prix }}
+        </h2>
+
+
+        <div class="grid grid-cols-4 gap-4 mt-6 items-center">
+            {% for article in liste_article %}
+            <div class="text-center">
+                {% if article[5] %}
+                <img src="{{ article[5] }}" width="200" height="200"
+                     alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
+                     class="mx-auto rounded shadow-md">
+                {% else %}
+                <p class="text-gray-500">
+                    {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
+                </p>
+                {% endif %}
+                <p class="text-lg font-semibold mt-2">{{ article[2] }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="flex items-center justify-between mt-6">
+            <p class="text-lg font-medium">
+                {% if session.get('lang') == 'en' %}
+                Click here to play again :
+                {% else %}
+                Cliquez ici pour rejouer :
+                {% endif %}
+            </p>
+            <a href="{{ url_for('home') }}"
+               class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                {% if session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}
+            </a>
+        </div>
     </div>
 </div>
 {% endif %}
