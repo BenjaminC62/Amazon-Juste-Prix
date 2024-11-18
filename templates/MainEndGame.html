@@ -85,7 +85,7 @@
     {% if image %}
     <img src="{{ image }}"
          alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-         class="mx-auto w-42 h-42 object-contain">
+         class="mx-auto w-52 h-52 object-contain">
     {% else %}
     <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non
         disponible{% endif %}</p>
@@ -220,7 +220,7 @@
 {% endif %}
 
 
-<footer class="bg-blue-600 text-white p-4  bg-white text-center mt-8 w-full">
+<footer class="bg-blue-600 text-white p-4 bg-white text-center mt-auto w-full">
     <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
     <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
         <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,

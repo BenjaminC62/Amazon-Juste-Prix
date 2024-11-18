@@ -43,7 +43,7 @@
         }
 
         .dark .text-blue-600 {
-            color: #63b3ed;
+            color: #ffffff;
         }
 
         .dark .bg-blue-500 {
@@ -58,6 +58,9 @@
             color: #ffffff;
         }
 
+        .dark .bg-blue-500:hover {
+            background-color: #2b6cb0;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
@@ -68,12 +71,13 @@
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
     </svg>
 </div>
-<header class="bg-blue-600 text-white p-4 flex bg-white items-center justify-between">
+<header class="bg-white text-white p-4 flex bg-white items-center justify-between">
     <div class="flex space-x-4">
         <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
         <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
     </div>
-    <h1 class="text-2xl font-bold flex-grow text-center">{% if session.get('lang') == 'en' %}Add Article{% else
+    <h1 class="text-2xl text-blue-600 font-bold flex-grow text-center">{% if session.get('lang') == 'en' %}Add Article{%
+        else
         %}Ajouter un article{% endif %}</h1>
 </header>
 <main class="container mx-auto p-4 flex flex-col items-center justify-center flex-grow">
