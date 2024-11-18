@@ -34,6 +34,9 @@
         .dark .bg-blue-700 {
             background-color: #2b6cb0;
         }
+        .dark .bg-blue-500:hover {
+            background-color: #2b6cb0;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen">
@@ -72,33 +75,27 @@
 <main class="flex items-center justify-center min-h-screen">
     <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center mb-48">
         {% if session.get('lang') == 'en' %}
-        <h1 class="text-4xl font-bold mb-4 text-center">Amazon Price Guessing Game</h1>
-        <p class="mb-2 text-center">Welcome to the Amazon Price Guessing Game</p>
-        <p class="mb-2 text-center">You will have to guess the price of an item on Amazon</p>
-        <p class="mb-2 text-center">If you guess the correct price, you earn a point</p>
-        <p class="mb-2 text-center">If you do not guess the correct price, you lose a point</p>
-        <p class="mb-2 text-center">You can play as many times as you want</p>
+        <h1 class="text-4xl font-bold mb-4 text-center">Welcome to the Amazon Price is Right game !</h1>
         <br>
-        <p class="mb-4 text-center">You can start playing by clicking the link below</p>
+        <p class=" text-xl mb-4 text-center">Start playing by choosing the difficulty, mode and theme you want : </p>
         {% else %}
-        <h1 class="text-4xl font-bold mb-4 text-center">Juste prix amazon</h1>
-        <p class="mb-2 text-center">Bienvenue sur le jeu du juste prix amazon.</p>
-        <p class="mb-2 text-center">Vous allez devoir deviner le prix d'un article sur amazon.</p>
-        <p class="mb-2 text-center">Si vous trouvez le juste prix, vous gagnez un point.</p>
-        <p class="mb-2 text-center">Si vous ne trouvez pas le juste prix, vous perdez un point.</p>
-        <p class="mb-2 text-center">Vous pouvez jouer autant de fois que vous le souhaitez.</p>
+        <h1 class="text-4xl font-bold mb-4 text-center">Bienvenue sur le jeu du Juste Prix Amazon !</h1>
         <br>
-        <p class="mb-4 text-center">Vous pouvez commencer à jouer en cliquant sur le lien ci-dessous : </p>
+        <p class="text-xl mb-4 text-center">Commencez à jouer en choisissant la difficulté, le mode et le thème que vous souhaitez : </p>
         {% endif %}
 
         <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
             <div class="flex justify-center items-center space-x-2">
                 {{ form.csrf_token }}
                 <label class="font-semibold">
-                    {% if session.get('lang') == 'en' %} {{ form.difficulty.label }} {% else %} Difficulté {% endif %}
+                    {% if session.get('lang') == 'en' %} Difficulty {% else %} Difficulté {% endif %}
                 </label>
-                {{ form.difficulty(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8")
-                }}
+                {{ form.difficulty(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8", required=True) }}
+            </div>
+
+            <div class="flex justify-center items-center space-x-2">
+                <label class="font-semibold">{% if session.get('lang') == 'en'%} {{ form.mode.label}} {%else%} {{ form.mode.label }} {%endif%}</label>
+                {{ form.mode(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8", name="mode", id="mode", required=True) }}
             </div>
 
             <div class="flex justify-center items-center space-x-2">
@@ -106,10 +103,10 @@
                 <label class="font-semibold">
                     {% if session.get('lang') == 'en' %} {{ form.theme.label }} {% else %} Thème {% endif %}
                 </label>
-                {{ form.theme(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8") }}
+                {{ form.theme(class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8", required=True) }}
             </div>
             <button type="submit"
-                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
+                    class="text-xl w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
                 {% if session.get('lang') == 'en' %} Play {% else %} Jouer {% endif %}
             </button>
         </form>

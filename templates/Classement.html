@@ -2,7 +2,8 @@
 <html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <title>{% if session.get('lang') == 'en' %}Amazon Price Guess Ranking{% else %}Classement du Juste Prix Amazon{% endif %}</title>
+    <title>{% if session.get('lang') == 'en' %}Amazon Price Guess Ranking{% else %}Classement du Juste Prix Amazon{%
+        endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
     <style>
@@ -10,110 +11,143 @@
             background-color: #1a202c;
             color: #ffffff;
         }
+
         .dark .bg-white {
             background-color: #2d3748;
         }
+
         .dark svg {
             stroke: #ffffff;
         }
+
         header, footer {
             background-color: #2d3748;
         }
+
         .dark .table-header {
             background-color: #2d3748; /* Couleur des en-têtes */
             color: #ffffff;
         }
+
         .dark .table-row {
             background-color: #4a5568; /* Couleur des lignes du tableau */
             color: #ffffff;
         }
+
         .dark .bg-gray-50 {
             background-color: #4a5568;
         }
+
         .dark .text-gray-900 {
             color: #f7fafc;
         }
+
         .dark .text-blue-600 {
-            color: #63b3ed;
+            color: #ffffff;
         }
+
         .dark .bg-blue-500 {
             background-color: #3182ce;
         }
+
         .dark .bg-blue-700 {
+            background-color: #2b6cb0;
+        }
+
+        .dark .bg-blue-500:hover {
             background-color: #2b6cb0;
         }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
-    <div class="flex justify-end items-center absolute top-0 right-0 m-4">
-        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer moon-icon">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
-        </svg>
+<div class="flex justify-end items-center absolute top-0 right-0 m-4">
+    <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27"
+         fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         class="cursor-pointer moon-icon">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
+    </svg>
+</div>
+<header class="bg-white text-white p-4 flex bg-white items-center justify-between">
+    <div class="flex space-x-4">
+        <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
+        <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
     </div>
-    <header class="bg-blue-600 text-white p-4 flex bg-white items-center justify-between">
-        <div class="flex space-x-4">
-            <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
-            <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
-        </div>
-        <h1 class="text-2xl font-bold flex-grow text-center">{% if session.get('lang') == 'en' %}Amazon Price Guess Ranking{% else %}Classement du Juste Prix Amazon{% endif %}</h1>
-    </header>
-    <main class="container mx-auto p-4 flex flex-col items-center justify-center flex-grow">
-        <table class="min-w-full bg-white shadow-md overflow-hidden rounded-lg">
-            <thead class="bg-gray-200 table-header"> <!-- Appliquer la couleur #2d3748 -->
-                <tr>
-                    <th class="py-2 px-4 border-t border-l border-r border-gray-300 text-center">{% if session.get('lang') == 'en' %}Position{% else %}Position{% endif %}</th>
-                    <th class="py-2 px-4 border-t border-r border-gray-300 text-center">{% if session.get('lang') == 'en' %}Username{% else %}Pseudo{% endif %}</th>
-                    <th class="py-2 px-4 border-t border-r border-gray-300 text-center">{% if session.get('lang') == 'en' %}Score{% else %}Score{% endif %}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i in range(10) %}
-                <tr class="table-row border-b"> <!-- Appliquer la couleur #4a5568 -->
-                    <td class="py-4 px-4 border-l border-r border-gray-300 text-center">{% if i < users|length %}{{ loop.index }}{% endif %}</td>
-                    <td class="py-4 px-4 border-r border-gray-300 text-center">{% if i < users|length %}{{ users[i][0] }}{% endif %}</td>
-                    <td class="py-4 px-4 border-r border-gray-300 text-center">{% if i < users|length %}{{ users[i][1] }}{% endif %}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="mt-8">
-            <a href="{{ url_for('home') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">{% if session.get('lang') == 'en' %}Back to Home{% else %}Retour à la page d'accueil{% endif %}</a>
-        </div>
-    </main>
-    <footer class="bg-blue-600 text-white p-4 bg-white text-center">
-        <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
-        <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
-            <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
-            <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
-            <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
-            <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a>
-        </p>
-    </footer>
-    <script>
-        const themeIcon = document.getElementById('theme-toggle-icon');
-        const body = document.body;
-        if (localStorage.getItem('dark-mode') === 'true') {
-            body.classList.add('dark');
-            updateIcon('dark');
-        }
-        themeIcon.addEventListener('click', () => {
-            body.classList.toggle('dark');
-            const isDarkMode = body.classList.contains('dark');
-            localStorage.setItem('dark-mode', isDarkMode);
-            updateIcon(isDarkMode ? 'dark' : 'light');
-        });
-        function updateIcon(mode) {
-            if (mode === 'dark') {
-                themeIcon.innerHTML = `
+    <h1 class="text-2xl text-blue-600 font-bold flex-grow text-center">{% if session.get('lang') == 'en' %}Amazon Price
+        Guess
+        Ranking{% else %}Classement du Juste Prix Amazon{% endif %}</h1>
+</header>
+<main class="container mx-auto p-4 flex flex-col items-center justify-center flex-grow">
+    <table class="min-w-full bg-white shadow-md overflow-hidden rounded-lg">
+        <thead class="bg-gray-200 table-header">
+        <tr>
+            <th class="py-2 px-4 border-t border-l border-r border-gray-300 text-center">{% if session.get('lang') ==
+                'en' %}Position{% else %}Position{% endif %}
+            </th>
+            <th class="py-2 px-4 border-t border-r border-gray-300 text-center">{% if session.get('lang') == 'en'
+                %}Username{% else %}Pseudo{% endif %}
+            </th>
+            <th class="py-2 px-4 border-t border-r border-gray-300 text-center">{% if session.get('lang') == 'en'
+                %}Score{% else %}Score{% endif %}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in range(10) %}
+        <tr class="table-row border-b">
+            <td class="py-4 px-4 border-l border-r border-gray-300 text-center">{% if i < users|length %}{{ loop.index
+                }}{% endif %}
+            </td>
+            <td class="py-4 px-4 border-r border-gray-300 text-center">{% if i < users|length %}{{ users[i][0] }}{%
+                endif %}
+            </td>
+            <td class="py-4 px-4 border-r border-gray-300 text-center">{% if i < users|length %}{{ users[i][1] }}{%
+                endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="mt-8">
+        <a href="{{ url_for('home') }}"
+           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">{% if session.get('lang')
+            == 'en' %}Back to Home{% else %}Retour à la page d'accueil{% endif %}</a>
+    </div>
+</main>
+<footer class="bg-blue-600 text-white p-4 bg-white text-center">
+    <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
+    <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
+        <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
+        <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
+        <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
+        <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a>
+    </p>
+</footer>
+<script>
+    const themeIcon = document.getElementById('theme-toggle-icon');
+    const body = document.body;
+    if (localStorage.getItem('dark-mode') === 'true') {
+        body.classList.add('dark');
+        updateIcon('dark');
+    }
+    themeIcon.addEventListener('click', () => {
+        body.classList.toggle('dark');
+        const isDarkMode = body.classList.contains('dark');
+        localStorage.setItem('dark-mode', isDarkMode);
+        updateIcon(isDarkMode ? 'dark' : 'light');
+    });
+
+    function updateIcon(mode) {
+        if (mode === 'dark') {
+            themeIcon.innerHTML = `
                     <circle cx="12" cy="12" r="5" fill="white"/>
                     <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="white"/>
                 `;
-            } else {
-                themeIcon.innerHTML = `
+        } else {
+            themeIcon.innerHTML = `
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
                 `;
-            }
         }
-    </script>
+    }
+</script>
 </body>
 </html>
