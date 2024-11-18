@@ -87,6 +87,24 @@
         <div id="countdown" class="text-6xl font-bold text-white-600"> 00:30</div>
     </div>
     <div class="bg-white p-6 rounded shadow-md w-full max-w-lg mt-8">
+        {% if timer == 0 %}
+    <div class="bg-white p-10 rounded shadow-md w-full max-w-lg mt-20">
+        <h1 class="text-5xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</h1>
+        <h2 class="text-center text-2xl font-semibold mt-4">{% if session.get('lang') == 'en' %} Too bad, you lost! {% else %} Dommage, vous avez perdu ! {% endif %}</h2>
+        <h2 class="text-center text-xl font-semibold mt-4">{% if session.get('lang') == 'en' %}Here is the price of the item: {% else %}Voici le prix de l'article : {% endif %}{{ prix }}</h2>
+        {% if image %}
+        <img src="{{ image }}" width="200" height="200" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
+        {% else %}
+        <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}</p>
+        {% endif %}
+        <div class="flex items-center justify-between mt-6">
+            <p class="text-lg font-medium">
+                {% if session.get('lang') == 'en' %} Click here to play again : {% else %} Cliquez ici pour rejouer : {% endif %}
+            </p>
+            <a href="{{ url_for('home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}</a>
+        </div>
+    </div>
+    {% else %}
         <h1 class="text-4xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
             %}Juste Prix Amazon{% endif %}</h1>
         <form action="{{ url_for('justePrixAmazon') }}" method="post" class="space-y-4">
@@ -109,6 +127,7 @@
             </button>
         </form>
         <div id="resultMessage" class="mt-4 text-center text-xl"></div>
+        {% endif %}
     </div>
 </div>
 <footer class="bg-blue-600 text-white p-4  bg-white text-center fixed bottom-0 w-full">
@@ -152,7 +171,7 @@
             if (timer < 0) {
                 clearInterval(interval);
                 display.textContent = "00:00";
-                return;
+                window.location.href = "{{ url_for('lose') }}";
             }
             minutes = parseInt(timer / 60, 10);
             seconds = parseInt(timer % 60, 10);
