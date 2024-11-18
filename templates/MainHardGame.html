@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="fr-FR">
 <head>
     <meta charset="UTF-8">
@@ -8,6 +9,7 @@
     <title>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
+
     <style>
         .dark {
             background-color: #1a202c;
@@ -54,19 +56,22 @@
         .form-group {
             display: flex;
             align-items: center;
-            gap: 0.5rem; /* Ajoute de l'espace entre les éléments */
+            gap: 0.5rem;
+        }
+
+        .dark .bg-blue-500:hover {
+            background-color: #2b6cb0;
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins flex-col">
-<header class="bg-blue-600 text-white p-4 flex items-center justify-between w-full fixed top-0 z-20">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+<header class="bg-white text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
     <div class="flex space-x-4">
         <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
         <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
         <a href="{{ url_for('home', lang='en') }}"
-           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-150 ease-in-out block text-center">
-            {% if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}
-        </a>
+           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{%
+            if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
     </div>
     <div class="flex justify-end items-center absolute top-0 right-0 m-4 z-10">
         <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27"
@@ -76,99 +81,39 @@
         </svg>
     </div>
 </header>
-{% if mode == "un_article" %}
-<div class="flex flex-col min-h-screen justify-center items-center">
+<div class="flex flex-col">
     <div class="text-center mb-6 mt-14">
-        <p class="text-4xl mb-3">Temps restant :</p>
+        <p class="text-4xl mb-3">Temps restant : </p>
         <div id="countdown" class="text-6xl font-bold text-white-600"> 00:30</div>
     </div>
-
-    <div class="bg-white p-6 rounded shadow-md w-full max-w-lg mx-auto mt-8">
-        <h1 class="text-4xl font-bold text-center mb-3">
-            {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
-        </h1>
-        <form action="" method="post" class="space-y-4">
-            <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
-            <h2 class="text-center text-xl font-semibold mt-4">{{ nom }}</h2>
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-lg mt-8">
+        <h1 class="text-4xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
+            %}Juste Prix Amazon{% endif %}</h1>
+        <form action="{{ url_for('justePrixAmazon') }}" method="post" class="space-y-4">
             {% if image %}
-            <img src="{{ image }}"
+            <img src="{{ image }}" width="100px" height="100px"
                  alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-                 class="mx-auto w-52 h-52 object-contain">
+                 class="mx-auto">
             {% else %}
-            <p class="text-center text-gray-500">
-                {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
-            </p>
+            <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image
+                non disponible{% endif %}</p>
             {% endif %}
             <div class="flex justify-center text-lg">
                 {{ form.csrf_token }}
                 <div class="form-group">
-                    {{ form.prix_article.label(class="dark:text-white") }} : {{ form.prix_article(class="border
-                    rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
-                    dark:bg-gray-800 dark:text-white") }}
+                    {{ form.prix_article.label }}: {{ form.prix_article() }}
                 </div>
             </div>
-            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button id="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
             </button>
         </form>
+        <div id="resultMessage" class="mt-4 text-center text-xl"></div>
     </div>
 </div>
-{% else %}
-<div class="bg-white p-2 rounded-lg shadow-md w-full mt-24 mb-8">
-    <div class="text-center mb-6 mt-24">
-        <p class="text-4xl mb-3">Temps restant :</p>
-        <div id="countdown2" class="text-6xl font-bold text-white-600"> 00:30</div>
-    </div>
-
-    <div class="w-full max-w-7xl mx-auto">
-        <h1 class="text-4xl font-bold text-center mb-3">
-            {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
-        </h1>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-8">
-            {% for article in liste_article %}
-            <div class="w-full max-w-xs">
-                <h2 class="text-center text-xl font-semibold mt-4">{{ article[1] }}</h2>
-
-                {% if article[5] %}
-                <img src="{{ article[5] }}"
-                     alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-                     class="mx-auto w-52 h-52 object-contain">
-                {% else %}
-                <p class="text-center text-gray-500 mb-4">
-                    {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
-                </p>
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-
-    <form action="" method="post"
-          class="flex justify-center text-lg mt-8 flex-col items-center w-full max-w-lg mx-auto">
-        {{ form.csrf_token }}
-        <div class="mt-8">
-            <label class="text-gray-700 font-bold">{ form.prix_article.label(class="dark:text-white") }} : </label>
-            {{ form.prix_article(class="border
-            rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
-            dark:bg-gray-800 dark:text-white") }}
-        </div>
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 mb-4">
-            {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
-        </button>
-    </form>
-</div>
-
-
-{% endif %}
-
-
-<footer class="bg-blue-600 text-white p-4 text-center w-full mt-auto">
-    <p>
-        {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
-    </p>
-    <p>
-        {% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
+<footer class="bg-blue-600 text-white p-4  bg-white text-center fixed bottom-0 w-full">
+    <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
+    <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
         <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
         <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
         <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
@@ -191,20 +136,19 @@
 
     function updateIcon(mode) {
         if (mode === 'dark') {
-            themeIcon.innerHTML = `
-                    <circle cx="12" cy="12" r="5" fill="white"/>
-                    <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="white"/>
-                `;
+            themeIcon.innerHTML = `<circle cx="12" cy="12" r="5" fill="white"/>
+                <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="white"/>`;
         } else {
-            themeIcon.innerHTML = `
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
-                `;
+            themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>`;
         }
     }
 
+    let interval; // Variable pour stocker l'intervalle du compteur
+
+    // Fonction pour démarrer le countdown
     function startCountdown(duration, display) {
         let timer = duration, minutes, seconds;
-        const interval = setInterval(function () {
+        interval = setInterval(function () {
             if (timer < 0) {
                 clearInterval(interval);
                 display.textContent = "00:00";
@@ -219,11 +163,53 @@
         }, 1000);
     }
 
+    // Au chargement de la page, démarre le timer
     window.onload = function () {
-        const duration = 60;
+        const duration = 30; // 60 secondes
         const display = document.querySelector('#countdown');
         startCountdown(duration, display);
     };
+
+    // Comparaison des prix
+    const correctPrice = parseInt("{{ prix }}", 10);
+    const submitButton = document.getElementById('submit');
+    const resultMessage = document.getElementById('resultMessage');
+    const priceInput = document.querySelector('input[name="prix_article"]');
+
+    // Fonction de comparaison des prix
+    function comparePrice() {
+        const enteredPrice = parseFloat(priceInput.value);
+
+        if (enteredPrice === correctPrice) {
+            clearInterval(interval); // Arrête le timer
+            resultMessage.textContent = "Bravo ! Vous avez trouvé le bon prix !";
+            resultMessage.classList.add("text-green-500");
+            resultMessage.classList.remove("text-red-500", "text-yellow-500");
+            setTimeout(() => {
+                document.querySelector('form').submit();
+            }, 500);
+        } else if (enteredPrice < correctPrice) {
+            resultMessage.textContent = "Trop bas ! Essayez encore.";
+            resultMessage.classList.add("text-yellow-500");
+            resultMessage.classList.remove("text-red-500", "text-green-500");
+        } else {
+            resultMessage.textContent = "Trop élevé ! Essayez encore.";
+            resultMessage.classList.add("text-red-500");
+            resultMessage.classList.remove("text-yellow-500", "text-green-500");
+        }
+    }
+
+    // Écouteur de clic sur le bouton "submit"
+    submitButton.addEventListener('click', comparePrice);
+
+    // Écouteur de la touche "Entrée"
+    priceInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();  // Empêche l'envoi du formulaire
+            comparePrice();  // Effectue la comparaison des prix
+        }
+    });
+
 </script>
 </body>
 </html>
