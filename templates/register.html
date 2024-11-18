@@ -93,12 +93,13 @@
                        class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
             </div>
             <button type="submit"
-                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
+                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded  text-center transition duration-150 ease-in-out">
                 {% if session.get('lang') == 'en' %}Register{% else %}Inscription{% endif %}
             </button>
             <a href="{{ url_for('login') }}" class="text-blue-600 hover:underline">
-                    {% if session.get('lang') == 'en' %}Already have an account? Log in.{% else %}Vous avez déjà un compte ? Connectez-vous.{% endif %}
-                </a>
+                {% if session.get('lang') == 'en' %}Already have an account? Log in.{% else %}Vous avez déjà un compte ?
+                Connectez-vous.{% endif %}
+            </a>
         </form>
         <div class="mt-8">
             <a href="{{ url_for('home') }}"

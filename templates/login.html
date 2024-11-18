@@ -81,16 +81,17 @@
                 </div>
             </div>
 
+            <div class="flex flex-col">
+                <button type="submit"
+                        class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold mt-4 mb-4 py-2 px-4 rounded text-center transition duration-150 ease-in-out">
+                    {% if session.get('lang') == 'en' %}Login{% else %}Connexion{% endif %}
+                </button>
+                <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline">
+                    {% if session.get('lang') == 'en' %}Don't have an account? Register{% else %}Pas de compte?
+                    Inscrivez-vous{% endif %}
+                </a>
+            </div>
 
-            <button type="submit"
-                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">
-                {% if session.get('lang') == 'en' %}Login{% else %}Connexion{% endif %}
-            </button>
-            <br>
-            <a href="{{ url_for('register') }}" class="text-blue-600 hover:underline">
-                {% if session.get('lang') == 'en' %}Don't have an account? Register{% else %}Pas de compte?
-                Inscrivez-vous{% endif %}
-            </a>
         </form>
         <div class="mt-8">
             <a href="{{ url_for('home') }}"
