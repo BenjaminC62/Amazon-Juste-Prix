@@ -45,23 +45,26 @@
     </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen font-poppins">
-    <header class="flex justify-between items-center p-4 bg-white bg-white shadow-md w-full">
-        <div class="flex space-x-4">
-            <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
-            <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
-        </div>
-        <div class="m-4">
-            <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer moon-icon">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
-            </svg>
-        </div>
-    </header>
-    <main class="flex-grow flex items-center justify-center">
-        <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center">
-            <h1 class="text-4xl font-bold mb-4 text-center">
-                {% if session.get('lang') == 'en' %}Login{% else %}Connexion{% endif %}
-            </h1>
-            <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
+<header class="flex justify-between items-center p-4 bg-white bg-white shadow-md w-full">
+    <div class="flex space-x-4">
+        <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
+        <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
+    </div>
+    <div class="m-4">
+        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27"
+             fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="cursor-pointer moon-icon">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
+        </svg>
+    </div>
+</header>
+<main class="flex-grow flex items-center justify-center">
+    <div class="bg-white shadow-md rounded-lg p-8 max-w-lg mx-auto text-center">
+        <h1 class="text-4xl font-bold mb-4 text-center">
+            {% if session.get('lang') == 'en' %}Login{% else %}Connexion{% endif %}
+        </h1>
+        <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
+            <div>
                 <div class="flex justify-center items-center space-x-2">
                     <label class="font-semibold">
                         {% if session.get('lang') == 'en' %}Username{% else %}Nom d'utilisateur{% endif %}
