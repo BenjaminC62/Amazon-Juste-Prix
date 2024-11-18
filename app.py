@@ -433,20 +433,6 @@ def get_prix_article(article):
     return result
 
 
-def verify_articles():
-    conn = sqlite3.connect('justePrix.db')
-    cursor = conn.cursor()
-    themes = ['default', 'livre', 'jeu_video', 'pc', 'carte_graphique']
-    for theme in themes:
-        if theme == 'default':
-            cursor.execute("SELECT COUNT(*) FROM ARTICLE")
-        else:
-            cursor.execute("SELECT COUNT(*) FROM ARTICLE WHERE theme = ?", (theme,))
-        nb_article = cursor.fetchone()[0]
-        print(f"Theme: {theme}, Number of articles: {nb_article}")
-    conn.commit()
-
-
 def getNom(article):
     r = requests.get(" http://ws.chez-wam.info/" + article)
     try:
@@ -511,5 +497,4 @@ def insertion_bd():
 
 
 if __name__ == '__main__':
-    verify_articles()
     app.run(debug=True)
