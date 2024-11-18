@@ -209,7 +209,7 @@
             if (timer < 0) {
                 clearInterval(interval);
                 display.textContent = "00:00";
-                return;
+                window.location.href = "{{ url_for('lose') }}";
             }
             minutes = parseInt(timer / 60, 10);
             seconds = parseInt(timer % 60, 10);
