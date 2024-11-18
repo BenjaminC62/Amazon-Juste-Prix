@@ -65,29 +65,33 @@
         </h1>
         <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
             <div class="flex flex-col gap-4 ">
-                <div class="flex flex-col gap-4 justify-start items-start">
-                    <div class="flex justify-center items-center space-x-2">
+                <div class="flex flex-col gap-4">
+
+                    <div class="flex justify-between items-center">
                         <label class="font-semibold">
                             {% if session.get('lang') == 'fr' %}Nom{% else %}Name{% endif %}
                         </label>
                         <input type="text" name="nom"
-                               class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
+                               class="ml-8 text-blue-600 transition duration-150 ease-in-out border rounded px-2 py-1">
                     </div>
-                    <div class="flex justify-center items-center space-x-2">
+
+                    <div class="flex justify-between items-center">
                         <label class="font-semibold">
                             {% if session.get('lang') == 'fr' %}Prenom{% else %}First-Name{% endif %}
                         </label>
                         <input type="text" name="prenom"
-                               class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
+                               class="ml-8 text-blue-600 transition duration-150 ease-in-out border rounded px-2 py-1">
                     </div>
-                    <div class="flex justify-center items-center space-x-2">
+
+                    <div class="flex justify-between items-center">
                         <label class="font-semibold">
                             {% if session.get('lang') == 'en' %}Password{% else %}Mot de passe{% endif %}
                         </label>
                         <input type="password" name="password"
-                               class="text-blue-600 transition duration-150 ease-in-out flex flex-row mx-8 gap-8">
+                               class="ml-8 text-blue-600 transition duration-150 ease-in-out border rounded px-2 py-1">
                     </div>
                 </div>
+
 
                 <button type="submit"
                         class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded  text-center transition duration-150 ease-in-out">

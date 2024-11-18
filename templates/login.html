@@ -64,22 +64,25 @@
             {% if session.get('lang') == 'en' %}Login{% else %}Connexion{% endif %}
         </h1>
         <form action="" method="post" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-md">
-            <div class="flex flex-col justify-stretch items-stretch ">
-                <div class="flex justify-between items-center space-x-2">
+            <div class="flex flex-col gap-4">
+
+                <div class="flex justify-between items-center">
                     <label class="font-semibold">
                         {% if session.get('lang') == 'en' %}Username{% else %}Nom d'utilisateur{% endif %}
                     </label>
                     <input type="text" name="username"
-                           class="text-blue-600 transition duration-150 ease-in-out flex-grow ml-4">
+                           class="text-blue-600 transition duration-150 ease-in-out border rounded px-2 py-1 ml-8">
                 </div>
-                <div class="flex justify-between items-center space-x-2 mt-8">
+                
+                <div class="flex justify-between items-center mt-4">
                     <label class="font-semibold">
                         {% if session.get('lang') == 'en' %}Password{% else %}Mot de passe{% endif %}
                     </label>
                     <input type="password" name="password"
-                           class="text-blue-600 transition duration-150 ease-in-out flex-grow ml-4">
+                           class="text-blue-600 transition duration-150 ease-in-out border rounded px-2 py-1 ml-8">
                 </div>
             </div>
+
 
             <div class="flex flex-col">
                 <button type="submit"
