@@ -138,9 +138,9 @@
             {% for article in liste_article %}
             <div class="text-center">
                 {% if article[5] %}
-                <img src="{{ article[5] }}" width="200" height="200"
+                <img src="{{ article[5] }}"
                      alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-                     class="mx-auto rounded shadow-md">
+                     class="mx-auto rounded w-52 h-52 object-contain">
                 {% else %}
                 <p class="text-gray-500">
                     {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}

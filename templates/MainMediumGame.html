@@ -82,7 +82,8 @@
     </div>
 </header>
 {% if mode == "un_article" %}
-<div class="flex flex-col items-center justify-center min-h-screen pt-16"> <!-- Nouvelle classe pt-16 pour espacement -->
+<div class="flex flex-col items-center justify-center min-h-screen pt-16">
+
     <div class="text-center mb-6">
         <p class="text-4xl mb-3">Temps restant :</p>
         <div id="countdown" class="text-6xl font-bold text-white-600">01:00</div>
@@ -94,9 +95,9 @@
         <br>
         <form action="{{ url_for('justePrixAmazon') }}" method="post" class="space-y-4">
             {% if image %}
-            <img src="{{ image }}" width="100px" height="100px"
+            <img src="{{ image }}"
                  alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-                 class="mx-auto">
+                 class="mx-auto w-52 h-52 object-contain">
             {% else %}
             <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image
                 non disponible{% endif %}</p>
@@ -105,8 +106,8 @@
                 {{ form.csrf_token }}
                 <div class="form-group">
                     {{ form.prix_article.label }}: {{ form.prix_article(class="border
-                rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
-                dark:bg-gray-800 dark:text-white") }}
+                    rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+                    dark:bg-gray-800 dark:text-white") }}
                 </div>
             </div>
         </form>
@@ -114,7 +115,7 @@
     </div>
 </div>
 {% else %}
-<div class="flex flex-col items-center justify-center min-h-screen pt-16">
+<div class="flex flex-col items-center justify-center min-h-screen pt-16 w-full mb-12">
     <div class="text-center mb-6 mt-14">
         <p class="text-4xl mb-3">Temps restant : </p>
         <div id="countdown2" class="text-6xl font-bold text-white-600"> 01:00</div>
@@ -149,14 +150,15 @@
                 </div>
                 {% endfor %}
                 <div class="flex justify-center text-lg mt-8 flex-col items-center">
-                {{ form.csrf_token }}
-                <div class="mt-8">
-                    <label class="text-gray-900 font-bold">{{ form.prix_article.label(class="dark:text-white") }} :</label>
-                    {{ form.prix_article(class="border
-                rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
-                dark:bg-gray-800 dark:text-white") }}
+                    {{ form.csrf_token }}
+                    <div class="mt-8">
+                        <label class="text-gray-900 font-bold">{{ form.prix_article.label(class="dark:text-white") }}
+                            :</label>
+                        {{ form.prix_article(class="border
+                        rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+                        dark:bg-gray-800 dark:text-white") }}
+                    </div>
                 </div>
-            </div>
             </div>
         </form>
         <div id="resultMessage2" class="mt-4 text-center text-xl"></div>
@@ -229,75 +231,75 @@
         }
     };
 
-     // Comparaison des prix
-const correctPrice = parseInt("{{ prix }}", 10);
-const resultMessage = document.getElementById('resultMessage');
-const priceInput = document.querySelector('input[name="prix_article"]');
+    // Comparaison des prix
+    const correctPrice = parseInt("{{ prix }}", 10);
+    const resultMessage = document.getElementById('resultMessage');
+    const priceInput = document.querySelector('input[name="prix_article"]');
 
-// Fonction de comparaison des prix
-function comparePrice() {
-    const enteredPrice = parseFloat(priceInput.value);
+    // Fonction de comparaison des prix
+    function comparePrice() {
+        const enteredPrice = parseFloat(priceInput.value);
 
-    if (enteredPrice === correctPrice) {
-        resultMessage.textContent = "Bravo ! Vous avez trouvé le bon prix !";
-        resultMessage.classList.add("text-green-500");
-        resultMessage.classList.remove("text-red-500", "text-yellow-500");
+        if (enteredPrice === correctPrice) {
+            resultMessage.textContent = "Bravo ! Vous avez trouvé le bon prix !";
+            resultMessage.classList.add("text-green-500");
+            resultMessage.classList.remove("text-red-500", "text-yellow-500");
 
-        // Redirection après 500 ms
-        setTimeout(() => {
-            document.querySelector('form').submit();
-        }, 500);
-    } else if (enteredPrice < correctPrice) {
-        resultMessage.textContent = "Trop bas ! Essayez encore.";
-        resultMessage.classList.add("text-yellow-500");
-        resultMessage.classList.remove("text-red-500", "text-green-500");
-    } else {
-        resultMessage.textContent = "Trop élevé ! Essayez encore.";
-        resultMessage.classList.add("text-red-500");
-        resultMessage.classList.remove("text-yellow-500", "text-green-500");
-    }
-}
-
-// Écouteur de la touche "Entrée"
-priceInput.addEventListener('keypress', function (event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();  // Empêche l'envoi du formulaire
-        comparePrice();          // Effectue la comparaison des prix
-    }
-});
-
-const input = document.querySelector('input[name="prix_article"]');
-const resultMessage2 = document.getElementById('resultMessage2');
-
-const correctPrice2 = parseInt("{{ prix }}", 10);
-
-// Événement "keypress" sur l'input
-input.addEventListener('keypress', function (event) {
-    if (event.key === 'Enter') {
-        event.preventDefault(); // Empêche la soumission automatique du formulaire
-
-        // Récupération de la valeur saisie
-        const enteredPrice = parseFloat(input.value);
-
-        // Comparaison des prix
-        if (enteredPrice === correctPrice2) {
-            resultMessage2.textContent = "Bravo ! Vous avez trouvé le bon prix !";
-            resultMessage2.classList.add("text-green-500");
-            resultMessage2.classList.remove("text-red-500", "text-yellow-500");
+            // Redirection après 500 ms
             setTimeout(() => {
                 document.querySelector('form').submit();
-        }, 500);
-        } else if (enteredPrice < correctPrice2) {
-            resultMessage2.textContent = "Trop bas ! Essayez encore.";
-            resultMessage2.classList.add("text-yellow-500");
-            resultMessage2.classList.remove("text-red-500", "text-green-500");
+            }, 500);
+        } else if (enteredPrice < correctPrice) {
+            resultMessage.textContent = "Trop bas ! Essayez encore.";
+            resultMessage.classList.add("text-yellow-500");
+            resultMessage.classList.remove("text-red-500", "text-green-500");
         } else {
-            resultMessage2.textContent = "Trop élevé ! Essayez encore.";
-            resultMessage2.classList.add("text-red-500");
-            resultMessage2.classList.remove("text-yellow-500", "text-green-500");
+            resultMessage.textContent = "Trop élevé ! Essayez encore.";
+            resultMessage.classList.add("text-red-500");
+            resultMessage.classList.remove("text-yellow-500", "text-green-500");
         }
     }
-});
+
+    // Écouteur de la touche "Entrée"
+    priceInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();  // Empêche l'envoi du formulaire
+            comparePrice();          // Effectue la comparaison des prix
+        }
+    });
+
+    const input = document.querySelector('input[name="prix_article"]');
+    const resultMessage2 = document.getElementById('resultMessage2');
+
+    const correctPrice2 = parseInt("{{ prix }}", 10);
+
+    // Événement "keypress" sur l'input
+    input.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Empêche la soumission automatique du formulaire
+
+            // Récupération de la valeur saisie
+            const enteredPrice = parseFloat(input.value);
+
+            // Comparaison des prix
+            if (enteredPrice === correctPrice2) {
+                resultMessage2.textContent = "Bravo ! Vous avez trouvé le bon prix !";
+                resultMessage2.classList.add("text-green-500");
+                resultMessage2.classList.remove("text-red-500", "text-yellow-500");
+                setTimeout(() => {
+                    document.querySelector('form').submit();
+                }, 500);
+            } else if (enteredPrice < correctPrice2) {
+                resultMessage2.textContent = "Trop bas ! Essayez encore.";
+                resultMessage2.classList.add("text-yellow-500");
+                resultMessage2.classList.remove("text-red-500", "text-green-500");
+            } else {
+                resultMessage2.textContent = "Trop élevé ! Essayez encore.";
+                resultMessage2.classList.add("text-red-500");
+                resultMessage2.classList.remove("text-yellow-500", "text-green-500");
+            }
+        }
+    });
 
 
 </script>
