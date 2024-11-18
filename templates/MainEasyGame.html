@@ -26,15 +26,6 @@
             background-color: #2d3748;
         }
 
-        .dark .table-header {
-            background-color: #2d3748;
-            color: #ffffff;
-        }
-
-        .dark .table-row {
-            background-color: #4a5568;
-            color: #ffffff;
-        }
 
         .dark .bg-gray-50 {
             background-color: #4a5568;
@@ -105,8 +96,8 @@
         {% endif %}
         <div class="flex justify-center text-lg">
             {{ form.csrf_token }}
-            <div class="form-group">
-                {{ form.prix_article.label(class="dark:text-white") }} : {{ form.prix_article(class="border
+            <div class="form-group text-gray-900">
+                {{ form.prix_article.label}} : {{ form.prix_article(class="border
                 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
                 dark:bg-gray-800 dark:text-white") }}
             </div>

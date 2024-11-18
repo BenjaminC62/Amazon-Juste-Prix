@@ -2,7 +2,7 @@ import os
 import random
 import sqlite3
 
-import pygame
+import pygame                                                                                                                        e
 from werkzeug.utils import secure_filename
 
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)
@@ -181,7 +181,7 @@ def rules():
     sound_id.set_volume(0.03)
     sound_id.play()
     user = session.get('username')
-    return render_template('regle.html', user=user)
+    return render_template('Regle.html', user=user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -453,7 +453,7 @@ def getNom(article):
         r.raise_for_status()
         name = r.json()["title"]
         name = name.split(" ")
-        name = " ".join(name[:3])
+        name = " ".join(name[:10])
     except:
         raise Exception("Nom de l'article n'est pas disponible !")
     return name
