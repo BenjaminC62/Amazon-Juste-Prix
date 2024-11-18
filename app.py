@@ -157,21 +157,21 @@ def justePrixAmazon():
             return render_template('MainEasyGame.html', image=image, form=form, prix=prix, nom=nom, result=result,
                                    mode=mode)
         else:
-            return render_template('MainEasyGame.html', liste_article=liste_article, form=form, result=result,
+            return render_template('MainEasyGame.html', liste_article=liste_article, prix=prix, form=form, result=result,
                                    mode=mode)
     elif difficulty == "medium":
         if mode == "un_article":
             return render_template('MainMediumGame.html', image=image, form=form, prix=prix, nom=nom, result=result,
                                    mode=mode)
         else:
-            return render_template('MainMediumGame.html', liste_article=liste_article, form=form, result=result,
+            return render_template('MainMediumGame.html', liste_article=liste_article, prix=prix,form=form, result=result,
                                    mode=mode)
     else:
         if mode == "un_article":
             return render_template('MainHardGame.html', image=image, form=form, prix=prix, nom=nom, result=result,
                                    mode=mode)
         else:
-            return render_template('MainHardGame.html', liste_article=liste_article, form=form, result=result,
+            return render_template('MainHardGame.html', liste_article=liste_article, prix=prix, form=form, result=result,
                                    mode=mode)
 
 

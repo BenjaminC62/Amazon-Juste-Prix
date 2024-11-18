@@ -9,7 +9,6 @@
     <title>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste prix Amazon{% endif %}</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
-
     <style>
         .dark {
             background-color: #1a202c;
@@ -114,12 +113,12 @@
 </div>
 
 {% else %}
-<div class="flex flex-col">
-    <div class="text-center mb-6 mt-14">
+<div class="flex flex-col items-center justify-center min-h-screen pt-24">
+    <div class="text-center mb-6 ">
         <p class="text-4xl mb-3">Temps restant : </p>
         <div id="countdown2" class="text-6xl font-bold text-white-600"> 00:30</div>
     </div>
-    <div class="bg-gray-50 p-2 rounded shadow-md w-full">
+    <div class="bg-white p-2 rounded shadow-md w-full">
         <h1 class="text-4xl font-bold text-center mb-3">
             {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
         </h1>
@@ -148,22 +147,16 @@
                     {% endif %}
                 </div>
                 {% endfor %}
-            </div>
-
-            <div class="flex justify-center text-lg mt-8 flex-col items-center">
+                <div class="flex justify-center text-lg mt-8 flex-col items-center">
                 {{ form.csrf_token }}
                 <div class="mt-8">
-                    <label class="text-gray-700 font-bold">{{ form.prix_article.label(class="dark:text-white") }} :</label>
+                    <label class="text-gray-900 font-bold">{{ form.prix_article.label(class="dark:text-white") }} :</label>
                     {{ form.prix_article(class="border
-                    rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+                    rounded-lg py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500
                     dark:bg-gray-800 dark:text-white") }}
                 </div>
-                <button type="submit"
-                        class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
-                    {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
-                </button>
             </div>
-
+            </div>
         </form>
         <div id="resultMessage2" class="mt-4 text-center text-xl"></div>
     </div>
@@ -269,6 +262,39 @@ priceInput.addEventListener('keypress', function (event) {
     if (event.key === 'Enter') {
         event.preventDefault();  // Empêche l'envoi du formulaire
         comparePrice();          // Effectue la comparaison des prix
+    }
+});
+
+const input = document.querySelector('input[name="prix_article"]');
+const resultMessage2 = document.getElementById('resultMessage2');
+
+const correctPrice2 = parseInt("{{ prix }}", 10);
+
+// Événement "keypress" sur l'input
+input.addEventListener('keypress', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Empêche la soumission automatique du formulaire
+
+        // Récupération de la valeur saisie
+        const enteredPrice = parseFloat(input.value);
+
+        // Comparaison des prix
+        if (enteredPrice === correctPrice2) {
+            resultMessage2.textContent = "Bravo ! Vous avez trouvé le bon prix !";
+            resultMessage2.classList.add("text-green-500");
+            resultMessage2.classList.remove("text-red-500", "text-yellow-500");
+            setTimeout(() => {
+                document.querySelector('form').submit();
+        }, 500);
+        } else if (enteredPrice < correctPrice2) {
+            resultMessage2.textContent = "Trop bas ! Essayez encore.";
+            resultMessage2.classList.add("text-yellow-500");
+            resultMessage2.classList.remove("text-red-500", "text-green-500");
+        } else {
+            resultMessage2.textContent = "Trop élevé ! Essayez encore.";
+            resultMessage2.classList.add("text-red-500");
+            resultMessage2.classList.remove("text-yellow-500", "text-green-500");
+        }
     }
 });
 </script>

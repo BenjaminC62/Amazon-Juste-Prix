@@ -111,9 +111,7 @@
     <h1 class="text-4xl font-bold text-center mb-3">
         {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
     </h1>
-    <form action="" method="post" class="space-y-4">
-        <h2 class="text-center text-lg font-semibold mt-4">{{ result }}</h2>
-
+    <form action="{{ url_for('justePrixAmazon') }}" method="post" class="space-y-4">
         <div class="flex flex-wrap justify-center items-center gap-8">
             {% for article in liste_article %}
             <div class="w-full max-w-xs">
@@ -136,23 +134,19 @@
                 {% endif %}
             </div>
             {% endfor %}
-        </div>
-
-        <div class="flex justify-center text-lg mt-8 flex-col items-center">
+            <div class="flex justify-center text-lg mt-8 flex-col items-center">
             {{ form.csrf_token }}
             <div class="mt-8">
-                <label class="text-gray-700 font-bold">{{ form.prix_article.label }}
+                <label class="text-gray-900 font-bold">{{ form.prix_article.label }}
                     :</label>
                 {{ form.prix_article(class="border
                 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
                 dark:bg-gray-800 dark:text-white") }}
             </div>
-            <button type="submit"
-                    class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
-                {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
-            </button>
+        </div>
         </div>
     </form>
+    <div id="resultMessage2" class="mt-4 text-center text-xl"></div>
 </div>
 
 {% endif %}
@@ -220,13 +214,50 @@ function comparePrice() {
     }
 }
 
+
+
 // Écouteur de la touche "Entrée"
 priceInput.addEventListener('keypress', function (event) {
     if (event.key === 'Enter') {
         event.preventDefault();  // Empêche l'envoi du formulaire
-        comparePrice();          // Effectue la comparaison des prix
+        comparePrice();
     }
 });
+
+
+const input = document.querySelector('input[name="prix_article"]');
+const resultMessage2 = document.getElementById('resultMessage2');
+
+const correctPrice2 = parseInt("{{ prix }}", 10);
+
+// Événement "keypress" sur l'input
+input.addEventListener('keypress', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Empêche la soumission automatique du formulaire
+
+        // Récupération de la valeur saisie
+        const enteredPrice = parseFloat(input.value);
+
+        // Comparaison des prix
+        if (enteredPrice === correctPrice2) {
+            resultMessage2.textContent = "Bravo ! Vous avez trouvé le bon prix !";
+            resultMessage2.classList.add("text-green-500");
+            resultMessage2.classList.remove("text-red-500", "text-yellow-500");
+            setTimeout(() => {
+                document.querySelector('form').submit();
+        }, 500);
+        } else if (enteredPrice < correctPrice2) {
+            resultMessage2.textContent = "Trop bas ! Essayez encore.";
+            resultMessage2.classList.add("text-yellow-500");
+            resultMessage2.classList.remove("text-red-500", "text-green-500");
+        } else {
+            resultMessage2.textContent = "Trop élevé ! Essayez encore.";
+            resultMessage2.classList.add("text-red-500");
+            resultMessage2.classList.remove("text-yellow-500", "text-green-500");
+        }
+    }
+});
+
 
 </script>
 </body>
