@@ -71,8 +71,10 @@
     </div>
 </header>
 {% if mode == "un_article" %}
-<div class="bg-white p-10 rounded shadow-md w-full max-w-lg mt-20">
-    <h1 class="text-5xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
+<div class="flex flex-col items-center justify-center min-h-screen pt-24"> <!-- pt-24 pour un espacement correct -->
+
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-lg">
+        <h1 class="text-5xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
         %}Juste Prix Amazon{% endif %}</h1>
     <h2 class="text-center text-2xl font-semibold mt-4">{% if session.get('lang') == 'en' %} Lost ! You didn't find the price within the time limit!
         {% else %} Perdu ! Vous n'avez pas trouvé le prix dans le temps imparti ! {% endif
@@ -95,10 +97,13 @@
         <a href="{{ url_for('home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{% if
             session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}</a>
     </div>
+    </div>
 </div>
 {% else %}
-<div class="bg-white p-10 rounded shadow-md w-full max-w-lg mt-20">
-    <h1 class="text-5xl font-bold text-center mb-3">
+<div class="flex flex-col items-center justify-center min-h-screen pt-24"> <!-- pt-24 pour un espacement correct -->
+
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-lg">
+        <h1 class="text-5xl font-bold text-center mb-3">
         {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
     </h1>
     <h2 class="text-center text-2xl font-semibold mt-4">
@@ -143,6 +148,7 @@
            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
             {% if session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}
         </a>
+    </div>
     </div>
 </div>
 {% endif %}
