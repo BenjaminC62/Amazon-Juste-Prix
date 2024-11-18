@@ -64,7 +64,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen flex-col font-poppins">
 <header class="bg-white text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
     <div class="flex space-x-4">
         <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
@@ -80,17 +80,14 @@
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
         </svg>
     </div>
-    <h1 class="text-2xl text-blue-600 font-bold flex-grow text-center">{% if session.get('lang') == 'en' %}Medium
-        difficulty{%
-        else %}Difficulté moyenne{% endif %}</h1>
 </header>
 {% if mode == "un_article" %}
-<div class="flex flex-col">
-    <div class="text-center mb-6 mt-14">
-        <p class="text-4xl mb-3">Temps restant : </p>
-        <div id="countdown" class="text-6xl font-bold text-white-600"> 01:00</div>
+<div class="flex flex-col items-center justify-center min-h-screen pt-16"> <!-- Nouvelle classe pt-16 pour espacement -->
+    <div class="text-center mb-6">
+        <p class="text-4xl mb-3">Temps restant :</p>
+        <div id="countdown" class="text-6xl font-bold text-white-600">01:00</div>
     </div>
-    <div class="bg-white p-6 rounded shadow-md w-full max-w-lg mt-8">
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-lg">
         <h1 class="text-4xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
             %}Juste Prix Amazon{% endif %}</h1>
         <h2 class="text-center text-xl font-semibold mt-4">{{ nom }}</h2>
@@ -107,68 +104,73 @@
             <div class="flex justify-center text-lg">
                 {{ form.csrf_token }}
                 <div class="form-group">
-                    {{ form.prix_article.label }}: {{ form.prix_article() }}
+                    {{ form.prix_article.label }}: {{ form.prix_article(class="border
+                rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+                dark:bg-gray-800 dark:text-white") }}
                 </div>
             </div>
-            <button id="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
-            </button>
         </form>
         <div id="resultMessage" class="mt-4 text-center text-xl"></div>
     </div>
 </div>
 {% else %}
-<div class="bg-gray-50 p-2 rounded shadow-md w-full">
-    <h1 class="text-4xl font-bold text-center mb-3">
-        {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
-    </h1>
-    <form action="" method="post" class="space-y-4">
+<div class="flex flex-col">
+    <div class="text-center mb-6 mt-14">
+        <p class="text-4xl mb-3">Temps restant : </p>
+        <div id="countdown2" class="text-6xl font-bold text-white-600"> 01:00</div>
+    </div>
+    <div class="bg-gray-50 p-2 rounded shadow-md w-full">
+        <h1 class="text-4xl font-bold text-center mb-3">
+            {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
+        </h1>
+        <form action="" method="post" class="space-y-4">
 
-        <div class="flex flex-wrap justify-center items-center gap-8">
-            {% for article in liste_article %}
-            <div class="w-full max-w-xs">
-                <h2 class="text-center text-xl font-semibold mt-4">{{ article[1] }}</h2>
-                <h3 class="text-center text-lg font-semibold mt-4">
-                    {% if article[2]-300 < 0 %}
-                    0
+            <div class="flex flex-wrap justify-center items-center gap-8">
+                {% for article in liste_article %}
+                <div class="w-full max-w-xs">
+                    <h2 class="text-center text-xl font-semibold mt-4">{{ article[1] }}</h2>
+                    <h3 class="text-center text-lg font-semibold mt-4">
+                        {% if article[2]-300 < 0 %}
+                        0
+                        {% else %}
+                        {{ (article[2]-300)|round(-2) }}
+                        {% endif %} - {{ (article[2]+300)|round(-2) }}
+                    </h3>
+
+                    {% if article[5] %}
+                    <img src="{{ article[5] }}"
+                         alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
+                         class="mx-auto w-52 h-52 object-contain">
                     {% else %}
-                    {{ (article[2]-300)|round(-2) }}
-                    {% endif %} - {{ (article[2]+300)|round(-2) }}
-                </h3>
-
-                {% if article[5] %}
-                <img src="{{ article[5] }}"
-                     alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
-                     class="mx-auto w-52 h-52 object-contain">
-                {% else %}
-                <p class="text-center text-gray-500 mb-4">
-                    {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
-                </p>
-                {% endif %}
+                    <p class="text-center text-gray-500 mb-4">
+                        {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
+                    </p>
+                    {% endif %}
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
 
-        <div class="flex justify-center text-lg mt-8 flex-col items-center">
-            {{ form.csrf_token }}
-            <div class="mt-8">
-                <label class="text-gray-700 font-bold">{{ form.prix_article.label(class="dark:text-white") }} :</label>
-                {{ form.prix_article(class="border
-                rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
-                dark:bg-gray-800 dark:text-white") }}
+            <div class="flex justify-center text-lg mt-8 flex-col items-center">
+                {{ form.csrf_token }}
+                <div class="mt-8">
+                    <label class="text-gray-700 font-bold">{{ form.prix_article.label(class="dark:text-white") }} :</label>
+                    {{ form.prix_article(class="border
+                    rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
+                    dark:bg-gray-800 dark:text-white") }}
+                </div>
+                <button type="submit"
+                        class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
+                    {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
+                </button>
             </div>
-            <button type="submit"
-                    class="mx-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">
-                {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
-            </button>
-        </div>
 
-    </form>
-    <div id="resultMessage2" class="mt-4 text-center text-xl"></div>
+        </form>
+        <div id="resultMessage2" class="mt-4 text-center text-xl"></div>
+    </div>
 </div>
 
 {% endif %}
-<footer class="bg-blue-600 text-white p-4  bg-white text-center fixed bottom-0 w-full">
+<footer class="bg-blue-600 text-white p-4  bg-white text-center mt-auto w-full">
     <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
     <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
         <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
@@ -223,49 +225,53 @@
     // Au chargement de la page, démarre le timer
     window.onload = function () {
         const duration = 60; // 60 secondes
-        const display = document.querySelector('#countdown');
-        startCountdown(duration, display);
+        const mode = "{{ mode }}";
+        if (mode === "un_article") {
+            const display = document.querySelector('#countdown');
+            startCountdown(duration, display);
+        } else {
+            const display = document.querySelector('#countdown2');
+            startCountdown(duration, display);
+        }
     };
 
-    // Comparaison des prix
-    const correctPrice = parseInt("{{ prix }}", 10);
-    const submitButton = document.getElementById('submit');
-    const resultMessage = document.getElementById('resultMessage');
-    const priceInput = document.querySelector('input[name="prix_article"]');
+     // Comparaison des prix
+const correctPrice = parseInt("{{ prix }}", 10);
+const resultMessage = document.getElementById('resultMessage');
+const priceInput = document.querySelector('input[name="prix_article"]');
 
-    // Fonction de comparaison des prix
-    function comparePrice() {
-        const enteredPrice = parseFloat(priceInput.value);
+// Fonction de comparaison des prix
+function comparePrice() {
+    const enteredPrice = parseFloat(priceInput.value);
 
-        if (enteredPrice === correctPrice) {
-            clearInterval(interval); // Arrête le timer
-            resultMessage.textContent = "Bravo ! Vous avez trouvé le bon prix !";
-            resultMessage.classList.add("text-green-500");
-            resultMessage.classList.remove("text-red-500", "text-yellow-500");
-            setTimeout(() => {
-                document.querySelector('form').submit();
-            }, 500);
-        } else if (enteredPrice < correctPrice) {
-            resultMessage.textContent = "Trop bas ! Essayez encore.";
-            resultMessage.classList.add("text-yellow-500");
-            resultMessage.classList.remove("text-red-500", "text-green-500");
-        } else {
-            resultMessage.textContent = "Trop élevé ! Essayez encore.";
-            resultMessage.classList.add("text-red-500");
-            resultMessage.classList.remove("text-yellow-500", "text-green-500");
-        }
+    if (enteredPrice === correctPrice) {
+        resultMessage.textContent = "Bravo ! Vous avez trouvé le bon prix !";
+        resultMessage.classList.add("text-green-500");
+        resultMessage.classList.remove("text-red-500", "text-yellow-500");
+
+        // Redirection après 500 ms
+        setTimeout(() => {
+            document.querySelector('form').submit();
+        }, 500);
+    } else if (enteredPrice < correctPrice) {
+        resultMessage.textContent = "Trop bas ! Essayez encore.";
+        resultMessage.classList.add("text-yellow-500");
+        resultMessage.classList.remove("text-red-500", "text-green-500");
+    } else {
+        resultMessage.textContent = "Trop élevé ! Essayez encore.";
+        resultMessage.classList.add("text-red-500");
+        resultMessage.classList.remove("text-yellow-500", "text-green-500");
     }
+}
 
-    // Écouteur de clic sur le bouton "submit"
-    submitButton.addEventListener('click', comparePrice);
+// Écouteur de la touche "Entrée"
+priceInput.addEventListener('keypress', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();  // Empêche l'envoi du formulaire
+        comparePrice();          // Effectue la comparaison des prix
+    }
+});
 
-    // Écouteur de la touche "Entrée"
-    priceInput.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();  // Empêche l'envoi du formulaire
-            comparePrice();  // Effectue la comparaison des prix
-        }
-    });
 
 </script>
 </body>

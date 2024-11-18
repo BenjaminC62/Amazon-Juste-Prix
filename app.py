@@ -14,6 +14,7 @@ from wtforms.fields.choices import RadioField, SelectField
 from wtforms.fields.numeric import IntegerField
 from wtforms.validators import DataRequired
 
+
 app = Flask(__name__)
 app.secret_key = 'secret'
 
