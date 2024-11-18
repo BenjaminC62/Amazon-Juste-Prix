@@ -2,7 +2,7 @@ import os
 import random
 import sqlite3
 
-import pygame                                                                                                                        e
+import pygame
 from werkzeug.utils import secure_filename
 
 pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=4096)

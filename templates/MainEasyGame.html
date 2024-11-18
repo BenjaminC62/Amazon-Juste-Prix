@@ -55,12 +55,16 @@
         .form-group {
             display: flex;
             align-items: center;
-            gap: 0.5rem; /* Ajoute de l'espace entre les éléments */
+            gap: 0.5rem;
+        }
+
+        .dark .bg-blue-500:hover {
+            background-color: #2b6cb0;
         }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
-<header class="bg-blue-600 text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
+<header class="bg-white text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
     <div class="flex space-x-4">
         <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
         <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
@@ -143,7 +147,8 @@
         <div class="flex justify-center text-lg mt-8 flex-col items-center">
             {{ form.csrf_token }}
             <div class="mt-8">
-                <label class="text-gray-700 font-bold">{{ form.prix_article.label(class="dark:text-white") }} :</label>
+                <label class="text-gray-700 font-bold">{{ form.prix_article.label(class="dark:text-white") }}
+                    :</label>
                 {{ form.prix_article(class="border
                 rounded-lg py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500
                 dark:bg-gray-800 dark:text-white") }}
