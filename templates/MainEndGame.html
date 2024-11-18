@@ -11,37 +11,48 @@
         body {
             transition: background-color 0.3s, color 0.3s;
         }
+
         body.dark {
             background-color: #1a202c;
             color: #ffffff;
         }
+
         .dark .bg-white {
             background-color: #2d3748;
         }
+
         header, footer {
             background-color: #2d3748;
         }
+
         .dark header, .dark footer {
             background-color: #2d3748;
         }
+
         .dark .bg-gray-50 {
             background-color: #4a5568;
         }
+
         .dark .text-gray-900 {
             color: #f7fafc;
         }
+
         .dark .text-gray-600 {
             color: white;
         }
+
         .dark .text-blue-600 {
             color: #63b3ed;
         }
+
         .dark .bg-blue-500 {
             background-color: #3182ce;
         }
+
         .dark .bg-blue-700 {
             background-color: #2b6cb0;
         }
+
         .button-container {
             display: flex;
             justify-content: center;
@@ -51,47 +62,255 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex flex-col min-h-screen font-poppins">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins flex-col">
 <header class="bg-blue-600 text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
     <div class="flex space-x-4">
         <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
         <a href="{{ url_for('change_language', lang='en') }}" class="flag-icon flag-icon-gb text-2xl"></a>
-        <a href="{{ url_for('home', lang='en') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{% if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
+        <a href="{{ url_for('home', lang='en') }}"
+           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded block text-center transition duration-150 ease-in-out">{%
+            if session.get('lang') == 'en' %}Home{% else %}Accueil{% endif %}</a>
     </div>
     <div class="flex justify-end items-center absolute top-0 right-0 m-4 z-10">
-        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="cursor-pointer moon-icon">
+        <svg id="theme-toggle-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 27 27"
+             fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             class="cursor-pointer moon-icon">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="black"/>
         </svg>
     </div>
 </header>
-<main class="flex-grow flex items-center justify-center mt-20">
-    <div class="bg-white p-10 rounded shadow-md w-full max-w-lg">
-        <h1 class="text-5xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</h1>
-        <h2 class="text-center text-2xl font-semibold mt-4">{% if session.get('lang') == 'en' %} Congratulations, you've won the right price ! {% else %} Bravo, vous avez gagné le juste prix ! {% endif %}</h2>
-        <h2 class="text-center text-xl font-semibold mt-4">{% if session.get('lang') == 'en' %}Here is the item: {% else %}Voici l'article : {% endif %}{{ nom }}</h2>
-        {% if image %}
-        {% endif %}
-            <img src="{{ image }}" width="200" height="200" alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
-        <a href="{{ url_for('home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded block text-center mt-4">{% if session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}</a>
-        {% if user == False %}
-        {% endif %}
-            <p class="mt-6 text-center text-lg font-medium">{% if session.get('lang') == 'en' %}Or you can register or log in to save your score :{% else %}Ou vous pouvez vous inscrire ou connecter pour enregistrer votre score :{% endif %}</p>
-            <div class="button-container">
-                <a href="{{ url_for('register') }}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Register{% else %}S'inscrire{% endif %}</a>
-                <a href="{{ url_for('login') }}" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') == 'en' %}Login{% else %}Se connecter{% endif %}</a>
-            </div>
+{% if mode == "un_article" %}
+<div class="bg-white p-10 rounded shadow-md w-full max-w-lg mt-20 ">
+    <h1 class="text-5xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
+        %}Juste Prix Amazon{% endif %}</h1>
+    <h2 class="text-center text-2xl font-semibold mt-4">{% if session.get('lang') == 'en' %} Congratulations, you've won
+        the right price in XX seconds ! {% else %} Bravo, vous avec gagné le juste prix en XX secondes ! {% endif
+        %}</h2>
+    <h2 class="text-center text-xl font-semibold mt-4">{% if session.get('lang') == 'en' %}Here is the item: {% else
+        %}Voici l'article : {% endif %}{{ nom }}</h2>
+    {% if image %}
+    <img src="{{ image }}" width="200" height="200"
+         alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}" class="mx-auto">
+    {% else %}
+    <p class="text-center text-gray-500">{% if session.get('lang') == 'en' %}Image not available{% else %}Image non
+        disponible{% endif %}</p>
+    {% endif %}
+    <div class="flex items-center justify-between mt-6">
+        <p class="text-lg font-medium">
+            {% if session.get('lang') == 'en' %} Click here to play again : {% else %} Cliquez ici pour rejouer : {%
+            endif %}
+        </p>
+        <a href="{{ url_for('home') }}" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">{% if
+            session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}</a>
     </div>
-</main>
-<footer class="bg-blue-600 text-white p-4 text-center w-full mt-8">
+    {% if user == True and pseudo == "" %}
+    <div class="flex items-center justify-center font-poppins">
+        <div class="bg-gray-50 p-4 rounded shadow-md w-full max-w-md text-center">
+            <h1 class="text-2xl font-bold mb-4">{% if session.get('lang') == 'en' %}Choose your nickname{% else
+                %}Choisissez votre pseudo{% endif %}</h1>
+            <div id="pseudo-display" class="text-4xl font-bold mb-6">AAA</div>
+            <p class="text-gray-600 mb-4">{% if session.get('lang') == 'en' %}Use the up and down arrows to change the
+                letters, left and right to move to the next one.{% else %}Utilisez les flèches haut et bas pour changer
+                les lettres, gauche et droite pour passer à la suivante.{% endif %}</p>
+            <button id="submit-pseudo"
+                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">{% if
+                session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
+            </button>
+        </div>
+    </div>
+    {% endif %}
+    {% if user == False %}
+    <p class="mt-6 text-center text-lg font-medium">{% if session.get('lang') == 'en' %}Or you can register or log in to
+        save your score :{% else %}Ou vous pouvez vous inscrire ou connecter pour enregistrer votre score :{% endif
+        %}</p>
+    <div class="flex justify-center items-center mt-4 space-x-4">
+        <a href="{{ url_for('register') }}"
+           class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') ==
+            'en' %}Register{% else %}S'inscrire{% endif %}</a>
+        <a href="{{ url_for('login') }}"
+           class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">{% if session.get('lang') ==
+            'en' %}Login{% else %}Se connecter{% endif %}</a>
+    </div>
+    {% endif %}
+</div>
+{% else %}
+<div class="bg-white p-10 rounded shadow-md w-full max-w-lg mt-20">
+    <h1 class="text-5xl font-bold text-center mb-3">
+        {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
+    </h1>
+    <h2 class="text-center text-2xl font-semibold mt-4">
+        {% if session.get('lang') == 'en' %}
+        Congratulations, you've won the right price in XX seconds!
+        {% else %}
+        Bravo, vous avez gagné le juste prix en XX secondes !
+        {% endif %}
+    </h2>
+    <h2 class="text-center text-xl font-semibold mt-4">
+        {% if session.get('lang') == 'en' %}Here are the items: {% else %}Voici les articles : {% endif %}
+    </h2>
+
+    <!-- Boucle pour afficher les images -->
+    <div class="grid grid-cols-4 gap-4 mt-6 items-center">
+        {% for article in liste_article %}
+        <div class="text-center">
+            {% if article[5] %}
+            <img src="{{ article[5] }}" width="200" height="200"
+                 alt="{% if session.get('lang') == 'en' %}item image{% else %}image de l'article{% endif %}"
+                 class="mx-auto rounded shadow-md">
+            {% else %}
+            <p class="text-gray-500">
+                {% if session.get('lang') == 'en' %}Image not available{% else %}Image non disponible{% endif %}
+            </p>
+            {% endif %}
+            <p class="text-lg font-semibold mt-2">{{ article[2] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="flex items-center justify-between mt-6">
+        <p class="text-lg font-medium">
+            {% if session.get('lang') == 'en' %}
+            Click here to play again :
+            {% else %}
+            Cliquez ici pour rejouer :
+            {% endif %}
+        </p>
+        <a href="{{ url_for('home') }}"
+           class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            {% if session.get('lang') == 'en' %}Play Again{% else %}Rejouer{% endif %}
+        </a>
+    </div>
+    {% if user == True %}
+    <div class="flex items-center justify-center font-poppins mt-8">
+        <div class="bg-gray-50 p-4 rounded shadow-md w-full max-w-md text-center">
+            <h1 class="text-2xl font-bold mb-4">
+                {% if session.get('lang') == 'en' %}Choose your nickname{% else %}Choisissez votre pseudo{% endif %}
+            </h1>
+            <div id="pseudo-display2" class="text-4xl font-bold mb-6">AAA</div>
+            <p class="text-gray-600 mb-4">
+                {% if session.get('lang') == 'en' %}
+                Use the up and down arrows to change the letters, left and right to move to the next one.
+                {% else %}
+                Utilisez les flèches haut et bas pour changer les lettres, gauche et droite pour passer à la suivante.
+                {% endif %}
+            </p>
+            <button id="submit-pseudo2"
+                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
+            </button>
+        </div>
+    </div>
+    {% else %}
+    <p class="mt-6 text-center text-lg font-medium">
+        {% if session.get('lang') == 'en' %}
+        Or you can register or log in to save your score :
+        {% else %}
+        Ou vous pouvez vous inscrire ou connecter pour enregistrer votre score :
+        {% endif %}
+    </p>
+    <div class="flex justify-center items-center mt-4 space-x-4">
+        <a href="{{ url_for('register') }}"
+           class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            {% if session.get('lang') == 'en' %}Register{% else %}S'inscrire{% endif %}
+        </a>
+        <a href="{{ url_for('login') }}"
+           class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded">
+            {% if session.get('lang') == 'en' %}Login{% else %}Se connecter{% endif %}
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+
+{% endif %}
+
+
+<footer class="bg-blue-600 text-white p-4  bg-white text-center my-auto mt-8 w-full">
     <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
     <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
-        <a href="https://github.com/MatheoDalmasso" class="font-bold" target="_blank">Mathéo DALMASSO</a>,
-        <a href="https://github.com/SimonCail" class="font-bold" target="_blank">Simon CAILLIERET</a>,
-        <a href="https://github.com/Mathias92-cmd" class="font-bold" target="_blank">Mathias MOREL</a>,
-        <a href="https://github.com/BenjaminC62" class="font-bold" target="_blank">Benjamin CORNET</a>
+        <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
+        <a href="https://github.com/SimonCail" class="font-bold">Simon CAILLIERET</a>,
+        <a href="https://github.com/Mathias92-cmd" class="font-bold">Mathias MOREL</a>,
+        <a href="https://github.com/BenjaminC62" class="font-bold">Benjamin CORNET</a>
     </p>
 </footer>
 <script>
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let currentPseudo = ["A", "A", "A"];
+    let currentIndex = 0;
+    const mode = "{{ mode }}";
+    const pseudoDisplay = document.getElementById(mode === "un_article" ? "pseudo-display" : "pseudo-display2");
+
+
+    function updateDisplay() {
+        pseudoDisplay.innerHTML = currentPseudo.map((letter, index) => {
+            return `<span class="${index === currentIndex ? 'selected-letter' : ''}">${letter}</span>`;
+        }).join("");
+    }
+
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowUp") {
+            currentPseudo[currentIndex] = alphabet[(alphabet.indexOf(currentPseudo[currentIndex]) + 1) % alphabet.length];
+        } else if (event.key === "ArrowDown") {
+            currentPseudo[currentIndex] = alphabet[(alphabet.indexOf(currentPseudo[currentIndex]) - 1 + alphabet.length) % alphabet.length];
+        } else if (event.key === "ArrowRight") {
+            currentIndex = (currentIndex + 1) % currentPseudo.length;
+        } else if (event.key === "ArrowLeft") {
+            currentIndex = (currentIndex - 1 + currentPseudo.length) % currentPseudo.length;
+        }
+        updateDisplay();
+    });
+    if (mode === "un_article") {
+        document.getElementById("submit-pseudo").addEventListener("click", () => {
+            const pseudo = currentPseudo.join("");
+            fetch('/save_pseudo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({pseudo}),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        window.location.href = '/';
+                    } else {
+                        return response.text().then((error) => {
+                            throw new Error(error);
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de l'envoi du pseudo :", error);
+                    alert("Une erreur s'est produite !");
+                });
+        });
+    } else {
+        document.getElementById("submit-pseudo2").addEventListener("click", () => {
+            const pseudo = currentPseudo.join("");
+            fetch('/save_pseudo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({pseudo}),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        window.location.href = '/';
+                    } else {
+                        return response.text().then((error) => {
+                            throw new Error(error);
+                        });
+                    }
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de l'envoi du pseudo :", error);
+                    alert("Une erreur s'est produite !");
+                });
+        });
+    }
+    updateDisplay();
     const body = document.body;
     const themeIcon = document.getElementById('theme-toggle-icon');
 
