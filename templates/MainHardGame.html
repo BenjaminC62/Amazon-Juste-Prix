@@ -64,7 +64,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen font-poppins">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen flex flex-col font-poppins">
 <header class="bg-white text-white p-4 flex bg-white items-center justify-between w-full fixed top-0">
     <div class="flex space-x-4">
         <a href="{{ url_for('change_language', lang='fr') }}" class="flag-icon flag-icon-fr text-2xl"></a>
@@ -82,14 +82,15 @@
     </div>
 </header>
 {% if mode == "un_article" %}
-<div class="flex flex-col">
-    <div class="text-center mb-6 mt-14">
+<div class="flex flex-col items-center justify-center min-h-screen pt-24"> <!-- pt-24 pour un espacement correct -->
+    <div class="text-center mb-6">
         <p class="text-4xl mb-3">Temps restant : </p>
-        <div id="countdown" class="text-6xl font-bold text-white-600"> 00:30</div>
+        <div id="countdown" class="text-6xl font-bold text-white-600">00:30</div>
     </div>
-    <div class="bg-white p-6 rounded shadow-md w-full max-w-lg mt-8">
-        <h1 class="text-4xl font-bold text-center mb-3">{% if session.get('lang') == 'en' %}Amazon Price Guess{% else
-            %}Juste Prix Amazon{% endif %}</h1>
+    <div class="bg-white p-6 rounded shadow-md w-full max-w-lg">
+        <h1 class="text-4xl font-bold text-center mb-3">
+            {% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}
+        </h1>
         <form action="{{ url_for('justePrixAmazon') }}" method="post" class="space-y-4">
             {% if image %}
             <img src="{{ image }}" width="100px" height="100px"
@@ -105,13 +106,11 @@
                     {{ form.prix_article.label }}: {{ form.prix_article() }}
                 </div>
             </div>
-            <button id="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                {% if session.get('lang') == 'en' %}Submit{% else %}Valider{% endif %}
-            </button>
         </form>
         <div id="resultMessage" class="mt-4 text-center text-xl"></div>
     </div>
 </div>
+
 {% else %}
 <div class="flex flex-col">
     <div class="text-center mb-6 mt-14">
@@ -169,7 +168,7 @@
 </div>
 
 {% endif %}
-<footer class="bg-blue-600 text-white p-4  bg-white text-center fixed bottom-0 w-full">
+<footer class="bg-blue-600 text-white p-4  bg-white text-center mt-auto w-full">
     <p>{% if session.get('lang') == 'en' %}Amazon Price Guess{% else %}Juste Prix Amazon{% endif %}</p>
     <p>{% if session.get('lang') == 'en' %}Created by{% else %}Réalisé par{% endif %}
         <a href="https://github.com/MatheoDalmasso" class="font-bold">Mathéo DALMASSO</a>,
@@ -235,52 +234,41 @@
     };
 
     // Comparaison des prix
-    const correctPrice = parseInt("{{ prix }}", 10);
-    const submitButton = document.getElementById('submit');
-    const resultMessage = document.getElementById('resultMessage');
-    const resultMessage2 = document.getElementById('resultMessage2');
-    const priceInput = document.querySelector('input[name="prix_article"]');
+const correctPrice = parseInt("{{ prix }}", 10);
+const resultMessage = document.getElementById('resultMessage');
+const priceInput = document.querySelector('input[name="prix_article"]');
 
-    // Fonction de comparaison des prix
-    function comparePrice() {
-        const enteredPrice = parseFloat(priceInput.value);
+// Fonction de comparaison des prix
+function comparePrice() {
+    const enteredPrice = parseFloat(priceInput.value);
 
-        if (enteredPrice === correctPrice) {
-            clearInterval(interval); // Arrête le timer
-            resultMessage.textContent = "Bravo ! Vous avez trouvé le bon prix !";
-            resultMessage.classList.add("text-green-500");
-            resultMessage.classList.remove("text-red-500", "text-yellow-500");
-            setTimeout(() => {
-                document.querySelector('form').submit();
-            }, 500);
-        } else if (enteredPrice < correctPrice) {
-            resultMessage2.textContent = "Bravo ! Vous avez trouvé le bon prix !";
-            resultMessage2.classList.add("text-green-500");
-            resultMessage2.classList.remove("text-red-500", "text-yellow-500");
-            resultMessage.textContent = "Trop bas ! Essayez encore.";
-            resultMessage.classList.add("text-yellow-500");
-            resultMessage.classList.remove("text-red-500", "text-green-500");
-        } else {
-            resultMessage2.textContent = "Bravo ! Vous avez trouvé le bon prix !";
-            resultMessage2.classList.add("text-green-500");
-            resultMessage2.classList.remove("text-red-500", "text-yellow-500");
-            resultMessage.textContent = "Trop élevé ! Essayez encore.";
-            resultMessage.classList.add("text-red-500");
-            resultMessage.classList.remove("text-yellow-500", "text-green-500");
-        }
+    if (enteredPrice === correctPrice) {
+        resultMessage.textContent = "Bravo ! Vous avez trouvé le bon prix !";
+        resultMessage.classList.add("text-green-500");
+        resultMessage.classList.remove("text-red-500", "text-yellow-500");
+
+        // Redirection après 500 ms
+        setTimeout(() => {
+            document.querySelector('form').submit();
+        }, 500);
+    } else if (enteredPrice < correctPrice) {
+        resultMessage.textContent = "Trop bas ! Essayez encore.";
+        resultMessage.classList.add("text-yellow-500");
+        resultMessage.classList.remove("text-red-500", "text-green-500");
+    } else {
+        resultMessage.textContent = "Trop élevé ! Essayez encore.";
+        resultMessage.classList.add("text-red-500");
+        resultMessage.classList.remove("text-yellow-500", "text-green-500");
     }
+}
 
-    // Écouteur de clic sur le bouton "submit"
-    submitButton.addEventListener('click', comparePrice);
-
-    // Écouteur de la touche "Entrée"
-    priceInput.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();  // Empêche l'envoi du formulaire
-            comparePrice();  // Effectue la comparaison des prix
-        }
-    });
-
+// Écouteur de la touche "Entrée"
+priceInput.addEventListener('keypress', function (event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();  // Empêche l'envoi du formulaire
+        comparePrice();          // Effectue la comparaison des prix
+    }
+});
 </script>
 </body>
 </html>
